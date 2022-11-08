@@ -9,17 +9,7 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * packageName :  kr.flab.tradingmarket.domain.user.entity
- * fileName : User
- * author :  ddh96
- * date : 2022-11-02
- * description : User 엔티티
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

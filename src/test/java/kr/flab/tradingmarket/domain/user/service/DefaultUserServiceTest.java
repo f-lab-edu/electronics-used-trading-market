@@ -19,21 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-/**
- * packageName :  kr.flab.tradingmarket.domain.user.service
- * fileName : DefaultUserServiceTest
- * author :  ddh96
- * date : 2022-11-02
- * description :
- * <p>
- * DefaultUserService 테스트
- * Mapper는 Mock처리
- * <p>
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
 @ExtendWith(MockitoExtension.class)
 class DefaultUserServiceTest {
 

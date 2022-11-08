@@ -8,17 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * packageName :  kr.flab.tradingmarket.common.code
- * fileName : ResponseMessage
- * author :  ddh96
- * date : 2022-11-02
- * description : API 응답용 Object
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
 
 @Getter
 @Slf4j

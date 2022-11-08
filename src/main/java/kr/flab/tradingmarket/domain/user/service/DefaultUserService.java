@@ -8,17 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * packageName :  kr.flab.tradingmarket.domain.user.service
- * fileName : DefaultUserService
- * author :  ddh96
- * date : 2022-11-02
- * description : UserService 기본 구현체
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j

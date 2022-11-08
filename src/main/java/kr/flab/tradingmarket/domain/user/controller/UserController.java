@@ -14,17 +14,7 @@ import javax.validation.Valid;
 import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.SUCCESS;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- * packageName :  kr.flab.tradingmarket.domain.user.controller
- * fileName : UserController
- * author :  ddh96
- * date : 2022-11-02
- * description : 유저관련 기능수행 RestApi 컨트롤러
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {

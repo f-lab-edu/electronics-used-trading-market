@@ -11,17 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.FAIL;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-/**
- * packageName :  kr.flab.tradingmarket.common.advice
- * fileName : ExceptionAdvices
- * author :  ddh96
- * date : 2022-11-02
- * description : Exception 통합 처리 Advice
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
 @ControllerAdvice
 @Slf4j
 public class ExceptionAdvices {

@@ -13,20 +13,6 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * packageName :  kr.flab.tradingmarket.domain.user.mapper
- * fileName : UserMapperTest
- * author :  ddh96
- * date : 2022-11-02
- * description :
- *
- * @MybatisTest를 사용한 UserMapper Test
- * @AutoConfigureTestDatabase -> 메모리 DB를 사용하지 않기위해서 설정
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-11-02                ddh96             최초 생성
- */
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

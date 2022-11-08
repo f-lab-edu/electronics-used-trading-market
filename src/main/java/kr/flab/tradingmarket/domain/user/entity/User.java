@@ -1,50 +1,52 @@
 package kr.flab.tradingmarket.domain.user.entity;
 
+import kr.flab.tradingmarket.domain.user.controller.request.JoinUserDto;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(of = {"userNo"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString //테스트용
 public class User {
 
     private Long userNo;
-
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}",
-            message = "아이디는 영문과 숫자 조합으로 8 ~ 20자리까지 가능합니다.")
-    @NotBlank
     private String userId;
-
-    @Length(max = 19)
-    @NotBlank
     private String userName;
-    @NotBlank
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}",
-            message = "비밀번호는 영문과 숫자 조합으로 8 ~ 16자리까지 가능합니다.")
     private String userPassword;
-
-    @NotBlank
-    @Pattern(regexp = "^[0-9]{11,11}",
-            message = "전화번호는 숫자 11자리로 입력해주세요")
     private String userPhone;
-
-    @NotNull
     private LocalDate userBirth;
-
-
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private UserProfileImage userProfileImage;
+
+    @Builder
+    public User(Long userNo, String userId, String userName, String userPassword, String userPhone, LocalDate userBirth, LocalDateTime createDate, LocalDateTime modifyDate, UserProfileImage userProfileImage) {
+        this.userNo = userNo;
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userBirth = userBirth;
+        this.createDate = createDate;
+        this.modifyDate = modifyDate;
+        this.userProfileImage = userProfileImage;
+    }
+
+    static public User from(JoinUserDto dto) {
+        return User.builder()
+                .userId(dto.getUserId())
+                .userName(dto.getUserName())
+                .userPassword(dto.getUserPassword())
+                .userPhone(dto.getUserPhone())
+                .userBirth(dto.getUserBirth())
+                .createDate(LocalDateTime.now())
+                .modifyDate(LocalDateTime.now())
+                .build();
+    }
 
     public void setEncryptionPassword(String encryptionPassword) {
         this.userPassword = encryptionPassword;

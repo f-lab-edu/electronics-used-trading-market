@@ -1,6 +1,7 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
+import kr.flab.tradingmarket.domain.user.controller.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseMessage> joinUser(@RequestBody @Valid User user) {
-        userService.joinUser(user);
+    public ResponseEntity<ResponseMessage> joinUser(@RequestBody @Valid JoinUserDto joinDto) {
+        userService.joinUser(User.from(joinDto));
         return ResponseEntity.status(OK)
                 .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(user)
+                        .Result(null)
                         .build());
     }
 

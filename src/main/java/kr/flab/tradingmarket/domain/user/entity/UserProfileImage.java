@@ -6,11 +6,9 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(of = {"imageNo"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString //테스트용
 public class UserProfileImage {
     private Long imageNo;
     private String originalFileName;

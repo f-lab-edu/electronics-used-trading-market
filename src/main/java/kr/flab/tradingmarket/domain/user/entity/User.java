@@ -1,6 +1,6 @@
 package kr.flab.tradingmarket.domain.user.entity;
 
-import kr.flab.tradingmarket.domain.user.controller.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import lombok.*;
 
 import java.time.LocalDate;

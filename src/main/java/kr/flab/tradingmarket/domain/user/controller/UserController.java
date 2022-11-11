@@ -1,8 +1,7 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
-import kr.flab.tradingmarket.domain.user.controller.request.JoinUserDto;
-import kr.flab.tradingmarket.domain.user.entity.User;
+import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<ResponseMessage> joinUser(@RequestBody @Valid JoinUserDto joinDto) {
-        userService.joinUser(User.from(joinDto));
+        userService.joinUser(joinDto);
         return ResponseEntity.status(OK)
                 .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                         .Result(null)

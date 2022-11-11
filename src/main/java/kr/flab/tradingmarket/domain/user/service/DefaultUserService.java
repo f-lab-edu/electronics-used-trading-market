@@ -1,5 +1,6 @@
 package kr.flab.tradingmarket.domain.user.service;
 
+import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
@@ -25,8 +26,9 @@ public class DefaultUserService implements UserService {
      * @throws UserIdDuplicateException 아이디 중복시에 리턴
      */
     @Override
-    public Long joinUser(User user) {
-        if (!isDuplicateUserId(user.getUserId())) {
+    public Long joinUser(JoinUserDto userDto) {
+        if (!isDuplicateUserId(userDto.getUserId())) {
+            User user = User.from(userDto);
             user.setEncryptionPassword(passwordEncoder.encode(user.getUserPassword()));
             return userMapper.insertUser(user);
         }

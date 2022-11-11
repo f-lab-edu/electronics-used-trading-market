@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.format.DateTimeParseException;
+
 import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.FAIL;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -31,6 +33,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                         .message("아이디가 중복됩니다.")
+                        .build());
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    protected ResponseEntity<ResponseMessage> validation(DateTimeParseException ex) {
+        log.info("userIdDuplicate ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+                new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                        .message("유효성 검증 실패 : 날짜 필드 오류")
                         .build());
     }
 }

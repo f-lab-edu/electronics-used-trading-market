@@ -21,7 +21,7 @@ public class DefaultUserService implements UserService {
     /**
      * 회원가입
      *
-     * @param user
+     * @param userDto
      * @return 생성된 user_no 리턴
      * @throws UserIdDuplicateException 아이디 중복시에 리턴
      */

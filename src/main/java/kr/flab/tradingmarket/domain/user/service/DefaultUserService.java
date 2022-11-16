@@ -6,6 +6,7 @@ import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +28,20 @@ public class DefaultUserService implements UserService {
      */
     @Override
     public Long joinUser(JoinUserDto userDto) {
-        if (!isDuplicateUserId(userDto.getUserId())) {
-            User user = User.from(userDto);
-            user.setEncryptionPassword(passwordEncoder.encode(user.getUserPassword()));
-            return userMapper.insertUser(user);
+
+        if (isDuplicateUserId(userDto.getUserId())) {
+            throw new UserIdDuplicateException();
         }
-        throw new UserIdDuplicateException();
+        User user = User.from(userDto);
+        user.setEncryptionPassword(passwordEncoder.encode(user.getUserPassword()));
+        Long saveUserId = null;
+        try {
+            saveUserId = userMapper.insertUser(user);
+        } catch (DuplicateKeyException e) {
+            throw new UserIdDuplicateException("Duplicated userId", e);
+        }
+        return saveUserId;
+
     }
 
     /**

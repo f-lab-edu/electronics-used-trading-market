@@ -3,20 +3,26 @@
 <mapper namespace="kr.flab.tradingmarket.domain.user.mapper.UserMapper">
 
     <insert id="insertUser" keyProperty="userNo" parameterType="User" useGeneratedKeys="true">
-        INSERT INTO USERS (user_id, user_name, user_password, user_phone, user_birth, create_date, modify_date)
+        INSERT INTO users (user_id, user_name, user_password, user_phone, user_birth, create_date, modify_date)
         VALUES (#{userId}, #{userName}, #{userPassword}, #{userPhone}, #{userBirth}, now(), now())
     </insert>
 
 
     <select id="findById" resultType="User">
         SELECT *
-        FROM USERS
+        FROM users
         WHERE user_id = #{userId}
     </select>
 
     <select id="findByNo" resultType="User" parameterType="Long">
         SELECT *
-        FROM USERS
+        FROM users
         WHERE user_no = #{userNo}
+    </select>
+
+    <select id="countById" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM users
+        WHERE user_id = #{userId}
     </select>
 </mapper>

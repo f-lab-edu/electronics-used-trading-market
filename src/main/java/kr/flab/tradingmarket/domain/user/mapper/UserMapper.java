@@ -11,8 +11,9 @@ public interface UserMapper {
 
     Long insertUser(User user);
 
-
     User findById(String userId);
 
     User findByNo(Long userNo);
+
+    int countById(String userId);
 }

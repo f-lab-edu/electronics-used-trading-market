@@ -1,11 +1,14 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 
 import java.time.LocalDate;
 
 public class UserControllerTestFixture {
     public static final String JOIN_URL = "/join";
+    public static final String LOGIN_URL = "/login";
+    public static final String LOGOUT_URL = "/logout";
 
 
     public static final JoinUserDto SUCCESSFUL_JOIN_USER = JoinUserDto.builder()
@@ -58,5 +61,15 @@ public class UserControllerTestFixture {
             .userBirth(LocalDate.parse("1997-10-30"))
             .build();
 
+
+    public static final UserAuthDto SUCCESSFUL_LOGIN_USER = UserAuthDto.builder()
+            .userId("successUser1")
+            .userPassword("successPassword1")
+            .build();
+
+    public static final UserAuthDto FAIL_LOGIN_USER = UserAuthDto.builder()
+            .userId("failUser1")
+            .userPassword("failPassword1")
+            .build();
 
 }

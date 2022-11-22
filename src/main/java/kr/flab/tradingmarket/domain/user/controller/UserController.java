@@ -1,15 +1,16 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
+import kr.flab.tradingmarket.common.annotation.AuthCheck;
+import kr.flab.tradingmarket.common.annotation.CurrentSession;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
 import kr.flab.tradingmarket.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -44,6 +45,28 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage> login(@RequestBody @Valid UserAuthDto loginDto) {
         loginService.login(loginDto);
+        return ResponseEntity.status(OK)
+                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                        .Result(null)
+                        .build());
+    }
+
+
+    @AuthCheck
+    @PatchMapping("/my/info")
+    public ResponseEntity<ResponseMessage> modifyUser(@RequestBody @Valid ModifyUserDto modifyUserDto, @CurrentSession Long userNo) {
+        userService.modifyUser(modifyUserDto, userNo);
+        return ResponseEntity.status(OK)
+                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                        .Result(null)
+                        .build());
+    }
+
+    @AuthCheck
+    @DeleteMapping("/my/withdraw")
+    public ResponseEntity<ResponseMessage> withdrawUser(@CurrentSession Long userNo) {
+        userService.withdrawUser(userNo);
+        loginService.logout();
         return ResponseEntity.status(OK)
                 .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                         .Result(null)

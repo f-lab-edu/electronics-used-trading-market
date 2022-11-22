@@ -16,4 +16,8 @@ public interface UserMapper {
     User findByNo(Long userNo);
 
     int countById(String userId);
+
+    void delete(Long userNo);
+
+    void updateUser(User user);
 }

@@ -1,6 +1,7 @@
 package kr.flab.tradingmarket.domain.user.service;
 
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
@@ -92,5 +93,33 @@ public class DefaultUserService implements UserService {
         }
         return findUser;
     }
+
+    /**
+     * 유저 수정
+     *
+     * @param modifyUserDto name,phone
+     * @param userNo
+     */
+    @Override
+    public void modifyUser(ModifyUserDto modifyUserDto, Long userNo) {
+        User updateUserInfo = User.builder()
+                .userNo(userNo)
+                .userName(modifyUserDto.getUserName())
+                .userPhone(modifyUserDto.getUserPhone())
+                .build();
+        userMapper.updateUser(updateUserInfo);
+    }
+
+    /**
+     * 유저삭제
+     *
+     * @param userNo
+     */
+    @Override
+    public void withdrawUser(Long userNo) {
+        userMapper.delete(userNo);
+
+    }
+
 
 }

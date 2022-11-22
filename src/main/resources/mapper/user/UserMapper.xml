@@ -7,6 +7,15 @@
         VALUES (#{userId}, #{userName}, #{userPassword}, #{userPhone}, #{userBirth}, now(), now())
     </insert>
 
+    <update id="updateUser" parameterType="User">
+        UPDATE users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            modify_date = now()
+        </trim>
+        WHERE user_no = #{userNo}
+    </update>
 
     <select id="findById" resultType="User">
         SELECT *
@@ -25,4 +34,9 @@
         FROM users
         WHERE user_id = #{userId}
     </select>
+
+    <delete id="delete">
+        DELETE FROM users WHERE user_no = #{userNo}
+    </delete>
+
 </mapper>

@@ -2,6 +2,7 @@ package kr.flab.tradingmarket.common.advice;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
+import kr.flab.tradingmarket.domain.user.exception.UserAccessDeniedException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,16 @@ public class ExceptionAdvices {
         return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
                         .message("해당 아이디가 존재하지 않습니다.")
+                        .build());
+    }
+
+    @ExceptionHandler(UserAccessDeniedException.class)
+    protected ResponseEntity<ResponseMessage> validation(UserAccessDeniedException ex) {
+        log.info("userIdDuplicate ex : ", ex);
+        return ResponseEntity.status(UNAUTHORIZED).body(
+                new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
+                        .message("접근 권한이 없습니다. 로그인해주세요")
+                        .Result("/login")
                         .build());
     }
 }

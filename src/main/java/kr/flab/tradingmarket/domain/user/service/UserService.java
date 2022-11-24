@@ -20,4 +20,6 @@ public interface UserService {
     void modifyUser(ModifyUserDto modifyUserDto, Long userId);
 
     void withdrawUser(Long userId);
+
+    ModifyUserDto findModifyUserDtoByUserNo(Long userNo);
 }

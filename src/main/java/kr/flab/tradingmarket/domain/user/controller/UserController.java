@@ -63,6 +63,15 @@ public class UserController {
     }
 
     @AuthCheck
+    @GetMapping("/my/info")
+    public ResponseEntity<ResponseMessage> myInfo(@CurrentSession Long userNo) {
+        return ResponseEntity.status(OK)
+                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                        .Result(userService.findModifyUserDtoByUserNo(userNo))
+                        .build());
+    }
+
+    @AuthCheck
     @DeleteMapping("/my/withdraw")
     public ResponseEntity<ResponseMessage> withdrawUser(@CurrentSession Long userNo) {
         userService.withdrawUser(userNo);

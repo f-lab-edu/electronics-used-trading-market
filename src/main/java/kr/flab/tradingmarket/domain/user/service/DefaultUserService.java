@@ -121,5 +121,10 @@ public class DefaultUserService implements UserService {
 
     }
 
+    @Override
+    public ModifyUserDto findModifyUserDtoByUserNo(Long userNo) {
+        return ModifyUserDto.from(findByUserNo(userNo));
+    }
+
 
 }

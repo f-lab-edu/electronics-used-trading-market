@@ -2,7 +2,10 @@ package kr.flab.tradingmarket.domain.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
+import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
+import kr.flab.tradingmarket.domain.user.service.LoginService;
 import kr.flab.tradingmarket.domain.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static kr.flab.tradingmarket.domain.user.controller.UserControllerTestFixture.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +35,9 @@ class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    LoginService loginService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -44,7 +50,8 @@ class UserControllerTest {
     @Test
     @DisplayName("controller : 회원가입 테스트 : 성공")
     void successfulJoinUser() throws Exception {
-
+        when(userService.joinUser(SUCCESSFUL_JOIN_USER))
+                .thenReturn(1L);
         mockMvc.perform(post(JOIN_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(SUCCESSFUL_JOIN_USER)))
@@ -55,7 +62,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("controller : 회원가입 테스트 : 유저중복으로 인한 실패")
-    void joinUser() throws Exception {
+    void failJoinUserByDuplication() throws Exception {
         when(userService.joinUser(SUCCESSFUL_JOIN_USER))
                 .thenThrow(UserIdDuplicateException.class);
         mockMvc.perform(post(JOIN_URL)
@@ -74,6 +81,63 @@ class UserControllerTest {
                         .content(FAIL_VALIDATION_BIRTH_FORMAT))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DisplayName("controller : 로그인 테스트 : 성공")
+    void successfulLogin() throws Exception {
+        doNothing()
+                .when(loginService)
+                .login(SUCCESSFUL_LOGIN_USER);
+        mockMvc.perform(post(LOGIN_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(SUCCESSFUL_LOGIN_USER)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("controller : 로그인 테스트 : 비밀번호 오류로 인한 실패")
+    void failLoginByPasswordNotMatch() throws Exception {
+        doThrow(PasswordNotMatchException.class)
+                .when(loginService)
+                .login(FAIL_LOGIN_USER);
+
+        mockMvc.perform(post(LOGIN_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(FAIL_LOGIN_USER)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("controller : 로그인 테스트 : 존재하지 않는 UserId 실패")
+    void failLoginByUserNotFound() throws Exception {
+        doThrow(UserNotFoundException.class)
+                .when(loginService)
+                .login(FAIL_LOGIN_USER);
+
+        mockMvc.perform(post(LOGIN_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(FAIL_LOGIN_USER)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DisplayName("controller : 로그아웃 테스트 : 성공")
+    void successfulLogout() throws Exception {
+        doNothing()
+                .when(loginService)
+                .logout();
+
+        mockMvc.perform(post(LOGOUT_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(FAIL_LOGIN_USER)))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
 

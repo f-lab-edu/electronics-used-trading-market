@@ -1,6 +1,8 @@
 package kr.flab.tradingmarket.domain.user.service;
 
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
+import kr.flab.tradingmarket.domain.user.entity.User;
 
 public interface UserService {
     Long joinUser(JoinUserDto userDto);
@@ -8,4 +10,9 @@ public interface UserService {
 
     boolean isDuplicateUserId(String userId);
 
+    Long userAuthCheck(UserAuthDto userAuth);
+
+    User findByUserId(String userId);
+
+    User findByUserNo(Long userNo);
 }

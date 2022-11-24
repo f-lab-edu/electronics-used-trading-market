@@ -68,11 +68,11 @@ public class DefaultUserService implements UserService {
     @Override
     public Long userAuthCheck(UserAuthDto userAuth) {
         User findUser = findByUserId(userAuth.getUserId());
-        if (passwordEncoder.matches(userAuth.getUserPassword(), findUser.getUserPassword())) {
-            return findUser.getUserNo();
-        } else {
+        if (!passwordEncoder.matches(userAuth.getUserPassword(), findUser.getUserPassword())) {
             throw new PasswordNotMatchException("Password Not Matches");
         }
+        return findUser.getUserNo();
+
     }
 
     @Override

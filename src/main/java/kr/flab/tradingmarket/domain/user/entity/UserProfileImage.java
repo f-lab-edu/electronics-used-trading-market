@@ -16,4 +16,15 @@ public class UserProfileImage {
     private Long fileSize;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
+
+
+    @Builder
+    public UserProfileImage(Long imageNo, String originalFileName, String fileLink, Long fileSize, LocalDateTime createDate, LocalDateTime modifyDate) {
+        this.imageNo = imageNo;
+        this.originalFileName = originalFileName;
+        this.fileLink = fileLink;
+        this.fileSize = fileSize;
+        this.createDate = createDate;
+        this.modifyDate = modifyDate;
+    }
 }

@@ -4,6 +4,7 @@ import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
+import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.separateImagePath;
 
 
 @Service
@@ -22,6 +26,7 @@ public class DefaultUserService implements UserService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
 
     /**
      * 회원가입
@@ -124,6 +129,38 @@ public class DefaultUserService implements UserService {
     @Override
     public ModifyUserDto findModifyUserDtoByUserNo(Long userNo) {
         return ModifyUserDto.from(findByUserNo(userNo));
+    }
+
+    /**
+     * 유저 프로필 이미지 변경
+     *
+     * @param imagePath
+     * @param userNo
+     */
+    @Override
+    @Transactional
+    public String modifyUserProfile(UserProfileImage imagePath, Long userNo) {
+
+        UserProfileImage userProfileImage = userMapper.findUserProfileImageByNo(userNo).getUserProfileImage();
+
+        updateProfileImage(imagePath, userNo);
+
+        if (userProfileImage == null) {
+            return null;
+        }
+
+        return deleteImageProfileAndGetFileName(userProfileImage);
+    }
+
+    private String deleteImageProfileAndGetFileName(UserProfileImage userProfileImage) {
+        userMapper.deleteProfileImage(userProfileImage.getImageNo());
+        return separateImagePath(userProfileImage.getFileLink());
+    }
+
+
+    private void updateProfileImage(UserProfileImage imagePath, Long userNo) {
+        userMapper.insertProfile(imagePath);
+        userMapper.updateUserProfile(imagePath.getImageNo(), userNo);
     }
 
 

@@ -7,6 +7,7 @@ import kr.flab.tradingmarket.domain.image.exception.imageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.image.utils.ImageUtils;
+import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
@@ -124,5 +125,15 @@ public class UserController {
                         .build());
     }
 
+    @AuthCheck
+    @PatchMapping("/my/password")
+    public ResponseEntity<ResponseMessage> changePassword(@CurrentSession Long userNo, @RequestBody @Valid ChangePasswordDto changePasswordDto) {
 
+        userService.changePassword(changePasswordDto, userNo);
+
+        return ResponseEntity.status(OK)
+                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                        .Result(null)
+                        .build());
+    }
 }

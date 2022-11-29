@@ -30,4 +30,6 @@ public interface UserMapper {
     User findUserProfileImageByNo(Long userNo);
 
     void deleteProfileImage(Long imageNo);
+
+    void updateUserPassword(@Param("userNo") Long userNo, @Param("userPassword") String userPassword);
 }

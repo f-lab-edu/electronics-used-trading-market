@@ -1,5 +1,6 @@
 package kr.flab.tradingmarket.domain.user.service;
 
+import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
@@ -107,11 +108,7 @@ public class DefaultUserService implements UserService {
      */
     @Override
     public void modifyUser(ModifyUserDto modifyUserDto, Long userNo) {
-        User updateUserInfo = User.builder()
-                .userNo(userNo)
-                .userName(modifyUserDto.getUserName())
-                .userPhone(modifyUserDto.getUserPhone())
-                .build();
+        User updateUserInfo = User.builder().userNo(userNo).userName(modifyUserDto.getUserName()).userPhone(modifyUserDto.getUserPhone()).build();
         userMapper.updateUser(updateUserInfo);
     }
 
@@ -150,6 +147,20 @@ public class DefaultUserService implements UserService {
         }
 
         return deleteImageProfileAndGetFileName(userProfileImage);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto changePassword, Long userNo) {
+
+        User findUser = findByUserNo(userNo);
+
+        if (!passwordEncoder.matches(changePassword.getCurrentPassword(), findUser.getUserPassword())) {
+            throw new PasswordNotMatchException("Password Not Matches");
+        }
+
+        userMapper.updateUserPassword(userNo, passwordEncoder.encode(changePassword.getPassword()));
+
+
     }
 
     private String deleteImageProfileAndGetFileName(UserProfileImage userProfileImage) {

@@ -78,4 +78,11 @@
         WHERE user_no = #{userNo}
     </update>
 
+    <update id="updateUserPassword">
+        UPDATE users
+        SET modify_date   = now(),
+            user_password =#{userPassword}
+        WHERE user_no = #{userNo}
+    </update>
+
 </mapper>

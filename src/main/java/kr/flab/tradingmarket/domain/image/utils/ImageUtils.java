@@ -22,9 +22,9 @@ public class ImageUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static String getImagePath(MultipartFile file, String filename, ImageType imageType) {
+    public static String getImagePath(MultipartFile file, ImageType imageType) {
         //File.separator 파일시스템에 따라서 구분자를 바꿔주는 ncloud object storage 경로 구분하는 /로 통일되어 있기 때문에 사용하지않음.
-        return imageType.getType() + "/" + filename + "." + getExtension(file);
+        return imageType.getType() + "/" + getImageName() + "." + getExtension(file);
     }
 
     public static String separateImagePath(String path) {

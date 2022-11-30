@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 @Service
@@ -25,13 +26,14 @@ public class AwsImageService implements ImageService {
     private String bucket;
 
     @Override
-    public String uploadImage(MultipartFile file, String uuidFileName, ImageType imageType) {
+    public String uploadImage(MultipartFile file, ImageType imageType) {
         ImageUtils.validationImageExtension(file);
-        String imagePath = ImageUtils.getImagePath(file, uuidFileName, imageType);
+        String imagePath = ImageUtils.getImagePath(file, imageType);
         ObjectMetadata metadata = new ObjectMetadata();
         try {
-            metadata.setContentLength(file.getInputStream().available());
-            s3Client.putObject(new PutObjectRequest(bucket, imagePath, file.getInputStream(), metadata)
+            InputStream inputStream = file.getInputStream();
+            metadata.setContentLength(inputStream.available());
+            s3Client.putObject(new PutObjectRequest(bucket, imagePath, inputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new ImageUploadException("Image upload failed", e);

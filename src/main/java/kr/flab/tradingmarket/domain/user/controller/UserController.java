@@ -6,7 +6,6 @@ import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
-import kr.flab.tradingmarket.domain.image.utils.ImageUtils;
 import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
@@ -96,9 +95,8 @@ public class UserController {
     @AuthCheck
     @PutMapping("/my/profile-image")
     public ResponseEntity<ResponseMessage> modifyProfileImage(@CurrentSession Long userNo, MultipartFile image) {
-        String imageName = ImageUtils.getImageName();
-        String imagePath = imageService.uploadImage(image, imageName, ImageType.PROFILE);
 
+        String imagePath = imageService.uploadImage(image, ImageType.PROFILE);
         UserProfileImage ImageEntity = UserProfileImage.builder()
                 .fileLink(imagePath)
                 .fileSize(image.getSize())

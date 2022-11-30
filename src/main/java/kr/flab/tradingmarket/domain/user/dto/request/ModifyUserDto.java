@@ -2,6 +2,7 @@ package kr.flab.tradingmarket.domain.user.dto.request;
 
 import kr.flab.tradingmarket.domain.user.entity.User;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Pattern;
 @ToString
 @Getter
 @Builder
+@EqualsAndHashCode
 public class ModifyUserDto {
     @Length(min = 2, max = 19)
     @NotBlank

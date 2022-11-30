@@ -14,7 +14,7 @@ public class ImageUtils {
         boolean isMatch = Arrays.stream(ImageExtension.values())
                 .anyMatch(ext -> ext.getName().equals(extension));
         if (!isMatch) {
-            throw new ExtensionNotSupportedException(extension + " extension is not supported");
+            throw new ExtensionNotSupportedException(extension + " extension is not supported", extension);
         }
     }
 

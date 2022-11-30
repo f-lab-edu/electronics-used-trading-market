@@ -3,7 +3,7 @@ package kr.flab.tradingmarket.domain.user.controller;
 import kr.flab.tradingmarket.common.annotation.AuthCheck;
 import kr.flab.tradingmarket.common.annotation.CurrentSession;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
-import kr.flab.tradingmarket.domain.image.exception.imageUploadException;
+import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.image.utils.ImageUtils;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.SUCCESS;
 import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.separateImagePath;
@@ -96,7 +95,7 @@ public class UserController {
 
     @AuthCheck
     @PutMapping("/my/profile-image")
-    public ResponseEntity<ResponseMessage> modifyProfileImage(@CurrentSession Long userNo, MultipartFile image) throws IOException {
+    public ResponseEntity<ResponseMessage> modifyProfileImage(@CurrentSession Long userNo, MultipartFile image) {
         String imageName = ImageUtils.getImageName();
         String imagePath = imageService.uploadImage(image, imageName, ImageType.PROFILE);
 
@@ -112,7 +111,7 @@ public class UserController {
             deleteImageName = userService.modifyUserProfile(ImageEntity, userNo);
         } catch (Exception e) {  // db 트랜잭션 실패시 버킷 이미지 삭제
             imageService.deleteImage(separateImagePath(imagePath));
-            throw new imageUploadException("Image upload failed", e);
+            throw new ImageUploadException("Image upload failed", e);
         }
 
         if (deleteImageName != null) {

@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.image.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,17 @@ public class AwsImageService implements ImageService {
     private String bucket;
 
     @Override
-    public String uploadImage(MultipartFile file, String uuidFileName, ImageType imageType) throws IOException {
+    public String uploadImage(MultipartFile file, String uuidFileName, ImageType imageType) {
         ImageUtils.validationImageExtension(file);
         String imagePath = ImageUtils.getImagePath(file, uuidFileName, imageType);
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getInputStream().available());
-        s3Client.putObject(new PutObjectRequest(bucket, imagePath, file.getInputStream(), metadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+        try {
+            metadata.setContentLength(file.getInputStream().available());
+            s3Client.putObject(new PutObjectRequest(bucket, imagePath, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
+            throw new ImageUploadException("Image upload failed", e);
+        }
         return s3Client.getUrl(bucket, imagePath).toString();
     }
 

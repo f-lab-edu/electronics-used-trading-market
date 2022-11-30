@@ -1,6 +1,6 @@
 package kr.flab.tradingmarket.domain.user.service;
 
-import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
+import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
@@ -166,7 +166,7 @@ class DefaultUserServiceTest {
         //when
         userService.modifyUser(SUCCESSFUL_USER_MODIFY_DTO, 1L);
         //then
-        verify(userMapper).updateUser(SUCCESSFUL_USER_MODIFY);
+        verify(userMapper).updateUser(any());
     }
 
     @Test
@@ -186,9 +186,9 @@ class DefaultUserServiceTest {
         //given
         given(userMapper.findByNo(any())).willReturn(SUCCESSFUL_USER_MODIFY);
         //when
-        ModifyUserDto modifyUserDtoByUserNo = userService.findModifyUserDtoByUserNo(1L);
+        MyInfoDto modifyUserDtoByUserNo = userService.findModifyUserDtoByUserNo(1L);
         //then
-        assertThat(SUCCESSFUL_USER_MODIFY_DTO).isEqualTo(modifyUserDtoByUserNo);
+        assertThat(DEFAULT_UPDATE_AFTER_MY_INFO).isEqualTo(modifyUserDtoByUserNo);
     }
 
     @Test

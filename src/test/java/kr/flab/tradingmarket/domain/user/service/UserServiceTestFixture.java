@@ -4,6 +4,7 @@ import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
+import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 
@@ -86,6 +87,10 @@ public class UserServiceTestFixture {
             .currentPassword("testPassword1")
             .password("testChangePw1")
             .confirmPassword("testChangePw1")
+            .build();
+    public final static MyInfoDto DEFAULT_UPDATE_AFTER_MY_INFO = MyInfoDto.builder()
+            .userName("testUserName2")
+            .userPhone("01012341111")
             .build();
 
 }

@@ -4,6 +4,7 @@ import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
+import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 
@@ -22,7 +23,7 @@ public interface UserService {
 
     void withdrawUser(Long userId);
 
-    ModifyUserDto findModifyUserDtoByUserNo(Long userNo);
+    MyInfoDto findModifyUserDtoByUserNo(Long userNo);
 
     String modifyUserProfile(UserProfileImage imagePath, Long userNo);
 

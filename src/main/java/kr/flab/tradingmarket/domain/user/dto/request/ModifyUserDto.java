@@ -1,6 +1,5 @@
 package kr.flab.tradingmarket.domain.user.dto.request;
 
-import kr.flab.tradingmarket.domain.user.entity.User;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,12 +23,5 @@ public class ModifyUserDto {
             message = "전화번호는 숫자 11자리로 입력해주세요.")
     private String userPhone;
 
-
-    static public ModifyUserDto from(User user) {
-        return ModifyUserDto.builder()
-                .userName(user.getUserName())
-                .userPhone(user.getUserPhone())
-                .build();
-    }
 
 }

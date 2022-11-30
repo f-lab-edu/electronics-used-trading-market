@@ -6,7 +6,7 @@ import kr.flab.tradingmarket.common.aop.LoginCheckAop;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
-import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
+import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
@@ -161,13 +161,13 @@ class UserControllerTest {
     void successfulMyInfo() throws Exception {
 
         given(userService.findModifyUserDtoByUserNo(any()))
-                .willReturn(ModifyUserDto.from(DEFAULT_USER));
+                .willReturn(MyInfoDto.from(DEFAULT_USER));
         given(loginService.getLoginUserId())
                 .willReturn(1L);
 
         mockMvc.perform(get(MY_INFO_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(ModifyUserDto.from(DEFAULT_USER))))
+                        .content(toJson(SUCCESSFUL_USER_MODIFY_DTO)))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -177,7 +177,7 @@ class UserControllerTest {
     void failMyInfo() throws Exception {
 
         given(userService.findModifyUserDtoByUserNo(any()))
-                .willReturn(ModifyUserDto.from(DEFAULT_USER));
+                .willReturn(MyInfoDto.from(DEFAULT_USER));
         given(loginService.getLoginUserId())
                 .willReturn(null);
 

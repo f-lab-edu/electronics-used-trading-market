@@ -4,6 +4,7 @@ import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
+import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
@@ -108,8 +109,7 @@ public class DefaultUserService implements UserService {
      */
     @Override
     public void modifyUser(ModifyUserDto modifyUserDto, Long userNo) {
-        User updateUserInfo = User.builder().userNo(userNo).userName(modifyUserDto.getUserName()).userPhone(modifyUserDto.getUserPhone()).build();
-        userMapper.updateUser(updateUserInfo);
+        userMapper.updateUser(User.from(modifyUserDto));
     }
 
     /**
@@ -124,8 +124,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public ModifyUserDto findModifyUserDtoByUserNo(Long userNo) {
-        return ModifyUserDto.from(findByUserNo(userNo));
+    public MyInfoDto findModifyUserDtoByUserNo(Long userNo) {
+        return MyInfoDto.from(findByUserNo(userNo));
     }
 
     /**

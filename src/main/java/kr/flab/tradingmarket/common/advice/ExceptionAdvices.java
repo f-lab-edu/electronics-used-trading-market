@@ -9,6 +9,7 @@ import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,12 +42,19 @@ public class ExceptionAdvices {
                         .build());
     }
 
-    @ExceptionHandler(DateTimeParseException.class)
-    protected ResponseEntity<ResponseMessage> dateTimeParseException(DateTimeParseException ex) {
-        log.info("DateTimeParseException ex : ", ex);
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ResponseEntity<ResponseMessage> dateTimeParseException(HttpMessageNotReadableException ex) {
+        Throwable rootCause = ex.getRootCause();
+        log.info("DateTimeParseException ex : ", rootCause);
+        if (rootCause instanceof DateTimeParseException e) {
+            return ResponseEntity.status(BAD_REQUEST).body(
+                    new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                            .message(e.getParsedString() + " : 유효성 검증 실패 : 날짜 필드 오류")
+                            .build());
+        }
         return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
-                        .message("유효성 검증 실패 : 날짜 필드 오류")
+                        .message("형식에 맞지 않는 필드가 존재합니다.")
                         .build());
     }
 
@@ -54,7 +62,7 @@ public class ExceptionAdvices {
     protected ResponseEntity<ResponseMessage> passwordNotMatchException(PasswordNotMatchException ex) {
         log.info("PasswordNotMatchException ex : ", ex);
         return ResponseEntity.status(BAD_REQUEST).body(
-                new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
+                new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                         .message("비밀번호가 일치하지 않습니다.")
                         .build());
     }
@@ -63,7 +71,7 @@ public class ExceptionAdvices {
     protected ResponseEntity<ResponseMessage> userNotFoundException(UserNotFoundException ex) {
         log.info("UserNotFoundException ex : ", ex);
         return ResponseEntity.status(BAD_REQUEST).body(
-                new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
+                new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                         .message("해당 아이디가 존재하지 않습니다.")
                         .build());
     }

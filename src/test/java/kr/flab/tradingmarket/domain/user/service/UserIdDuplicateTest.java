@@ -1,5 +1,7 @@
 package kr.flab.tradingmarket.domain.user.service;
 
+import kr.flab.tradingmarket.domain.image.config.AwsConfig;
+import kr.flab.tradingmarket.domain.image.service.AwsImageService;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
@@ -8,15 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 
 import static kr.flab.tradingmarket.domain.user.service.UserServiceTestFixture.SUCCESSFUL_JOIN_USER_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-@Transactional
 @SpringBootTest
+@Profile("test")
 public class UserIdDuplicateTest {
 
     @Autowired
@@ -25,9 +28,19 @@ public class UserIdDuplicateTest {
     @Autowired
     UserMapper userMapper;
 
+    @MockBean
+    AwsConfig awsConfig;
+
+    @MockBean
+    AwsImageService AwsImageService;
+
+    @MockBean
+    RedisLoginService redisLoginService;
+
+
     @Test
     @DisplayName("serivce : 트랜젝션 테스트 : 동시성이슈 테스트 UserIdDuplicateException 발생 (isDuplicateUserId 동작 실패)")
-    void ConcurrencyJoinTransaction() {
+    void concurrencyJoinTransaction() {
         assertThatThrownBy(() -> {
             ThreadExceptionTester t1 = new ThreadExceptionTester(() -> userService.joinUser(SUCCESSFUL_JOIN_USER_DTO));
             ThreadExceptionTester t2 = new ThreadExceptionTester(() -> userService.joinUser(SUCCESSFUL_JOIN_USER_DTO));
@@ -43,11 +56,12 @@ public class UserIdDuplicateTest {
 
         assertThat(findUser.getUserId()).isEqualTo(findUserId);
         assertThat(countUser).isEqualTo(1);
+        userMapper.delete(findUser.getUserNo());
     }
 
     @Test
     @DisplayName("serivce : 트랜젝션 테스트 : 회원가입시 아이디가 중복되는경우 isDuplicateUserId 동작")
-    void JoinTransaction() {
+    void joinTransaction() {
         userService.joinUser(SUCCESSFUL_JOIN_USER_DTO);
 
         assertThatThrownBy(() -> userService.joinUser(SUCCESSFUL_JOIN_USER_DTO)).isInstanceOf(UserIdDuplicateException.class);
@@ -57,7 +71,9 @@ public class UserIdDuplicateTest {
 
         assertThat(findUser.getUserId()).isEqualTo(findUserId);
         assertThat(countUser).isEqualTo(1);
+        userMapper.delete(findUser.getUserNo());
     }
 
 
 }
+

@@ -2,11 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.flab.tradingmarket.domain.user.mapper.UserMapper">
 
+    <resultMap type="User" id="userAndProfileImage">
+        <id column="user_no" property="userNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <association property="userProfileImage" javaType="UserProfileImage">
+            <id column="image_no" property="imageNo"/>
+            <result column="origin_file_name" property="originalFileName"/>
+            <result column="file_link" property="fileLink"/>
+            <result column="file_size" property="fileSize"/>
+        </association>
+    </resultMap>
+
     <insert id="insertUser" keyProperty="userNo" parameterType="User" useGeneratedKeys="true">
         INSERT INTO users (user_id, user_name, user_password, user_phone, user_birth, create_date, modify_date)
         VALUES (#{userId}, #{userName}, #{userPassword}, #{userPhone}, #{userBirth}, now(), now())
     </insert>
 
+    <update id="updateUser" parameterType="User">
+        UPDATE users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            modify_date = now()
+        </trim>
+        WHERE user_no = #{userNo}
+    </update>
 
     <select id="findById" resultType="User">
         SELECT *
@@ -25,4 +46,43 @@
         FROM users
         WHERE user_id = #{userId}
     </select>
+
+    <delete id="delete">
+        DELETE
+        FROM users
+        WHERE user_no = #{userNo}
+    </delete>
+
+    <delete id="deleteProfileImage">
+        DELETE
+        FROM users_profile_images
+        WHERE image_no = #{imageNo}
+    </delete>
+
+    <select id="findUserProfileImageByNo" resultMap="userAndProfileImage">
+        SELECT *
+        FROM users u
+                 LEFT JOIN users_profile_images up ON u.image_no = up.image_no
+        WHERE user_no = #{userNo}
+    </select>
+
+    <insert id="insertProfile" keyProperty="imageNo" parameterType="UserProfileImage" useGeneratedKeys="true">
+        INSERT INTO users_profile_images (origin_file_name, file_link, file_size, create_date, modify_date)
+        VALUES (#{originalFileName}, #{fileLink}, #{fileSize}, now(), now())
+    </insert>
+
+    <update id="updateUserProfile">
+        UPDATE users
+        SET modify_date = now(),
+            image_no    =#{imageNo}
+        WHERE user_no = #{userNo}
+    </update>
+
+    <update id="updateUserPassword">
+        UPDATE users
+        SET modify_date   = now(),
+            user_password =#{userPassword}
+        WHERE user_no = #{userNo}
+    </update>
+
 </mapper>

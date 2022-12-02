@@ -1,5 +1,6 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
+import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,6 +66,14 @@ public class UserValidationTest {
     void validationUserPhone() {
         Set<ConstraintViolation<JoinUserDto>> violations = validator.validate(FAIL_VALIDATION_WRONG_PATTERN_PHONE);
         assertThat("전화번호는 숫자 11자리로 입력해주세요.").isEqualTo(violations.iterator().next().getMessage());
+    }
+
+
+    @Test
+    @DisplayName("비밀번호와 재입력한 비밀번호가 다를 때 : validation 실패 테스트")
+    void validationPasswordEqual() {
+        Set<ConstraintViolation<ChangePasswordDto>> violations = validator.validate(FAIL_VALIDATION_NON_EQUALS_PASSWORD);
+        assertThat("재입력한 비밀번호가 일치하지 않습니다.").isEqualTo(violations.iterator().next().getMessage());
     }
 
 

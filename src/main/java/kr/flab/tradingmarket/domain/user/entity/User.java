@@ -1,6 +1,7 @@
 package kr.flab.tradingmarket.domain.user.entity;
 
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
+import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -45,6 +46,14 @@ public class User {
                 .userBirth(dto.getUserBirth())
                 .createDate(LocalDateTime.now())
                 .modifyDate(LocalDateTime.now())
+                .build();
+    }
+
+
+    static public User from(ModifyUserDto dto) {
+        return User.builder()
+                .userName(dto.getUserName())
+                .userPhone(dto.getUserPhone())
                 .build();
     }
 

@@ -34,6 +34,9 @@ public class UserIdDuplicateTest {
     @MockBean
     AwsImageService AwsImageService;
 
+    @MockBean
+    RedisLoginService redisLoginService;
+
 
     @Test
     @DisplayName("serivce : 트랜젝션 테스트 : 동시성이슈 테스트 UserIdDuplicateException 발생 (isDuplicateUserId 동작 실패)")

@@ -28,6 +28,7 @@ public class DefaultUserService implements UserService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final LoginService loginService;
 
 
     /**
@@ -110,6 +111,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void modifyUser(ModifyUserDto modifyUserDto, Long userNo) {
         userMapper.updateUser(User.from(modifyUserDto));
+        loginService.logout();
     }
 
     /**

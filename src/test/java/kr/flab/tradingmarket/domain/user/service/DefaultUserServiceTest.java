@@ -31,6 +31,8 @@ class DefaultUserServiceTest {
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    LoginService loginService;
 
 
     @Test
@@ -167,6 +169,7 @@ class DefaultUserServiceTest {
         userService.modifyUser(SUCCESSFUL_USER_MODIFY_DTO, 1L);
         //then
         verify(userMapper).updateUser(any());
+        verify(loginService).logout();
     }
 
     @Test

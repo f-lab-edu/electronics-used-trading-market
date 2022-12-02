@@ -235,7 +235,6 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         verify(userService).withdrawUser(userId);
-        verify(loginService).logout();
     }
 
 

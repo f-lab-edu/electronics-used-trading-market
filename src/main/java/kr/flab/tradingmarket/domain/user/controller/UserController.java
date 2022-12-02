@@ -84,7 +84,7 @@ public class UserController {
     @DeleteMapping("/my/withdraw")
     public ResponseEntity<ResponseMessage> withdrawUser(@CurrentSession Long userNo) {
         userService.withdrawUser(userNo);
-        loginService.logout();
+
         return ResponseEntity.status(OK)
                 .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                         .Result(null)

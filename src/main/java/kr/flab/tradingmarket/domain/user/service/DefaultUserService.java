@@ -3,7 +3,6 @@ package kr.flab.tradingmarket.domain.user.service;
 import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
-import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
@@ -68,30 +67,6 @@ public class DefaultUserService implements UserService {
         return findUser != null;
     }
 
-    /**
-     * 유저 인증 정보 확인
-     *
-     * @param userAuth id,password dto
-     * @return user 인증이 성공하면 userNo 리턴
-     */
-    @Override
-    public Long userAuthCheck(UserAuthDto userAuth) {
-        User findUser = findByUserId(userAuth.getUserId());
-        if (!passwordEncoder.matches(userAuth.getUserPassword(), findUser.getUserPassword())) {
-            throw new PasswordNotMatchException("Password Not Matches");
-        }
-        return findUser.getUserNo();
-
-    }
-
-    @Override
-    public User findByUserId(String userId) {
-        User findUser = userMapper.findById(userId);
-        if (findUser == null) {
-            throw new UserNotFoundException("User Not Found");
-        }
-        return findUser;
-    }
 
     @Override
     public User findByUserNo(Long userNo) {

@@ -93,4 +93,10 @@ public class UserServiceTestFixture {
             .userPhone("01012341111")
             .build();
 
+    public static final UserAuthDto DEFAULT_LOGIN_USER = UserAuthDto.builder()
+            .userId("testUser1")
+            .userPassword("testPassword1")
+            .build();
+
+
 }

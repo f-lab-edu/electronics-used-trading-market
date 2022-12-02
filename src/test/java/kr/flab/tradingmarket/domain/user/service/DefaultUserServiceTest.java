@@ -85,32 +85,6 @@ class DefaultUserServiceTest {
 
 
     @Test
-    @DisplayName("service : 유저 아이디로 유저찾기 : 성공")
-    void successfulFindByUserId() {
-        //given
-        given(userMapper.findById(any())).willReturn(SUCCESSFUL_JOIN_RETURN_USER);
-        //when
-        User findUser = userService.findByUserId(SUCCESSFUL_JOIN_RETURN_USER.getUserId());
-        //then
-        assertThat(findUser).isEqualTo(SUCCESSFUL_JOIN_RETURN_USER);
-
-
-    }
-
-
-    @Test
-    @DisplayName("service : 유저 아이디로 유저찾기 : 해당유저가 없을때 실패 ")
-    void failFindByUserId() {
-        //given
-        given(userMapper.findById(any())).willReturn(null);
-        //when
-        //then
-        assertThatThrownBy(() -> userService.findByUserId(any()))
-                .isInstanceOf(UserNotFoundException.class);
-    }
-
-
-    @Test
     @DisplayName("service : 유저 번호로 유저 찾기 : 성공")
     void successfulFindByUserNo() {
         //given
@@ -134,32 +108,6 @@ class DefaultUserServiceTest {
                 .isInstanceOf(UserNotFoundException.class);
     }
 
-
-    @Test
-    @DisplayName("service : user 인증 정보확인 테스트 : 성공")
-    void successfulUserAuthCheck() {
-        //given
-        given(userMapper.findById(any())).willReturn(SUCCESSFUL_JOIN_RETURN_USER);
-        given(passwordEncoder.matches(any(), any())).willReturn(true);
-        //when
-        Long returnUserNo = userService.userAuthCheck(SUCCESSFUL_USER_AUTH_DTO);
-
-        //then
-        assertThat(returnUserNo).isEqualTo(1L);
-    }
-
-
-    @Test
-    @DisplayName("service : user 인증 정보확인 테스트 : 비밀번호 오류 실패")
-    void failUserAuthCheck() {
-        //given
-        given(userMapper.findById(any())).willReturn(SUCCESSFUL_JOIN_RETURN_USER);
-        given(passwordEncoder.matches(any(), any())).willReturn(false);
-        //when
-        //then
-        assertThatThrownBy(() -> userService.userAuthCheck(SUCCESSFUL_USER_AUTH_DTO))
-                .isInstanceOf(PasswordNotMatchException.class);
-    }
 
     @Test
     @DisplayName("service : 유저 정보 수정 : 성공")

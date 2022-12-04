@@ -6,6 +6,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password : ${jasypt.encryptor.password}
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -35,15 +39,15 @@ spring:
       on-profile: devDB
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: ${dev.master.url}
-    username: ${dev.master.username}
-    password: ${dev.master.password}
+    url: ENC(7tAqK/3zMoPtWPuY4PP6H1lBYwAlOWN0gcoNuMvQpZzQWG1AzFzh6ZKIy6KTuFKKohlCHG+aI6GmY5GVOffGp8cFxZ2x4q6/pSQHm3xrsory7yOVSfWT75Y9pRRIb4hOLEN1CRaCLPL6yDhO8uM2zw==)
+    username: ENC(lbJMtrWTuFYRh/U4fJIp+A==)
+    password: ENC(2afjs6pZucLb4spH6Q+dwg==)
   session:
     storage-type: redis
   redis:
-    host: ${dev.redis.host}
-    port: ${dev.redis.port}
-    password: ${dev.redis.password}
+    host: ENC(FWS+rsmsOB77rzNz3rhtRg4jboOV48Qx)
+    port: ENC(XRKvxV1k0hftM+5eSdKULw==)
+    password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
   devtools:
     remote:
       restart:
@@ -55,15 +59,15 @@ spring:
       on-profile: prodDB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${prod.master.url}
-    username: ${prod.master.username}
-    password: ${prod.master.password}
+    url: ENC(s6Q5W26RNX06oDVNpw5qXVD9qD00SSX0GbTRpbS4Gr/gqGvwBAU69uq+SLwaTgq+dmnSpsyj2CyL6pe5hAbbBbykKfrdGLS46vYzvbWLx0JRX8Wkv5ujAKuA17TqKbk6vjyoneez2C6IISjgjjJ5FCcg9+ckp7PmFtvPjXzZM8M=)
+    username: ENC(uMIZNcs/+Uf42t7q7d9IgVHnIjsDY1bF)
+    password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
   session:
     storage-type: redis
   redis:
-    host: ${prod.redis.host}
-    port: ${prod.redis.port}
-    password: ${prod.redis.password}
+    host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
+    port: ENC(wf+/bZci+64eLNvc+llNtQ==)
+    password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
 ---
 spring:
   config:
@@ -92,12 +96,12 @@ spring:
 cloud:
   aws:
     credentials:
-      access-key: ${aws.accesskey}
-      secret-key: ${aws.secretkey}
+      access-key: ENC(R+T4/IelUmO07SrH1mMzzwfZNO3lSeew/KP6nmmCL8Q=)
+      secret-key: ENC(56Nn/BmWFnAfgV0s083R/f5A4pXVFM4ZdgaLpIhn6yC0nr6wioRHo1V58OQ0c/eyQ2vI4yfmIjA=)
     s3:
-      bucket: ${aws.bucket}
+      bucket: ENC(DIOo74eqdLNY1k4lXMv9ag==)
     region: #S3 지역
       static: kr-standard
     stack:
       auto: false
-    end-point: ${aws.endpoint}
+    end-point: ENC(AbYf+7EegWS/kfEDePU9zdufukQRuSyR1S915zwt7I08torE1Sup+JnkyHiUtSNb)

@@ -38,6 +38,7 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.348'
 	implementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 
 }
 

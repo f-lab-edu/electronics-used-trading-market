@@ -117,7 +117,7 @@ CREATE TABLE `users`
     `modify_date`   datetime(6)  NOT NULL,
     `image_no`      int DEFAULT NULL,
     PRIMARY KEY (`user_no`),
-    UNIQUE KEY `user_id_UNIQUE` (`user_id`)
+    CONSTRAINT `user_id_UNIQUE` UNIQUE (`user_id`)
 );
 
 

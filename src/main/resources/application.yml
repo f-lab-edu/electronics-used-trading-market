@@ -25,13 +25,9 @@ spring:
       on-profile: testDB
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;
     username: sa
     password:
-  redis:
-    host: ${test.redis.host}
-    port: ${test.redis.port}
-    password: ${test.redis.password}
 ---
 spring:
   config:
@@ -64,6 +60,10 @@ spring:
     password: ${prod.master.password}
   session:
     storage-type: redis
+  redis:
+    host: ${prod.redis.host}
+    port: ${prod.redis.port}
+    password: ${prod.redis.password}
 ---
 spring:
   config:

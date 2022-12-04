@@ -1,39 +1,47 @@
 package kr.flab.tradingmarket.domain.user.service;
 
-import kr.flab.tradingmarket.domain.image.config.AwsConfig;
-import kr.flab.tradingmarket.domain.image.service.AwsImageService;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
 import kr.flab.tradingmarket.utils.ThreadExceptionTester;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import static kr.flab.tradingmarket.domain.user.service.UserServiceTestFixture.SUCCESSFUL_JOIN_USER_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 
-@SpringBootTest
+@MybatisTest
 @ActiveProfiles("test")
-public class UserIdDuplicateTest {
+class UserIdDuplicateTest {
 
-    @Autowired
     UserService userService;
-
     @Autowired
     UserMapper userMapper;
+    @Mock
+    PasswordEncoder passwordEncoder;
+    @Mock
+    LoginService loginService;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
-    @MockBean
-    AwsConfig awsConfig;
+    @BeforeEach
+    public void setUp() {
+        jdbcTemplate.update("delete from users");
+        userService = new DefaultUserService(userMapper, passwordEncoder, loginService);
+        given(passwordEncoder.encode(any())).willReturn("encodePassword");
+    }
 
-    @MockBean
-    AwsImageService AwsImageService;
-    
 
     @Test
     @DisplayName("serivce : 트랜젝션 테스트 : 동시성이슈 테스트 UserIdDuplicateException 발생 (isDuplicateUserId 동작 실패)")
@@ -53,7 +61,6 @@ public class UserIdDuplicateTest {
 
         assertThat(findUser.getUserId()).isEqualTo(findUserId);
         assertThat(countUser).isEqualTo(1);
-        userMapper.delete(findUser.getUserNo());
     }
 
     @Test
@@ -70,7 +77,6 @@ public class UserIdDuplicateTest {
         assertThat(countUser).isEqualTo(1);
         userMapper.delete(findUser.getUserNo());
     }
-
 
 }
 

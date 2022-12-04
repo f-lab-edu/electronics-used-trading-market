@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.348'
+	implementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 
 }
 

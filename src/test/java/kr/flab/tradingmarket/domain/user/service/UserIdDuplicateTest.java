@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import static kr.flab.tradingmarket.domain.user.service.UserServiceTestFixture.SUCCESSFUL_JOIN_USER_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
-@Profile("test")
+@ActiveProfiles("test")
 public class UserIdDuplicateTest {
 
     @Autowired
@@ -33,10 +33,7 @@ public class UserIdDuplicateTest {
 
     @MockBean
     AwsImageService AwsImageService;
-
-    @MockBean
-    RedisLoginService redisLoginService;
-
+    
 
     @Test
     @DisplayName("serivce : 트랜젝션 테스트 : 동시성이슈 테스트 UserIdDuplicateException 발생 (isDuplicateUserId 동작 실패)")

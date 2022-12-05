@@ -1,29 +1,28 @@
 package kr.flab.tradingmarket.domain.user.service;
 
+import static kr.flab.tradingmarket.domain.user.service.UserServiceTestFixture.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static kr.flab.tradingmarket.domain.user.service.UserServiceTestFixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultUserServiceTest {
-
 
     @InjectMocks
     DefaultUserService userService;
@@ -34,20 +33,19 @@ class DefaultUserServiceTest {
     @Mock
     LoginService loginService;
 
-
     @Test
     @DisplayName("service : 회원가입 테스트 : 성공")
     void joinUserSuccess() {
+        ArgumentCaptor<User> capture = ArgumentCaptor.forClass(User.class);
         //given
         given(userMapper.findById(SUCCESSFUL_JOIN_USER.getUserId())).willReturn(null);
-        given(userMapper.insertUser(SUCCESSFUL_JOIN_USER)).willReturn(1L);
-        given(userMapper.findByNo(1L)).willReturn(SUCCESSFUL_JOIN_RETURN_USER);
+
         //when
-        Long userId = userService.joinUser(SUCCESSFUL_JOIN_USER_DTO);
-        User findUser = userMapper.findByNo(userId);
+        userService.joinUser(SUCCESSFUL_JOIN_USER_DTO);
+
         //then
-        assertThat(userId).isEqualTo(1L);
-        assertThat(findUser).isEqualTo(SUCCESSFUL_JOIN_RETURN_USER);
+        verify(userMapper).insertUser(capture.capture());
+        assertThat(capture.getValue()).isEqualTo(SUCCESSFUL_JOIN_USER);
     }
 
     @Test
@@ -57,7 +55,8 @@ class DefaultUserServiceTest {
         given(userMapper.findById(SUCCESSFUL_JOIN_USER.getUserId())).willReturn(SUCCESSFUL_JOIN_RETURN_USER);
         //when
         //then
-        assertThatThrownBy(() -> userService.joinUser(SUCCESSFUL_JOIN_USER_DTO)).isInstanceOf(UserIdDuplicateException.class);
+        assertThatThrownBy(() -> userService.joinUser(SUCCESSFUL_JOIN_USER_DTO))
+            .isInstanceOf(UserIdDuplicateException.class);
 
     }
 
@@ -83,7 +82,6 @@ class DefaultUserServiceTest {
         assertThat(result).isFalse();
     }
 
-
     @Test
     @DisplayName("service : 유저 번호로 유저 찾기 : 성공")
     void successfulFindByUserNo() {
@@ -96,7 +94,6 @@ class DefaultUserServiceTest {
 
     }
 
-
     @Test
     @DisplayName("service : 유저 번호 유저찾기 : 해당유저가 없을때 실패 ")
     void failFindByUserNo() {
@@ -104,10 +101,8 @@ class DefaultUserServiceTest {
         given(userMapper.findByNo(any())).willReturn(null);
         //when
         //then
-        assertThatThrownBy(() -> userService.findByUserNo(any()))
-                .isInstanceOf(UserNotFoundException.class);
+        assertThatThrownBy(() -> userService.findByUserNo(any())).isInstanceOf(UserNotFoundException.class);
     }
-
 
     @Test
     @DisplayName("service : 유저 정보 수정 : 성공")
@@ -171,7 +166,6 @@ class DefaultUserServiceTest {
         verify(userMapper).deleteProfileImage(DEFAULT_USER.getUserProfileImage().getImageNo());
     }
 
-
     @Test
     @DisplayName("service : 유저 비밀번호 변경 : 성공")
     void successfulChangePassword() {
@@ -186,7 +180,6 @@ class DefaultUserServiceTest {
         verify(userMapper).updateUserPassword(userNo, "encodePassword");
     }
 
-
     @Test
     @DisplayName("service : 유저 비밀번호 변경 : 실패")
     void failChangePassword() {
@@ -196,7 +189,7 @@ class DefaultUserServiceTest {
         //when
         //then
         assertThatThrownBy(() -> userService.changePassword(DEFAULT_CHANGE_PASSWORD_DTO, 1L))
-                .isInstanceOf(PasswordNotMatchException.class);
+            .isInstanceOf(PasswordNotMatchException.class);
     }
 
 }

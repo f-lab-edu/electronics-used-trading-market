@@ -39,7 +39,7 @@ public class DefaultUserService implements UserService {
     public void joinUser(JoinUserDto userDto) {
 
         if (isDuplicateUserId(userDto.getUserId())) {
-            throw new UserIdDuplicateException();
+            throw new UserIdDuplicateException("Duplicated userId");
         }
         User user = User.from(userDto);
         user.setEncryptionPassword(passwordEncoder.encode(user.getUserPassword()));

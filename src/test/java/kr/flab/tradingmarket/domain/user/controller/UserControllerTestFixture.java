@@ -51,10 +51,4 @@ public class UserControllerTestFixture {
         .password("testChangePw1")
         .confirmPassword("testChangePw2")
         .build();
-    public static final ChangePasswordDto SUCCESS_VALIDATION_EQUALS_PASSWORD = ChangePasswordDto.builder()
-        .currentPassword("testPassword1")
-        .password("testChangePw1")
-        .confirmPassword("testChangePw2")
-        .build();
-
 }

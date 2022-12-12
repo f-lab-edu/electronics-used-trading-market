@@ -485,7 +485,9 @@ class UserControllerTest {
     void failChangePasswordCausedByPasswordNotMatch() throws Exception {
         //given
         givenLogin();
-        willThrow(PasswordNotMatchException.class).given(userService).changePassword(any(), any());
+        willThrow(PasswordNotMatchException.class)
+            .given(userService)
+            .changePassword(any(), any());
 
         //when
         //then

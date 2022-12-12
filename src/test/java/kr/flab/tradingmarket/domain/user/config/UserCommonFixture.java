@@ -41,6 +41,15 @@ public class UserCommonFixture {
         .userBirth(LocalDate.of(1997, 10, 30))
         .userProfileImage(DEFAULT_USER_PROFILE_IMG)
         .build();
+
+    public static final User DEFAULT_NO_PROFILE_USER = User.builder()
+        .userNo(1L)
+        .userId("testUser1")
+        .userName("testUsername")
+        .userPassword("testPassword1")
+        .userPhone("01012341232")
+        .userBirth(LocalDate.of(1997, 10, 30))
+        .build();
     public static final ChangePasswordDto DEFAULT_CHANGE_PASSWORD_DTO = ChangePasswordDto.builder()
         .currentPassword("testPassword1")
         .password("testChangePw1")
@@ -76,5 +85,6 @@ public class UserCommonFixture {
     public static final ArgumentCaptor<String> STRING_CAPTURE = ArgumentCaptor.forClass(String.class);
     public static final ArgumentCaptor<ChangePasswordDto> CHANGE_PASSWORD_DTO_CAPTURE = ArgumentCaptor.forClass(
         ChangePasswordDto.class);
+    public static final ArgumentCaptor<User> USER_CAPTURE = ArgumentCaptor.forClass(User.class);
 
 }

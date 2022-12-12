@@ -38,10 +38,14 @@ class RedisLoginServiceTest {
     @DisplayName("serivce : 로그인 테스트 : 성공")
     void successfulLogin() {
         //given
-        given(userMapper.findById(any())).willReturn(DEFAULT_USER);
-        given(passwordEncoder.matches(any(), any())).willReturn(true);
+        given(userMapper.findById(any()))
+            .willReturn(DEFAULT_USER);
+        given(passwordEncoder.matches(any(), any()))
+            .willReturn(true);
+
         //when
         loginService.login(DEFAULT_LOGIN_USER);
+
         //then
         assertThat(mockSession.getAttribute(SESSION_NAME)).isEqualTo(1L);
     }
@@ -50,8 +54,11 @@ class RedisLoginServiceTest {
     @DisplayName("serivce : 로그인 테스트 : 비밀번호 오류로 인한 실패")
     void failLoginByPasswordNotMatch() {
         //given
-        given(userMapper.findById(any())).willReturn(DEFAULT_USER);
-        given(passwordEncoder.matches(any(), any())).willReturn(false);
+        given(userMapper.findById(any()))
+            .willReturn(DEFAULT_USER);
+        given(passwordEncoder.matches(any(), any()))
+            .willReturn(false);
+
         //when
         //then
         assertThatThrownBy(() -> loginService.login(DEFAULT_LOGIN_USER))
@@ -63,7 +70,9 @@ class RedisLoginServiceTest {
     @DisplayName("serivce : 로그인 테스트 : 존재하지 않는 UserId 실패")
     void failLoginByUserNotFound() {
         //given
-        given(userMapper.findById(any())).willReturn(null);
+        given(userMapper.findById(any()))
+            .willReturn(null);
+
         //when
         //then
         assertThatThrownBy(() -> loginService.login(DEFAULT_LOGIN_USER))

@@ -1,17 +1,17 @@
 package kr.flab.tradingmarket.domain.user.mapper;
 
-import kr.flab.tradingmarket.domain.user.entity.User;
-import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import kr.flab.tradingmarket.domain.user.entity.User;
+import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 
 @Mapper
 @Repository
 public interface UserMapper {
 
-    Long insertUser(User user);
+    void insertUser(User user);
 
     User findById(String userId);
 

@@ -1,5 +1,21 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
+import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.*;
+import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
+import static org.springframework.http.HttpStatus.*;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.flab.tradingmarket.common.annotation.AuthCheck;
 import kr.flab.tradingmarket.common.annotation.CurrentSession;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
@@ -14,16 +30,6 @@ import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
 import kr.flab.tradingmarket.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-
-import static kr.flab.tradingmarket.common.code.ResponseMessage.Status.SUCCESS;
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.separateImagePath;
-import static org.springframework.http.HttpStatus.OK;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -37,47 +43,43 @@ public class UserController {
     public ResponseEntity<ResponseMessage> joinUser(@RequestBody @Valid JoinUserDto joinDto) {
         userService.joinUser(joinDto);
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
 
     @PostMapping("/logout")
     public ResponseEntity<ResponseMessage> logout() {
         loginService.logout();
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage> login(@RequestBody @Valid UserAuthDto loginDto) {
         loginService.login(loginDto);
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
-
 
     @AuthCheck
     @PatchMapping("/my/info")
-    public ResponseEntity<ResponseMessage> modifyUser(@RequestBody @Valid ModifyUserDto modifyUserDto, @CurrentSession Long userNo) {
+    public ResponseEntity<ResponseMessage> modifyUser(@RequestBody @Valid ModifyUserDto modifyUserDto,
+        @CurrentSession Long userNo) {
         userService.modifyUser(modifyUserDto, userNo);
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
 
     @AuthCheck
     @GetMapping("/my/info")
     public ResponseEntity<ResponseMessage> myInfo(@CurrentSession Long userNo) {
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(userService.findModifyUserDtoByUserNo(userNo))
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .result(userService.findModifyUserDtoByUserNo(userNo))
+                .build());
     }
 
     @AuthCheck
@@ -86,11 +88,9 @@ public class UserController {
         userService.withdrawUser(userNo);
 
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
-
 
     @AuthCheck
     @PutMapping("/my/profile-image")
@@ -98,10 +98,10 @@ public class UserController {
 
         String imagePath = imageService.uploadImage(image, ImageType.PROFILE);
         UserProfileImage ImageEntity = UserProfileImage.builder()
-                .fileLink(imagePath)
-                .fileSize(image.getSize())
-                .originalFileName(image.getOriginalFilename())
-                .build();
+            .fileLink(imagePath)
+            .fileSize(image.getSize())
+            .originalFileName(image.getOriginalFilename())
+            .build();
 
         String deleteImageName = null;
 
@@ -117,20 +117,19 @@ public class UserController {
         }
 
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
 
     @AuthCheck
     @PatchMapping("/my/password")
-    public ResponseEntity<ResponseMessage> changePassword(@CurrentSession Long userNo, @RequestBody @Valid ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<ResponseMessage> changePassword(@CurrentSession Long userNo,
+        @RequestBody @Valid ChangePasswordDto changePasswordDto) {
 
         userService.changePassword(changePasswordDto, userNo);
 
         return ResponseEntity.status(OK)
-                .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                        .Result(null)
-                        .build());
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .build());
     }
 }

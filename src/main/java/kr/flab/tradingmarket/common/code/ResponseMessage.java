@@ -1,13 +1,13 @@
 package kr.flab.tradingmarket.common.code;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.FieldError;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.validation.FieldError;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Slf4j
@@ -15,17 +15,16 @@ public class ResponseMessage {
     private final Status status;
     private final int code;
     private final String message;
-    private final Object Result;
+    private final Object result;
     private Map<String, String> validationMessage;
 
     private ResponseMessage(Builder builder) {
         status = builder.status;
         code = builder.code;
         message = builder.message;
-        Result = builder.Result;
+        result = builder.result;
         validationMessage = builder.validationMessage;
     }
-
 
     public enum Status {
         SUCCESS, FAIL
@@ -38,7 +37,7 @@ public class ResponseMessage {
         private final Status status;
         private final int code;
         private String message = null;
-        private Object Result = null;
+        private Object result = null;
         private Map<String, String> validationMessage = null;
         private List<FieldError> validation = null;
 
@@ -47,8 +46,8 @@ public class ResponseMessage {
             this.code = code;
         }
 
-        public Builder Result(Object Result) {
-            this.Result = Result;
+        public Builder result(Object result) {
+            this.result = result;
             return this;
         }
 
@@ -83,6 +82,5 @@ public class ResponseMessage {
         }
 
     }
-
 
 }

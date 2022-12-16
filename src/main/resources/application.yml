@@ -6,26 +6,102 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-spring:
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
-  devtools:
-    remote:
-      restart:
-        enabled: true
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mymarket?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
-    username:
-    password:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password : ${jasypt.encryptor.password}
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
     use-generated-keys: true
   type-aliases-package: kr.flab.tradingmarket.domain
   mapper-locations: classpath:mapper/**/*.xml
+spring:
+  profiles:
+    group:
+      "test": testDB,common
+      "dev":  devDB,common,awsS3
+      "prod": prodDB,common,awsS3
+---
+spring:
+  config:
+    activate:
+      on-profile: testDB
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;
+    username: sa
+    password:
+---
+spring:
+  config:
+    activate:
+      on-profile: devDB
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ENC(7tAqK/3zMoPtWPuY4PP6H1lBYwAlOWN0gcoNuMvQpZzQWG1AzFzh6ZKIy6KTuFKKohlCHG+aI6GmY5GVOffGp8cFxZ2x4q6/pSQHm3xrsory7yOVSfWT75Y9pRRIb4hOLEN1CRaCLPL6yDhO8uM2zw==)
+    username: ENC(lbJMtrWTuFYRh/U4fJIp+A==)
+    password: ENC(2afjs6pZucLb4spH6Q+dwg==)
+  session:
+    storage-type: redis
+  redis:
+    host: ENC(FWS+rsmsOB77rzNz3rhtRg4jboOV48Qx)
+    port: ENC(XRKvxV1k0hftM+5eSdKULw==)
+    password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+  devtools:
+    remote:
+      restart:
+        enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: prodDB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(s6Q5W26RNX06oDVNpw5qXVD9qD00SSX0GbTRpbS4Gr/gqGvwBAU69uq+SLwaTgq+dmnSpsyj2CyL6pe5hAbbBbykKfrdGLS46vYzvbWLx0JRX8Wkv5ujAKuA17TqKbk6vjyoneez2C6IISjgjjJ5FCcg9+ckp7PmFtvPjXzZM8M=)
+    username: ENC(uMIZNcs/+Uf42t7q7d9IgVHnIjsDY1bF)
+    password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
+  session:
+    storage-type: redis
+  redis:
+    host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
+    port: ENC(wf+/bZci+64eLNvc+llNtQ==)
+    password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+---
+spring:
+  config:
+    activate:
+      on-profile: awsS3
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(R+T4/IelUmO07SrH1mMzzwfZNO3lSeew/KP6nmmCL8Q=)
+      secret-key: ENC(56Nn/BmWFnAfgV0s083R/f5A4pXVFM4ZdgaLpIhn6yC0nr6wioRHo1V58OQ0c/eyQ2vI4yfmIjA=)
+    s3:
+      bucket: ENC(DIOo74eqdLNY1k4lXMv9ag==)
+    region: #S3 지역
+      static: kr-standard
+    stack:
+      auto: false
+    end-point: ENC(AbYf+7EegWS/kfEDePU9zdufukQRuSyR1S915zwt7I08torE1Sup+JnkyHiUtSNb)

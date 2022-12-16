@@ -29,6 +29,17 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.security:spring-security-crypto:6.0.0'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2'
+	runtimeOnly 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.348'
+	implementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
 }
 
 tasks.named('test') {

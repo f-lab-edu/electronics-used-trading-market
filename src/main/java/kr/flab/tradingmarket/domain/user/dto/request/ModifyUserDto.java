@@ -1,13 +1,14 @@
 package kr.flab.tradingmarket.domain.user.dto.request;
 
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
+import kr.flab.tradingmarket.common.annotation.PhonePatternNotBlank;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @ToString
 @Getter
@@ -18,10 +19,6 @@ public class ModifyUserDto {
     @NotBlank
     private String userName;
 
-    @NotBlank
-    @Pattern(regexp = "^[0-9]{11,11}",
-            message = "전화번호는 숫자 11자리로 입력해주세요.")
+    @PhonePatternNotBlank
     private String userPhone;
-
-
 }

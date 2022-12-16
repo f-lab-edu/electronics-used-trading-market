@@ -1,5 +1,12 @@
 package kr.flab.tradingmarket.domain.user.service;
 
+import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
+
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
@@ -12,13 +19,6 @@ import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import kr.flab.tradingmarket.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.separateImagePath;
-
 
 @Service
 @RequiredArgsConstructor
@@ -29,29 +29,25 @@ public class DefaultUserService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final LoginService loginService;
 
-
     /**
      * 회원가입
      *
      * @param userDto
-     * @return 생성된 user_no 리턴
      * @throws UserIdDuplicateException 아이디 중복시에 리턴
      */
     @Override
-    public Long joinUser(JoinUserDto userDto) {
+    public void joinUser(JoinUserDto userDto) {
 
         if (isDuplicateUserId(userDto.getUserId())) {
-            throw new UserIdDuplicateException();
+            throw new UserIdDuplicateException("Duplicated userId");
         }
         User user = User.from(userDto);
         user.setEncryptionPassword(passwordEncoder.encode(user.getUserPassword()));
-        Long saveUserId = null;
         try {
-            saveUserId = userMapper.insertUser(user);
+            userMapper.insertUser(user);
         } catch (DuplicateKeyException e) {
             throw new UserIdDuplicateException("Duplicated userId", e);
         }
-        return saveUserId;
 
     }
 
@@ -66,7 +62,6 @@ public class DefaultUserService implements UserService {
         User findUser = userMapper.findById(userId);
         return findUser != null;
     }
-
 
     @Override
     public User findByUserNo(Long userNo) {
@@ -137,7 +132,6 @@ public class DefaultUserService implements UserService {
 
         userMapper.updateUserPassword(userNo, passwordEncoder.encode(changePassword.getPassword()));
 
-
     }
 
     private String deleteImageProfileAndGetFileName(UserProfileImage userProfileImage) {
@@ -145,11 +139,9 @@ public class DefaultUserService implements UserService {
         return separateImagePath(userProfileImage.getFileLink());
     }
 
-
     private void updateProfileImage(UserProfileImage imagePath, Long userNo) {
         userMapper.insertProfile(imagePath);
         userMapper.updateUserProfile(imagePath.getImageNo(), userNo);
     }
-
 
 }

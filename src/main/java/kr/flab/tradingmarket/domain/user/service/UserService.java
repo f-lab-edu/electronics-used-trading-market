@@ -8,7 +8,7 @@ import kr.flab.tradingmarket.domain.user.entity.User;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 
 public interface UserService {
-    Long joinUser(JoinUserDto userDto);
+    void joinUser(JoinUserDto userDto);
 
     boolean isDuplicateUserId(String userId);
 

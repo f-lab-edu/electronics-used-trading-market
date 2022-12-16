@@ -5,6 +5,7 @@ echo "> build 파일명: $JAR_NAME"
 KEY=$1
 IP1=$2
 IP2=$3
+DEPLOYED_PORT=8080
 echo ">환경변수 확인"
 echo ">KEY="$1
 echo ">IP1="$2
@@ -37,7 +38,7 @@ echo 내 "> OTHER_IP" $OTHER_IP
 echo "> 서버 체크 시작"
 for retry_count in {1..10};
 do
-  response=$(sudo curl -s http://$OTHER_IP:8080/actuator/health)
+  response=$(sudo curl -s http://$OTHER_IP:$DEPLOYED_PORT/actuator/health)
   up_count=$(echo $response | grep 'UP' | wc -l)
   echo "> $retry_count : $response  : $up_count"
   if [ $up_count -ge 1 ]; then
@@ -104,11 +105,11 @@ sudo nohup java -jar -Dspring.profiles.active=prod $BASE_PATH$JAR_NAME --jasypt.
 sudo sleep 10
 
 echo "> 10초 후 Health check 시작"
-echo "> curl -s http://$MY_IP:8080/actuator/health"
+echo "> curl -s http://$MY_IP:$DEPLOYED_PORT/actuator/health"
 
 #==========================현재 서버 Health check  ============================
 for retry_count in {1..10}; do
-  response=$(sudo curl -s http://$MY_IP:8080/actuator/health)
+  response=$(sudo curl -s http://$MY_IP:$DEPLOYED_PORT/actuator/health)
   up_count=$(echo $response | grep 'UP' | wc -l)
   if [ $up_count -ge 1 ]; then
     echo "> Health check 성공"

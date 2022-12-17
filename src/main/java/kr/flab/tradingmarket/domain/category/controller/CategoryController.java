@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
-import kr.flab.tradingmarket.domain.category.service.DefaultCategoryService;
+import kr.flab.tradingmarket.domain.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/category")
 public class CategoryController {
 
-    private final DefaultCategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping("/first")
     public ResponseEntity<ResponseMessage> firstCategoryList() {

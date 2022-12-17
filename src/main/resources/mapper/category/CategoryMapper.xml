@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.flab.tradingmarket.domain.category.mapper.CategoryMapper">
+
+    <select id="findFirstCategories" resultType="SimpleCategoryDto" >
+        SELECT category_no , first_category as category_name FROM category where second_category is null
+    </select>
+    <select id="findSecondCategories" resultType="SimpleCategoryDto" >
+        SELECT category_no , second_category as category_name FROM category where third_category is null and second_category is not null
+    </select>
+    <select id="findThirdCategories" resultType="SimpleCategoryDto" >
+        SELECT category_no , third_category as category_name FROM category where third_category is not null
+    </select>
+
+</mapper>

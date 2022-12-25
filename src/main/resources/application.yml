@@ -60,7 +60,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ENC(DsJnoWkUl5JZFe0I8tPgctf9KbIcOrT77sZb5MudYoCV6BmWOI8CR0vwa1nO4/pV5YOC5qljA7EtWNVgrQ0XHEoD7gKoEGdLM9iY944neywzbZTG+MRY0UGKN+ZE37Ed82ILH+WZDjql9bcKwFL1MA==)
-    username: ENC(uMIZNcs/+Uf42t7q7d9IgVHnIjsDY1bF)
+    username: ENC(+ShQ99B5HU2QGE/szPbDcg==)
     password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
   session:
     storage-type: redis

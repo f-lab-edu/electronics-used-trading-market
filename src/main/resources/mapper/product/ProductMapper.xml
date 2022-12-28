@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.flab.tradingmarket.domain.product.mapper.ProductMapper">
+
+    <resultMap type="Product" id="productAndCategoryAndAllImages">
+        <id column="product_no" property="productNo"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_exchange_status" property="productExchangeStatus"/>
+        <result column="product_purchase_date" property="purchaseDate"/>
+        <result column="product_sales_status" property="productSalesStatus"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_content" property="productContent"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="create_date" property="createDate"/>
+        <association property="productThumbnail" javaType="ProductImage">
+            <id column="image_no" property="imageNo"/>
+            <result column="origin_product_no" property="productNo"/>
+            <result column="file_link" property="fileLink"/>
+        </association>
+        <association property="category" javaType="Category">
+            <id column="category_no" property="categoryNo"/>
+        </association>
+        <association property="seller" javaType="User">
+            <id column="seller_no" property="userNo"/>
+        </association>
+    </resultMap>
+
+
+    <insert id="insertProduct"  parameterType="Product" useGeneratedKeys="true" keyProperty="productNo">
+        INSERT INTO products (product_name,
+                              product_category_no,
+                              product_as_expiration_date,
+                              product_status,product_exchange_status,
+                              product_purchase_date,
+                              product_sales_status,
+                              product_price,
+                              product_content,
+                              product_stock,
+                              product_view_count,
+                              create_date,
+                              modify_date,
+                              seller_no)
+        VALUES (#{productName}, #{category.categoryNo}, #{productAsExpirationDate}, #{productStatus},
+                #{productExchangeStatus}, #{purchaseDate}, #{productSalesStatus}, #{productPrice}, #{productContent},
+                #{productStock}, #{productViewCount}, NOW(), NOW(), #{seller.userNo});
+
+    </insert>
+
+    <insert id="insertProductImages" parameterType="java.util.List" useGeneratedKeys="true"  keyProperty="imageNo">
+        INSERT INTO product_images (product_no, origin_file_name, file_link, file_size, create_date, modify_date)
+        VALUES
+        <foreach collection="list" item="item" separator=" , ">
+            (
+            #{item.productNo}
+            , #{item.originalFileName}
+            , #{item.fileLink}
+            , #{item.fileSize}
+            , NOW()
+            , NOW()
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateProductThumbnail">
+        UPDATE products
+        SET product_thumbnail_no =#{productThumbnail.imageNo}
+        WHERE product_no = #{productNo}
+    </update>
+
+
+</mapper>

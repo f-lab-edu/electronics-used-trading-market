@@ -3,6 +3,10 @@ package kr.flab.tradingmarket.common.code;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 
 import org.springframework.validation.FieldError;
 
@@ -65,6 +69,22 @@ public class ResponseMessage {
             if (validation != null) {
                 this.validationMessage = makeValidationMessage();
             }
+            return this;
+        }
+
+        public Builder validation(Set<ConstraintViolation<?>> error) {
+
+            Map<String, String> validationMessage = new HashMap<>();
+            if (!error.isEmpty()) {
+                for (ConstraintViolation<?> constraintViolation : error) {
+                    String fieldName = null;
+                    for (Path.Node node : constraintViolation.getPropertyPath()) {
+                        fieldName = node.getName();
+                    }
+                    validationMessage.put(fieldName, constraintViolation.getMessage());
+                }
+            }
+            this.validationMessage = validationMessage;
             return this;
         }
 

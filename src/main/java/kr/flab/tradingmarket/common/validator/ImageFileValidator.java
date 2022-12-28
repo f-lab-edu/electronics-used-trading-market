@@ -14,11 +14,7 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, List<
     @Override
     public boolean isValid(List<MultipartFile> value, ConstraintValidatorContext context) {
 
-        if ((value.size() == 1 && value.get(0).isEmpty()) || value.size() > 11) {
-            return false;
-        }
-
-        return true;
+        return (value.size() != 1 || !value.get(0).isEmpty()) && value.size() < 11;
     }
 
 }

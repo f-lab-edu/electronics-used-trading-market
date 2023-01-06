@@ -7,6 +7,7 @@ import java.util.List;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.flab.tradingmarket.domain.category.entity.Category;
 import kr.flab.tradingmarket.domain.product.dto.RegisterProductDto;
@@ -78,6 +79,10 @@ public class ProductCommonFixture {
     public static final MockMultipartFile REGISTER_PRODUCT_MULTIPART_3RD =
         new MockMultipartFile("images", "ProductImage3.jpg", MediaType.MULTIPART_FORM_DATA.toString(),
             "test".getBytes());
+    public static final List<MultipartFile> DEFAULT_PRODUCT_MULTIPART_IMAGES = List.of(REGISTER_PRODUCT_MULTIPART_1ST,
+        REGISTER_PRODUCT_MULTIPART_2ND,
+        REGISTER_PRODUCT_MULTIPART_3RD);
+
     public static final ArgumentCaptor<Product> REGISTER_PRODUCT_CAPTURE = ArgumentCaptor.forClass(Product.class);
     public static final ArgumentCaptor<ProductImage> REGISTER_PRODUCT_IMAGE_CAPTURE = ArgumentCaptor.forClass(
         ProductImage.class);

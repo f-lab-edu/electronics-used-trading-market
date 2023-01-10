@@ -12,6 +12,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
@@ -29,7 +32,7 @@ public class ExceptionAdvices {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ResponseMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        log.info("methodArgumentNotValidException ex : {}", ex.getFieldError());
+        log.info("MethodArgumentNotValidException ex : {}", ex.getFieldError());
         return ResponseEntity.status(BAD_REQUEST).body(
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("유효성 검증 실패")
@@ -39,7 +42,7 @@ public class ExceptionAdvices {
 
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<ResponseMessage> constraintViolationException(ConstraintViolationException ex) {
-        log.info("methodArgumentNotValidException ex : ", ex);
+        log.info("ConstraintViolationException ex : ", ex);
         return ResponseEntity.status(BAD_REQUEST).body(
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("유효성 검증 실패")
@@ -57,19 +60,28 @@ public class ExceptionAdvices {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ResponseEntity<ResponseMessage> dateTimeParseException(HttpMessageNotReadableException ex) {
+    protected ResponseEntity<ResponseMessage> httpMessageNotReadableException(HttpMessageNotReadableException ex) {
         Throwable rootCause = ex.getRootCause();
-        log.info("DateTimeParseException ex : ", rootCause);
-        if (rootCause instanceof DateTimeParseException e) {
+        if (rootCause instanceof JsonMappingException jsonMappingException) {
+            log.info("JsonMappingException ex : ", ex);
             return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
-                    .message(e.getParsedString() + " : 유효성 검증 실패 : 날짜 필드 오류")
+                    .validation(jsonMappingException.getPath().get(0).getFieldName(), "형식에 맞지않습니다.")
                     .build());
         }
+        if (rootCause instanceof DateTimeParseException dateTimeParseException) {
+            log.info("dateTimeParseException ex : ", ex);
+            return ResponseEntity.status(BAD_REQUEST).body(
+                new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                    .validation(dateTimeParseException.getParsedString(), " : 날짜 형식이 맞지않습니다.")
+                    .build());
+        }
+        log.info("HttpMessageNotReadableException ex : ", ex);
         return ResponseEntity.status(BAD_REQUEST).body(
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
-                .message("형식에 맞지 않는 필드가 존재합니다.")
+                .validation("field", "형식에 맞지않는 필드가 존재합니다.")
                 .build());
+
     }
 
     @ExceptionHandler(PasswordNotMatchException.class)
@@ -111,19 +123,19 @@ public class ExceptionAdvices {
 
     @ExceptionHandler(ImageUploadException.class)
     protected ResponseEntity<ResponseMessage> imageUploadException(ImageUploadException ex) {
-        log.info("ExtensionNotSupportedException ex : ", ex);
+        log.info("ImageUploadException ex : ", ex);
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
-                .message("이미지 업로드에 실패했습니다. 재시도 해주세요.")
+                .message("이미지 업로드에 실패했습니다. 나중에 다시시도 해주세요.")
                 .build());
     }
 
     @ExceptionHandler(ProductRegisterException.class)
-    protected ResponseEntity<ResponseMessage> imageUploadException(ProductRegisterException ex) {
-        log.info("ExtensionNotSupportedException ex : ", ex);
+    protected ResponseEntity<ResponseMessage> productRegisterException(ProductRegisterException ex) {
+        log.info("ProductRegisterException ex : ", ex);
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
-                .message("상품등록에 실패했습니다. 재시도 해주세요.")
+                .message("상품등록에 실패했습니다. 나중에 다시시도 해주세요.")
                 .build());
     }
 
@@ -136,4 +148,12 @@ public class ExceptionAdvices {
                 .build());
     }
 
+    @ExceptionHandler(NoHandlerFoundException.class)
+    protected ResponseEntity<ResponseMessage> noHandlerFoundException(NoHandlerFoundException ex) {
+        log.info("NoHandlerFoundException ex : ", ex);
+        return ResponseEntity.status(NOT_FOUND).body(
+            new ResponseMessage.Builder(FAIL, NOT_FOUND.value())
+                .message("잘못된 URL 입니다.")
+                .build());
+    }
 }

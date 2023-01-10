@@ -20,7 +20,7 @@ public class ResponseMessage {
     private final int code;
     private final String message;
     private final Object result;
-    private Map<String, String> validationMessage;
+    private final Map<String, String> validationMessage;
 
     private ResponseMessage(Builder builder) {
         status = builder.status;
@@ -43,7 +43,6 @@ public class ResponseMessage {
         private String message = null;
         private Object result = null;
         private Map<String, String> validationMessage = null;
-        private List<FieldError> validation = null;
 
         public Builder(Status status, int code) {
             this.status = status;
@@ -65,27 +64,38 @@ public class ResponseMessage {
         }
 
         public Builder validation(List<FieldError> validation) {
-            this.validation = validation;
             if (validation != null) {
-                this.validationMessage = makeValidationMessage();
+                addValidationMessage(validation);
             }
             return this;
         }
 
         public Builder validation(Set<ConstraintViolation<?>> error) {
-
-            Map<String, String> validationMessage = new HashMap<>();
             if (!error.isEmpty()) {
-                for (ConstraintViolation<?> constraintViolation : error) {
-                    String fieldName = null;
-                    for (Path.Node node : constraintViolation.getPropertyPath()) {
-                        fieldName = node.getName();
-                    }
-                    validationMessage.put(fieldName, constraintViolation.getMessage());
-                }
+                addValidationMessage(error);
             }
-            this.validationMessage = validationMessage;
             return this;
+        }
+
+        private void addValidationMessage(Set<ConstraintViolation<?>> error) {
+            validationMessageEmptyCheck();
+            for (ConstraintViolation<?> constraintViolation : error) {
+                String fieldName = null;
+                for (Path.Node node : constraintViolation.getPropertyPath()) {
+                    fieldName = node.getName();
+                }
+                addValidationMessage(fieldName, constraintViolation.getMessage());
+            }
+        }
+
+        public Builder validation(String fieldName, String message) {
+            validationMessageEmptyCheck();
+            addValidationMessage(fieldName, message);
+            return this;
+        }
+
+        private void addValidationMessage(String fieldName, String message) {
+            this.validationMessage.put(fieldName, message);
         }
 
         /**
@@ -93,14 +103,18 @@ public class ResponseMessage {
          *
          * @return
          */
-        private Map<String, String> makeValidationMessage() {
-            Map<String, String> map = new HashMap<>();
+        private void addValidationMessage(List<FieldError> validation) {
+            validationMessageEmptyCheck();
             for (FieldError allError : validation) {
-                map.put(allError.getField(), allError.getDefaultMessage());
+                addValidationMessage(allError.getField(), allError.getDefaultMessage());
             }
-            return map;
         }
 
+        private void validationMessageEmptyCheck() {
+            if (this.validationMessage == null) {
+                this.validationMessage = new HashMap<>();
+            }
+        }
     }
 
 }

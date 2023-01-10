@@ -4,6 +4,7 @@ import static kr.flab.tradingmarket.domain.user.config.UserCommonFixture.*;
 import static kr.flab.tradingmarket.domain.user.controller.UserControllerTestFixture.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Locale;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -18,13 +19,14 @@ import org.junit.jupiter.api.Test;
 import kr.flab.tradingmarket.domain.user.dto.request.ChangePasswordDto;
 import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 
-public class UserValidationTest {
-    private Validator validator;
+class UserValidationTest {
+    Validator validator;
 
     @BeforeEach
     void setUp() {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
+        Locale.setDefault(Locale.KOREA);
     }
 
     @Test
@@ -35,7 +37,7 @@ public class UserValidationTest {
     }
 
     @Test
-    @DisplayName("userPassword가 공백일떄 : validation 실패 테스트")
+    @DisplayName("userPassword가 공백일때 : validation 실패 테스트")
     void failPasswordByBlank() {
         Set<ConstraintViolation<JoinUserDto>> violations = validator.validate(FAIL_VALIDATION_BLANK_PASSWORD);
         assertThat("공백일 수 없습니다").isEqualTo(violations.iterator().next().getMessage());
@@ -49,7 +51,7 @@ public class UserValidationTest {
     }
 
     @Test
-    @DisplayName("userPassword가 공백일떄 : validation 실패 테스트")
+    @DisplayName("userPhone이 공백일때 : validation 실패 테스트")
     void failPhoneByBlank() {
         Set<ConstraintViolation<JoinUserDto>> violations = validator.validate(FAIL_VALIDATION_BLANK_PHONE);
         assertThat("공백일 수 없습니다").isEqualTo(violations.iterator().next().getMessage());

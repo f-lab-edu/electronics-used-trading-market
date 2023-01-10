@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.time.format.DateTimeParseException;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
+import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserAccessDeniedException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
@@ -31,6 +34,16 @@ public class ExceptionAdvices {
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("유효성 검증 실패")
                 .validation(ex.getBindingResult().getFieldErrors())
+                .build());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ResponseMessage> constraintViolationException(ConstraintViolationException ex) {
+        log.info("methodArgumentNotValidException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
+                .validation(ex.getConstraintViolations())
                 .build());
     }
 
@@ -102,6 +115,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
                 .message("이미지 업로드에 실패했습니다. 재시도 해주세요.")
+                .build());
+    }
+
+    @ExceptionHandler(ProductRegisterException.class)
+    protected ResponseEntity<ResponseMessage> imageUploadException(ProductRegisterException ex) {
+        log.info("ExtensionNotSupportedException ex : ", ex);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
+                .message("상품등록에 실패했습니다. 재시도 해주세요.")
                 .build());
     }
 

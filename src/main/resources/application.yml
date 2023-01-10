@@ -45,7 +45,7 @@ spring:
   session:
     storage-type: redis
   redis:
-    host: ENC(FWS+rsmsOB77rzNz3rhtRg4jboOV48Qx)
+    host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
     port: ENC(XRKvxV1k0hftM+5eSdKULw==)
     password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
   devtools:
@@ -59,8 +59,8 @@ spring:
       on-profile: prodDB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(s6Q5W26RNX06oDVNpw5qXVD9qD00SSX0GbTRpbS4Gr/gqGvwBAU69uq+SLwaTgq+dmnSpsyj2CyL6pe5hAbbBbykKfrdGLS46vYzvbWLx0JRX8Wkv5ujAKuA17TqKbk6vjyoneez2C6IISjgjjJ5FCcg9+ckp7PmFtvPjXzZM8M=)
-    username: ENC(uMIZNcs/+Uf42t7q7d9IgVHnIjsDY1bF)
+    url: ENC(DsJnoWkUl5JZFe0I8tPgctf9KbIcOrT77sZb5MudYoCV6BmWOI8CR0vwa1nO4/pV5YOC5qljA7EtWNVgrQ0XHEoD7gKoEGdLM9iY944neywzbZTG+MRY0UGKN+ZE37Ed82ILH+WZDjql9bcKwFL1MA==)
+    username: ENC(+ShQ99B5HU2QGE/szPbDcg==)
     password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
   session:
     storage-type: redis

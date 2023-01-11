@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+import kr.flab.tradingmarket.common.code.ValidationType;
 import kr.flab.tradingmarket.common.validator.ImageFileValidator;
 
 @Constraint(validatedBy = ImageFileValidator.class)
@@ -20,4 +21,5 @@ public @interface ValidImage {
 
     Class<? extends Payload>[] payload() default {};
 
+    ValidationType type() default ValidationType.INSERT;
 }

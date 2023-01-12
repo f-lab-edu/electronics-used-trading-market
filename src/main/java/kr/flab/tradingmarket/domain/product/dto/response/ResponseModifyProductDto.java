@@ -10,10 +10,12 @@ import kr.flab.tradingmarket.domain.product.entity.ProductExchangeStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.entity.ProductStatus;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @Builder
+@EqualsAndHashCode(of = "productNo")
 public class ResponseModifyProductDto {
 
     private Long productNo;

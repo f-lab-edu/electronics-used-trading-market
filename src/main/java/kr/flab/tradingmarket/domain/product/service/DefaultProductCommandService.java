@@ -52,7 +52,7 @@ public class DefaultProductCommandService implements ProductCommandService {
             Optional<List<ProductImage>> productImages = productService.modifyProduct(productNo, modifyProduct,
                 updateImageList);
             productImages.ifPresent(imageService::deleteProductImages);
-        } catch (DataAccessException e) {
+        } catch (RuntimeException e) {
             if (hasUploadImage) {
                 imageService.deleteProductImages(updateImageList);
             }

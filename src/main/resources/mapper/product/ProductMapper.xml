@@ -16,16 +16,19 @@
         <result column="modify_date" property="modifyDate"/>
         <result column="create_date" property="createDate"/>
         <association property="productThumbnail" javaType="ProductImage">
-            <id column="image_no" property="imageNo"/>
-            <result column="origin_product_no" property="productNo"/>
-            <result column="file_link" property="fileLink"/>
+            <id column="product_thumbnail_no" property="imageNo"/>
         </association>
         <association property="category" javaType="Category">
-            <id column="category_no" property="categoryNo"/>
+            <id column="product_category_no" property="categoryNo"/>
         </association>
         <association property="seller" javaType="User">
             <id column="seller_no" property="userNo"/>
         </association>
+        <collection property="imageList" ofType="ProductImage">
+            <id property="imageNo" column="image_no"/>
+            <result property="fileLink" column="file_link"/>
+            <result property="originalFileName" column="origin_file_name"/>
+        </collection>
     </resultMap>
 
 
@@ -64,11 +67,48 @@
         </foreach>
     </insert>
 
-    <update id="updateProductThumbnail">
+    <update id="updateProductThumbnail" parameterType="Product">
         UPDATE products
         SET product_thumbnail_no =#{productThumbnail.imageNo}
         WHERE product_no = #{productNo}
     </update>
+    <update id="updateProduct" >
+        UPDATE products
+        SET product_name =#{productName},
+            product_as_expiration_date = #{productAsExpirationDate},
+            product_status = #{productStatus},
+            product_exchange_status = #{productExchangeStatus},
+            product_purchase_date = #{purchaseDate},
+            product_sales_status = #{productSalesStatus},
+            product_price = #{productPrice},
+            product_content =#{productContent},
+            product_stock =#{productStock},
+            product_category_no=#{category.categoryNo},
+            modify_date=NOW()
+            WHERE product_no = #{productNo}
 
+    </update>
+    <delete id="deleteProductImages" parameterType="java.util.List">
+        DELETE FROM product_images where image_no IN (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+
+    <select id="existsByProductNoAndSellerNo" resultType="int">
+        SELECT count(*)
+        FROM products p
+        WHERE p.product_no = #{productNo} and p.seller_no = #{sellerNo}
+    </select>
+
+
+    <select id="findByThumbnailAndImages" resultMap="productAndCategoryAndAllImages">
+        SELECT *
+        FROM products p
+                 LEFT JOIN product_images pi ON p.product_no = pi.product_no
+        WHERE p.product_no = #{productNo}
+    </select>
 
 </mapper>

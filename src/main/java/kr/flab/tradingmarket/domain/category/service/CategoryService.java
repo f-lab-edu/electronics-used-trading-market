@@ -10,4 +10,6 @@ public interface CategoryService {
     List<SimpleCategoryDto> findAllSecondCategories();
 
     List<SimpleCategoryDto> findAllThirdCategories();
+
+    boolean existCategory(Long categoryNo);
 }

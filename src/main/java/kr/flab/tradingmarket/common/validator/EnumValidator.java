@@ -11,7 +11,7 @@ import kr.flab.tradingmarket.common.annotation.ValidEnum;
 
 public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
-    Set<String> values;
+    private Set<String> values;
 
     @Override
     public void initialize(ValidEnum constraintAnnotation) {

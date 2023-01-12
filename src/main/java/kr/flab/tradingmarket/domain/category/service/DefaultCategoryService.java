@@ -24,4 +24,8 @@ public class DefaultCategoryService implements CategoryService {
     public List<SimpleCategoryDto> findAllThirdCategories() {
         return categoryMapper.findThirdCategories();
     }
+
+    public boolean existCategory(Long categoryNo) {
+        return categoryMapper.existsCategory(categoryNo) == 1;
+    }
 }

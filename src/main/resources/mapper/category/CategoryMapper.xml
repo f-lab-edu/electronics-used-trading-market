@@ -12,4 +12,8 @@
         SELECT category_no , third_category as category_name FROM category where third_category is not null
     </select>
 
+    <select id="existsCategory" resultType="int" >
+        SELECT count(*)  FROM category where category_no = #{categoryNo}
+    </select>
+
 </mapper>

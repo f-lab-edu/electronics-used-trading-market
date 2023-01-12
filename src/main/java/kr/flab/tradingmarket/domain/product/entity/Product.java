@@ -3,9 +3,11 @@ package kr.flab.tradingmarket.domain.product.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import kr.flab.tradingmarket.domain.category.entity.Category;
-import kr.flab.tradingmarket.domain.product.dto.RegisterProductDto;
+import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
+import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,13 +35,15 @@ public class Product {
     private ProductImage productThumbnail;
     private Category category;
     private User seller;
+    private List<ProductImage> imageList;
 
     @Builder
     public Product(Long productNo, String productName, LocalDate productAsExpirationDate, ProductStatus productStatus,
         ProductExchangeStatus productExchangeStatus, LocalDate purchaseDate, ProductSalesStatus productSalesStatus,
         BigDecimal productPrice, String productContent, Integer productStock, Integer productViewCount,
         LocalDateTime modifyDate, LocalDateTime createDate, ProductImage productThumbnail, Category category,
-        User seller) {
+        User seller,
+        List<ProductImage> imageList) {
         this.productNo = productNo;
         this.productName = productName;
         this.productAsExpirationDate = productAsExpirationDate;
@@ -56,6 +60,7 @@ public class Product {
         this.productThumbnail = productThumbnail;
         this.category = category;
         this.seller = seller;
+        this.imageList = imageList;
     }
 
     public static Product of(RegisterProductDto registerProductDto, Long sellerNo) {
@@ -74,4 +79,22 @@ public class Product {
             .seller(User.builder().userNo(sellerNo).build())
             .build();
     }
+
+    public static Product of(RequestModifyProductDto modifyProductDto, Long productNo) {
+
+        return Product.builder()
+            .productNo(productNo)
+            .productName(modifyProductDto.getProductName())
+            .productAsExpirationDate(modifyProductDto.getProductAsExpirationDate())
+            .productStatus(ProductStatus.valueOf(modifyProductDto.getProductStatus()))
+            .productExchangeStatus(ProductExchangeStatus.valueOf(modifyProductDto.getProductExchangeStatus()))
+            .purchaseDate(modifyProductDto.getPurchaseDate())
+            .productSalesStatus(ProductSalesStatus.valueOf(modifyProductDto.getProductSalesStatus()))
+            .productPrice(modifyProductDto.getProductPrice())
+            .productContent(modifyProductDto.getProductContent())
+            .productStock(modifyProductDto.getProductStock())
+            .category(Category.builder().categoryNo(modifyProductDto.getProductCategoryNo()).build())
+            .build();
+    }
+
 }

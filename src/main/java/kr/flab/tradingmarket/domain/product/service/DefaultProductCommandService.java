@@ -66,4 +66,10 @@ public class DefaultProductCommandService implements ProductCommandService {
             throw e;
         }
     }
+
+    @Override
+    public void deleteProduct(Long productNo) {
+        Optional<List<ProductImage>> productImages = productService.deleteProduct(productNo);
+        productImages.ifPresent(imageService::deleteProductImages);
+    }
 }

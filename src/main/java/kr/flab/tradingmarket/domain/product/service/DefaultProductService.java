@@ -80,6 +80,16 @@ public class DefaultProductService implements ProductService {
         }
     }
 
+    @Override
+    @Transactional
+    public Optional<List<ProductImage>> deleteProduct(Long productNo) {
+        Optional<List<ProductImage>> productImageList = Optional.ofNullable(
+            productMapper.findProductImageByProductNo(productNo));
+        productMapper.deleteProductImageByProductNo(productNo);
+        productMapper.deleteProductByProductNo(productNo);
+        return productImageList;
+    }
+
     private static class ModifyProductValidObject {
         @Getter
         private final Long productNo;

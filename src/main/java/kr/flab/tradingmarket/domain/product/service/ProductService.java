@@ -18,4 +18,6 @@ public interface ProductService {
 
     Optional<List<ProductImage>> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList);
+
+    Optional<List<ProductImage>> deleteProduct(Long productNo);
 }

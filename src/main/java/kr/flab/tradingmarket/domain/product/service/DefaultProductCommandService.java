@@ -13,6 +13,7 @@ import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
+import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 import lombok.RequiredArgsConstructor;
 
@@ -56,7 +57,7 @@ public class DefaultProductCommandService implements ProductCommandService {
             if (hasUploadImage) {
                 imageService.deleteProductImages(updateImageList);
             }
-            throw new ProductRegisterException("Product Registration Failed", e);
+            throw new ProductModifyException("Product Modify Failed", e);
         }
     }
 }

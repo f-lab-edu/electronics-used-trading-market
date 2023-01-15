@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
@@ -53,11 +54,16 @@ public class DefaultProductCommandService implements ProductCommandService {
             Optional<List<ProductImage>> productImages = productService.modifyProduct(productNo, modifyProduct,
                 updateImageList);
             productImages.ifPresent(imageService::deleteProductImages);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             if (hasUploadImage) {
                 imageService.deleteProductImages(updateImageList);
             }
             throw new ProductModifyException("Product Modify Failed", e);
+        } catch (DtoValidationException e) {
+            if (hasUploadImage) {
+                imageService.deleteProductImages(updateImageList);
+            }
+            throw e;
         }
     }
 }

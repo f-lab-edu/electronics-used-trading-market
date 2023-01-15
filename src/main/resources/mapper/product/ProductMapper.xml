@@ -27,7 +27,7 @@
         <collection property="imageList" ofType="ProductImage">
             <id property="imageNo" column="image_no"/>
             <result property="fileLink" column="file_link"/>
-            <result property="originalFileName" column="origin_file_name"/>
+            <result property="originalFileName" column="original_file_name"/>
         </collection>
     </resultMap>
 
@@ -53,7 +53,7 @@
     </insert>
 
     <insert id="insertProductImages" parameterType="java.util.List" useGeneratedKeys="true"  keyProperty="imageNo">
-        INSERT INTO product_images (product_no, origin_file_name, file_link, file_size, create_date, modify_date)
+        INSERT INTO product_images (product_no, original_file_name, file_link, file_size, create_date, modify_date)
         VALUES
         <foreach collection="list" item="item" separator=" , ">
             (
@@ -111,4 +111,17 @@
         WHERE p.product_no = #{productNo}
     </select>
 
+    <select id="findProductImageByProductNo" resultType="ProductImage">
+        SELECT *
+        FROM product_images
+        WHERE product_no = #{productNo}
+    </select>
+
+    <delete id="deleteProductImageByProductNo">
+        DELETE FROM product_images where product_no =#{productNo}
+    </delete>
+
+    <delete id="deleteProductByProductNo">
+        DELETE FROM products where product_no =#{productNo}
+    </delete>
 </mapper>

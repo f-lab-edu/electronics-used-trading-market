@@ -22,6 +22,7 @@ import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.common.exception.NoPermissionException;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
+import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserAccessDeniedException;
@@ -161,6 +162,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
                 .message("상품등록에 실패했습니다. 나중에 다시시도 해주세요.")
+                .build());
+    }
+
+    @ExceptionHandler(ProductModifyException.class)
+    protected ResponseEntity<ResponseMessage> productModifyException(ProductModifyException ex) {
+        log.info("ProductModifyException ex : ", ex);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
+                .message("상품수정에 실패했습니다. 나중에 다시시도 해주세요.")
                 .build());
     }
 

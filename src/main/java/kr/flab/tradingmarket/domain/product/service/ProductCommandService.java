@@ -14,4 +14,6 @@ public interface ProductCommandService {
     ResponseModifyProductDto findByModifyProduct(Long productNo);
 
     void modifyProduct(Long productNo, RequestModifyProductDto modifyProduct, List<MultipartFile> images);
+
+    void deleteProduct(Long productNo);
 }

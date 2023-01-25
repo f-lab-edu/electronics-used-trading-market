@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import kr.flab.tradingmarket.common.exception.DtoValidationException;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
 
@@ -30,7 +32,7 @@ class DefaultProductServiceTest {
         //given
 
         //when
-        productService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO, DEFAULT_REGISTERS_PRODUCT_IMAGES, 1L);
+        productService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO, DEFAULT_PRODUCT_IMAGES, 1L);
 
         //then
         then(productMapper)
@@ -42,7 +44,7 @@ class DefaultProductServiceTest {
             .should()
             .insertProductImages(REGISTER_PRODUCT_IMAGE_LIST_CAPTURE.capture());
         List<ProductImage> images = REGISTER_PRODUCT_IMAGE_LIST_CAPTURE.getValue();
-        assertThat(DEFAULT_REGISTERS_PRODUCT_IMAGES).containsExactly(
+        assertThat(DEFAULT_PRODUCT_IMAGES).containsExactly(
             images.get(0),
             images.get(1),
             images.get(2));
@@ -54,4 +56,218 @@ class DefaultProductServiceTest {
             DEFAULT_PRODUCT_THUMBNAILS);
 
     }
+
+    @Test
+    @DisplayName("service : 수정할 물품 조회 : 성공")
+    public void successfulFindByModifyProduct() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_THUMBNAIL_AND_IMAGES_PRODUCT);
+
+        //when
+        ResponseModifyProductDto result = productService.findByModifyProduct(any());
+
+        //then
+        then(productMapper)
+            .should()
+            .findByThumbnailAndImages(any());
+        assertThat(result).isEqualTo(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
+
+    }
+
+    @Test
+    @DisplayName("service : 물품 수정 삭제에 대한 권한체크 : 성공")
+    public void successfulIsProductAuthorized() {
+        //given
+        given(productMapper.existsByProductNoAndSellerNo(any(), any()))
+            .willReturn(1);
+
+        //when
+        boolean productAuthorized = productService.isProductAuthorized(any(), any());
+
+        //then
+        then(productMapper)
+            .should()
+            .existsByProductNoAndSellerNo(any(), any());
+        assertThat(productAuthorized).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("service : 물품 수정 삭제에 대한 권한체크 : 실패")
+    public void failIsProductAuthorized() {
+        //given
+        given(productMapper.existsByProductNoAndSellerNo(any(), any()))
+            .willReturn(0);
+
+        //when
+        boolean productAuthorized = productService.isProductAuthorized(any(), any());
+
+        //then
+        then(productMapper)
+            .should()
+            .existsByProductNoAndSellerNo(any(), any());
+        assertThat(productAuthorized).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 썸네일 업데이트를 기존에 있던 이미지로 시도하는데 해당 이미지 이름이 기존 이미지 리스트에 없는경우 실패")
+    public void failModifyDtoValidationByOldImage() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), FAIL_OLD_IMAGE_UPDATE_REQUEST_MODIFY_PRODUCT_DTO,
+                DEFAULT_PRODUCT_IMAGES), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("updateThumbnail", "존재하지 않는 이미지 입니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 썸네일 업데이트를 새로 추가한 이미지로 시도하는데 해당 이미지 이름이 추가된 이미지 리스트에 없는경우 실패")
+    public void failModifyDtoValidationByNewImage() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), FAIL_NEW_IMAGE_UPDATE_REQUEST_MODIFY_PRODUCT_DTO,
+                DEFAULT_PRODUCT_IMAGES), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("updateThumbnail", "존재하지 않는 이미지 입니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 기존 썸네일 이미지를 삭제하고 새로운 썸네일 이미지를 지정하지 않았을때 실패")
+    public void failModifyDtoValidationByDeleteImage() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), FAIL_DELETE_IMAGE_REQUEST_MODIFY_PRODUCT_DTO,
+                DEFAULT_PRODUCT_IMAGES), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("updateThumbnail", "썸네일을 지정해주세요.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 삭제할 이미지와 업데이트할 썸네일이 겹치는 경우 실패")
+    public void failModifyDtoValidationByOverlappingThumbnailsAndDeletedImages() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), FAIL_OVERLAPPING_THUMBNAILS_DELETED_IMAGES,
+                null), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("updateThumbnail", "삭제할 이미지와 썸네일이 겹칩니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 총 이미지의 개수가 11개 이상이 될 때 실패")
+    public void failModifyDtoValidationByTotalImageExceeded() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), DEFAULT_REQUEST_MODIFY_PRODUCT_DTO,
+                FULL_PRODUCT_IMAGES), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("images", "이미지는 1개 이상 10개 이하만 업로드 할 수있습니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 총 이미지의 개수가 1개 미만이 될 때 실패")
+    public void failModifyDtoValidationByTotalImageUnder() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), DELETE_ALL_IMAGES_REQUEST_MODIFY_PRODUCT_DTO,
+                null), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("images", "이미지는 1개 이상 10개 이하만 업로드 할 수있습니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 권한이 없는 다른 Product Image를 삭제하려고 할 때 실패")
+    public void failModifyDtoValidationByWrongImageNumber() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        DtoValidationException catchException = catchThrowableOfType(
+            () -> productService.modifyProduct(any(), DELETE_WRONG_IMAGE_REQUEST_MODIFY_PRODUCT_DTO,
+                DEFAULT_PRODUCT_IMAGES), DtoValidationException.class);
+
+        //then
+        assertThat(catchException)
+            .extracting("field", "message")
+            .containsExactly("removeImages", "잘못된 이미지 번호입니다.");
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 이미지 변경있을때 성공")
+    public void successfulModifyDtoValidationByImageChange() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        productService.modifyProduct(any(), DEFAULT_REQUEST_MODIFY_PRODUCT_DTO, DEFAULT_PRODUCT_IMAGES);
+
+        //then
+        then(productMapper)
+            .should()
+            .insertProductImages(any());
+        then(productMapper)
+            .should()
+            .updateProductThumbnail(any(), any());
+        then(productMapper)
+            .should()
+            .updateProductThumbnail(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 validation : 이미지 변경없을때 성공")
+    public void successfulModifyDtoValidationByNoImageChange() {
+        //given
+        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+
+        //when
+        productService.modifyProduct(any(), NO_CHANGE_IMAGE_REQUEST_MODIFY_PRODUCT_DTO, null);
+
+        //then
+        then(productMapper)
+            .should(never())
+            .insertProductImages(any());
+        then(productMapper)
+            .should(never())
+            .updateProductThumbnail(any(), any());
+        then(productMapper)
+            .should(never())
+            .updateProductThumbnail(any(), any());
+    }
+
 }

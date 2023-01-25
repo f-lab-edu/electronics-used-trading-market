@@ -27,9 +27,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.flab.tradingmarket.common.aop.LoginCheckAop;
+import kr.flab.tradingmarket.common.interceptor.ProductAuthorizationInterceptor;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
+import kr.flab.tradingmarket.domain.product.service.ProductService;
 import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
@@ -39,7 +41,7 @@ import kr.flab.tradingmarket.domain.user.service.UserService;
 
 @WebMvcTest(UserController.class)
 @ExtendWith(MockitoExtension.class)
-@Import({AopAutoConfiguration.class, LoginCheckAop.class})
+@Import({AopAutoConfiguration.class, LoginCheckAop.class, ProductAuthorizationInterceptor.class})
 @ActiveProfiles("test")
 class UserControllerTest {
 
@@ -50,9 +52,11 @@ class UserControllerTest {
     @MockBean
     LoginService loginService;
     @MockBean
+    ProductService productService;
+    @MockBean
     ImageService imageService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     private String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);

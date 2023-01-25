@@ -10,17 +10,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.QueryTimeoutException;
 
+import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultProductCommandServiceTest {
 
     @InjectMocks
-    DefaultProductCommandService defaultProductCommandService;
+    DefaultProductCommandService productCommandService;
     @Mock
     ProductService productService;
 
@@ -32,18 +36,16 @@ class DefaultProductCommandServiceTest {
     void successfulRegisterProduct() {
         //given
         //when
-        defaultProductCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO, DEFAULT_PRODUCT_MULTIPART_IMAGES,
+        productCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO, DEFAULT_PRODUCT_MULTIPART_IMAGES,
             1L);
 
         //then
         then(imageService)
             .should()
             .uploadProductImages(any(), any());
-
         then(productService)
             .should()
             .registerProduct(any(), any(), any());
-
         then(imageService)
             .should(never())
             .deleteProductImages(any());
@@ -59,7 +61,7 @@ class DefaultProductCommandServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> defaultProductCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO,
+        assertThatThrownBy(() -> productCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO,
             DEFAULT_PRODUCT_MULTIPART_IMAGES,
             1L))
             .isInstanceOf(ProductRegisterException.class);
@@ -67,11 +69,9 @@ class DefaultProductCommandServiceTest {
         then(imageService)
             .should()
             .uploadProductImages(any(), any());
-
         then(productService)
             .should()
             .registerProduct(any(), any(), any());
-
         then(imageService)
             .should()
             .deleteProductImages(any());
@@ -87,7 +87,7 @@ class DefaultProductCommandServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> defaultProductCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO,
+        assertThatThrownBy(() -> productCommandService.registerProduct(DEFAULT_REGISTER_PRODUCT_DTO,
             DEFAULT_PRODUCT_MULTIPART_IMAGES,
             1L))
             .isInstanceOf(ImageUploadException.class);
@@ -95,14 +95,115 @@ class DefaultProductCommandServiceTest {
         then(imageService)
             .should()
             .uploadProductImages(any(), any());
-
         then(productService)
             .should(never())
             .registerProduct(any(), any(), any());
-
         then(imageService)
             .should(never())
             .deleteProductImages(any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 : DataAccessException 발생 실패")
+    void failModifyProductByDataAccessException() {
+        //given
+        willThrow(new DataAccessException("test") {
+        })
+            .given(productService)
+            .modifyProduct(any(), any(), any());
+
+        //when
+        //then
+        assertThatThrownBy(() -> productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO,
+            DEFAULT_PRODUCT_MULTIPART_IMAGES))
+            .isInstanceOf(ProductModifyException.class);
+
+        then(imageService)
+            .should()
+            .uploadProductImages(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 : DtoValidationException 발생 실패")
+    void failModifyProductByDtoValidationException() {
+        //given
+        willThrow(DtoValidationException.class)
+            .given(productService)
+            .modifyProduct(any(), any(), any());
+
+        //when
+        //then
+        assertThatThrownBy(() -> productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO,
+            DEFAULT_PRODUCT_MULTIPART_IMAGES))
+            .isInstanceOf(DtoValidationException.class);
+
+        then(imageService)
+            .should()
+            .uploadProductImages(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 : ImageUploadException 발생 실패")
+    void failModifyProductByImageUploadException() {
+        //given
+        willThrow(ImageUploadException.class)
+            .given(imageService)
+            .uploadProductImages(any(), any());
+        //when
+        //then
+        assertThatThrownBy(() -> productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO,
+            DEFAULT_PRODUCT_MULTIPART_IMAGES))
+            .isInstanceOf(ImageUploadException.class);
+
+        then(productService)
+            .should(never())
+            .modifyProduct(any(), any(), any());
+        then(imageService)
+            .should(never())
+            .deleteProductImages(any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 : 이미지 업로드 있을때 성공")
+    void successfulModifyProductByImageExistence() {
+        //given
+        given(imageService.uploadProductImages(any(), any()))
+            .willReturn(DEFAULT_PRODUCT_IMAGES);
+
+        //when
+        productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO, DEFAULT_PRODUCT_MULTIPART_IMAGES);
+
+        //then
+        then(imageService)
+            .should()
+            .uploadProductImages(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품수정 : 이미지 업로드 없을때 성공")
+    void successfulModifyProductByNoImage() {
+        //given
+        //when
+        productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO, EMPTY_PRODUCT_MULTIPART_IMAGES);
+
+        //then
+        then(imageService)
+            .should(never())
+            .uploadProductImages(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품 수정시 조회 : 성공")
+    void successfulFindByModifyProduct() {
+        //given
+        given(productService.findByModifyProduct(any()))
+            .willReturn(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
+
+        //when
+        ResponseModifyProductDto result = productCommandService.findByModifyProduct(1L);
+
+        //then
+        assertThat(result).isEqualTo(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
     }
 
 }

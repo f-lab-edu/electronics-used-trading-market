@@ -24,4 +24,10 @@ public interface ProductMapper {
     void updateProduct(Product from);
 
     void deleteProductImages(List<Long> removeImages);
+
+    List<ProductImage> findProductImageByProductNo(Long productNo);
+
+    void deleteProductImageByProductNo(Long productNo);
+
+    void deleteProductByProductNo(Long productNo);
 }

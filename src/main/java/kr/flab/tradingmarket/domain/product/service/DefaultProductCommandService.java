@@ -51,9 +51,11 @@ public class DefaultProductCommandService implements ProductCommandService {
             updateImageList = imageService.uploadProductImages(images, ImageType.PRODUCT);
         }
         try {
-            Optional<List<ProductImage>> productImages = productService.modifyProduct(productNo, modifyProduct,
+            List<ProductImage> deleteImageList = productService.modifyProduct(productNo, modifyProduct,
                 updateImageList);
-            productImages.ifPresent(imageService::deleteProductImages);
+            if (deleteImageList != null) {
+                imageService.deleteProductImages(deleteImageList);
+            }
         } catch (DataAccessException e) {
             if (hasUploadImage) {
                 imageService.deleteProductImages(updateImageList);
@@ -65,5 +67,11 @@ public class DefaultProductCommandService implements ProductCommandService {
             }
             throw e;
         }
+    }
+
+    @Override
+    public void deleteProduct(Long productNo) {
+        Optional<List<ProductImage>> productImages = productService.deleteProduct(productNo);
+        productImages.ifPresent(imageService::deleteProductImages);
     }
 }

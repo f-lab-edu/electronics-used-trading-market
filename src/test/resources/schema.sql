@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `users_profile_images`;
 CREATE TABLE `users_profile_images`
 (
     `image_no`         int         NOT NULL AUTO_INCREMENT,
-    `origin_file_name` varchar(80) NOT NULL,
+    `original_file_name` varchar(80) NOT NULL,
     `file_link`        varchar(80) NOT NULL,
     `file_size`        int         NOT NULL,
     `create_date`      datetime(6) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `product_images`
 (
     `image_no`         int         NOT NULL,
     `product_no`       int         NOT NULL,
-    `origin_file_name` varchar(80) NOT NULL,
+    `original_file_name` varchar(80) NOT NULL,
     `file_link`        varchar(80) NOT NULL,
     `file_size`        int         NOT NULL,
     `create_date`      datetime(6) NOT NULL,

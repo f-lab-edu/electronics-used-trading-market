@@ -1,4 +1,4 @@
-package kr.flab.tradingmarket.domain.product.dto;
+package kr.flab.tradingmarket.domain.product.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import kr.flab.tradingmarket.common.annotation.ValidCategory;
 import kr.flab.tradingmarket.common.annotation.ValidEnum;
 import kr.flab.tradingmarket.domain.product.entity.ProductExchangeStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductStatus;
@@ -24,6 +25,7 @@ public class RegisterProductDto {
     @NotBlank
     private String productName;
     @NotNull
+    @ValidCategory
     private Long productCategoryNo;
     @NotNull
     private LocalDate productAsExpirationDate;

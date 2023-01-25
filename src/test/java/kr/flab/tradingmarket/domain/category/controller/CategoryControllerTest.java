@@ -19,11 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import kr.flab.tradingmarket.common.config.WebConfig;
+import kr.flab.tradingmarket.common.interceptor.ProductAuthorizationInterceptor;
 import kr.flab.tradingmarket.common.resolver.SessionResolver;
 import kr.flab.tradingmarket.domain.category.service.CategoryService;
 
 @WebMvcTest(controllers = CategoryController.class, excludeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, SessionResolver.class})})
+    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebConfig.class, SessionResolver.class,
+        ProductAuthorizationInterceptor.class})})
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 class CategoryControllerTest {

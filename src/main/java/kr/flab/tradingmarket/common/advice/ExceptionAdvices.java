@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.*;
 import java.time.format.DateTimeParseException;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,8 +18,11 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kr.flab.tradingmarket.common.code.ResponseMessage;
+import kr.flab.tradingmarket.common.exception.DtoValidationException;
+import kr.flab.tradingmarket.common.exception.NoPermissionException;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
+import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserAccessDeniedException;
@@ -50,6 +54,26 @@ public class ExceptionAdvices {
                 .build());
     }
 
+    @ExceptionHandler(DtoValidationException.class)
+    protected ResponseEntity<ResponseMessage> imageCountExceededException(DtoValidationException ex) {
+        log.info("DtoValidationException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
+                .validation(ex.getField(), ex.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    protected ResponseEntity<ResponseMessage> imageCountExceededException(ValidationException ex) {
+        log.info("ValidationException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
+                .validation("field", "형식에 맞지않는 필드가 존재합니다.")
+                .build());
+    }
+
     @ExceptionHandler(UserIdDuplicateException.class)
     protected ResponseEntity<ResponseMessage> userIdDuplicateException(UserIdDuplicateException ex) {
         log.info("UserIdDuplicateException ex : ", ex);
@@ -66,6 +90,7 @@ public class ExceptionAdvices {
             log.info("JsonMappingException ex : ", ex);
             return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                    .message("유효성 검증 실패")
                     .validation(jsonMappingException.getPath().get(0).getFieldName(), "형식에 맞지않습니다.")
                     .build());
         }
@@ -73,15 +98,16 @@ public class ExceptionAdvices {
             log.info("dateTimeParseException ex : ", ex);
             return ResponseEntity.status(BAD_REQUEST).body(
                 new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                    .message("유효성 검증 실패")
                     .validation(dateTimeParseException.getParsedString(), " : 날짜 형식이 맞지않습니다.")
                     .build());
         }
         log.info("HttpMessageNotReadableException ex : ", ex);
         return ResponseEntity.status(BAD_REQUEST).body(
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
                 .validation("field", "형식에 맞지않는 필드가 존재합니다.")
                 .build());
-
     }
 
     @ExceptionHandler(PasswordNotMatchException.class)
@@ -139,6 +165,24 @@ public class ExceptionAdvices {
                 .build());
     }
 
+    @ExceptionHandler(ProductModifyException.class)
+    protected ResponseEntity<ResponseMessage> productModifyException(ProductModifyException ex) {
+        log.info("ProductModifyException ex : ", ex);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
+                .message("상품수정에 실패했습니다. 나중에 다시시도 해주세요.")
+                .build());
+    }
+
+    @ExceptionHandler(NoPermissionException.class)
+    protected ResponseEntity<ResponseMessage> noPermissionException(NoPermissionException ex) {
+        log.info("NoPermissionException ex : ", ex);
+        return ResponseEntity.status(UNAUTHORIZED).body(
+            new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
+                .message("권한이 없습니다.")
+                .build());
+    }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ResponseMessage> exception(Exception ex) {
         log.error("Exception ex : ", ex);
@@ -156,4 +200,5 @@ public class ExceptionAdvices {
                 .message("잘못된 URL 입니다.")
                 .build());
     }
+
 }

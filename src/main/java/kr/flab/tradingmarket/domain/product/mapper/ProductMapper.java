@@ -16,4 +16,18 @@ public interface ProductMapper {
     void insertProductImages(List<ProductImage> productImages);
 
     void updateProductThumbnail(ProductImage productThumbnail, Long productNo);
+
+    int existsByProductNoAndSellerNo(Long productNo, Long sellerNo);
+
+    Product findByThumbnailAndImages(Long productNo);
+
+    void updateProduct(Product from);
+
+    void deleteProductImages(List<Long> removeImages);
+
+    List<ProductImage> findProductImageByProductNo(Long productNo);
+
+    void deleteProductImageByProductNo(Long productNo);
+
+    void deleteProductByProductNo(Long productNo);
 }

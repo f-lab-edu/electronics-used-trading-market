@@ -17,4 +17,5 @@ public interface CategoryMapper {
 
     List<SimpleCategoryDto> findThirdCategories();
 
+    int existsCategory(Long categoryNo);
 }

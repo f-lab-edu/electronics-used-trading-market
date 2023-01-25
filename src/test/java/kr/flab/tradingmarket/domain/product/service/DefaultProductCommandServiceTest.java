@@ -4,6 +4,8 @@ import static kr.flab.tradingmarket.domain.product.config.ProductCommonFixture.*
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -206,4 +208,35 @@ class DefaultProductCommandServiceTest {
         assertThat(result).isEqualTo(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
     }
 
+    @Test
+    @DisplayName("service : 물품 삭제 : 삭제 할 이미지가 있을때 성공")
+    void successfulDeleteProduct() {
+        //given
+        given(productService.deleteProduct(any()))
+            .willReturn(Optional.of(DEFAULT_PRODUCT_IMAGES));
+
+        //when
+        productCommandService.deleteProduct(1L);
+
+        //then
+        then(imageService)
+            .should()
+            .deleteProductImages(any());
+    }
+
+    @Test
+    @DisplayName("service : 물품 삭제 : 삭제 할 이미지가 없을때 성공")
+    void successfulDeleteProductByNoImages() {
+        //given
+        given(productService.deleteProduct(any()))
+            .willReturn(Optional.empty());
+
+        //when
+        productCommandService.deleteProduct(1L);
+
+        //then
+        then(imageService)
+            .should(never())
+            .deleteProductImages(any());
+    }
 }

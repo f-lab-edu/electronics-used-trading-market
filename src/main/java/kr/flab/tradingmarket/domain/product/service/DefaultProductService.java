@@ -52,17 +52,17 @@ public class DefaultProductService implements ProductService {
 
     @Transactional
     @Override
-    public Optional<List<ProductImage>> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
+    public List<ProductImage> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList) {
 
         ModifyProductValidObject validModifyProduct = new ModifyProductValidObject(productNo, modifyProduct,
             updateImageList, productMapper.findByThumbnailAndImages(productNo));
         productMapper.updateProduct(Product.of(modifyProduct, productNo));
         if (validModifyProduct.isModifyImage()) {
-            return Optional.empty();
+            return null;
         }
         updateImageAndThumbnail(validModifyProduct);
-        return Optional.of(validModifyProduct.getCurrentDeleteImage());
+        return validModifyProduct.getCurrentDeleteImage();
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

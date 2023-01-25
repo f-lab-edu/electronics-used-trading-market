@@ -16,7 +16,7 @@ public interface ProductService {
 
     boolean isProductAuthorized(Long productNo, Long userNo);
 
-    Optional<List<ProductImage>> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
+    List<ProductImage> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList);
 
     Optional<List<ProductImage>> deleteProduct(Long productNo);

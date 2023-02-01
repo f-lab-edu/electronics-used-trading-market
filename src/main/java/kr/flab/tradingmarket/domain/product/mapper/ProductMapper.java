@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ProductSimpleDto;
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 
@@ -30,4 +32,6 @@ public interface ProductMapper {
     void deleteProductImageByProductNo(Long productNo);
 
     void deleteProductByProductNo(Long productNo);
+
+    List<ProductSimpleDto> findByProductsWithLikeSearch(ProductSearchDto searchDto, Long userNo);
 }

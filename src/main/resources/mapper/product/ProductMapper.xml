@@ -36,7 +36,7 @@
         INSERT INTO products (product_name,
                               product_category_no,
                               product_as_expiration_date,
-                              product_status,product_exchange_status,
+                              product_status, product_exchange_status,
                               product_purchase_date,
                               product_sales_status,
                               product_price,
@@ -52,7 +52,7 @@
 
     </insert>
 
-    <insert id="insertProductImages" parameterType="java.util.List" useGeneratedKeys="true"  keyProperty="imageNo">
+    <insert id="insertProductImages" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="imageNo">
         INSERT INTO product_images (product_no, original_file_name, file_link, file_size, create_date, modify_date)
         VALUES
         <foreach collection="list" item="item" separator=" , ">
@@ -72,20 +72,20 @@
         SET product_thumbnail_no =#{productThumbnail.imageNo}
         WHERE product_no = #{productNo}
     </update>
-    <update id="updateProduct" >
+    <update id="updateProduct">
         UPDATE products
-        SET product_name =#{productName},
+        SET product_name               =#{productName},
             product_as_expiration_date = #{productAsExpirationDate},
-            product_status = #{productStatus},
-            product_exchange_status = #{productExchangeStatus},
-            product_purchase_date = #{purchaseDate},
-            product_sales_status = #{productSalesStatus},
-            product_price = #{productPrice},
-            product_content =#{productContent},
-            product_stock =#{productStock},
+            product_status             = #{productStatus},
+            product_exchange_status    = #{productExchangeStatus},
+            product_purchase_date      = #{purchaseDate},
+            product_sales_status       = #{productSalesStatus},
+            product_price              = #{productPrice},
+            product_content            =#{productContent},
+            product_stock              =#{productStock},
             product_category_no=#{category.categoryNo},
             modify_date=NOW()
-            WHERE product_no = #{productNo}
+        WHERE product_no = #{productNo}
 
     </update>
     <delete id="deleteProductImages" parameterType="java.util.List">
@@ -96,13 +96,12 @@
         )
     </delete>
 
-
     <select id="existsByProductNoAndSellerNo" resultType="int">
         SELECT count(*)
         FROM products p
-        WHERE p.product_no = #{productNo} and p.seller_no = #{sellerNo}
+        WHERE p.product_no = #{productNo}
+          and p.seller_no = #{sellerNo}
     </select>
-
 
     <select id="findByThumbnailAndImages" resultMap="productAndCategoryAndAllImages">
         SELECT *
@@ -117,11 +116,107 @@
         WHERE product_no = #{productNo}
     </select>
 
+    <select id="findByProductsWithLikeSearch" resultType="ProductSimpleDto">
+        SELECT p.product_no,
+               p.product_name,
+               p.product_price,
+               p.modify_date,
+               p.product_sales_status,
+               pi.file_link AS image,
+               p.like_count,
+               (EXISTS(SELECT 1 FROM likes WHERE product_no = p.product_no AND user_no = #{userNo})) AS my_wish
+        FROM (SELECT product_no, product_name, modify_date, product_price, product_thumbnail_no, like_count ,product_sales_status
+              FROM products
+                    <if test='searchDto.getOrder().toString() eq "DATE"'>
+                        use index(product_name_and_modify_idx)
+                    </if>
+
+                    <if test='searchDto.getOrder().toString().contains("PRICE")'>
+                        use index(product_name_and_price_idx)
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "POPULAR"'>
+                        use index(product_name_and_like_idx)
+                    </if>
+              WHERE product_name LIKE CONCAT(#{searchDto.keyword},'%')
+
+                    <if test='searchDto.getOrder().toString() eq "DATE" and searchDto.lastModifiedDate != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                           AND (modify_date < #{searchDto.lastModifiedDate} OR (modify_date = #{searchDto.lastModifiedDate} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "PRICE_DESC" and searchDto.lastPrice != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (product_price < #{searchDto.lastPrice} OR (product_price = #{searchDto.lastPrice} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "PRICE_ASC" and searchDto.lastPrice != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (product_price > #{searchDto.lastPrice} OR (product_price = #{searchDto.lastPrice} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "POPULAR" and searchDto.lastLikes != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (like_count < #{searchDto.lastLikes} OR (like_count = #{searchDto.lastLikes} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.category != null' >
+                        AND product_category_no = #{searchDto.category}
+                    </if>
+
+                    <if test='searchDto.maxPrice != null'>
+                        <![CDATA[
+                            AND product_price <= #{searchDto.maxPrice}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.minPrice != null'>
+                        <![CDATA[
+                            AND product_price >= #{searchDto.minPrice}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.purchaseDate != null'>
+                        <![CDATA[
+                            AND product_purchase_date >= #{searchDto.purchaseDate}
+                        ]]>
+                    </if>
+                    <if test='searchDto.productAsExpirationDate != null'>
+                        <![CDATA[
+                            AND product_as_expiration_date >= #{searchDto.productAsExpirationDate}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.productStatus != null'>
+                        AND product_status = #{searchDto.productStatus}
+                    </if>
+
+                    <if test='searchDto.productSalesStatus != null'>
+                        AND product_sales_status = #{searchDto.productSalesStatus}
+                    </if>
+
+                    <if test='searchDto.productExchangeStatus != null'>
+                        AND product_exchange_status = #{searchDto.productExchangeStatus}
+                    </if>
+
+              ORDER BY ${searchDto.getOrder().getQuery()} ,product_no
+              LIMIT #{searchDto.size}) p
+                 LEFT JOIN product_images pi ON p.product_thumbnail_no = pi.image_no
+    </select>
+
     <delete id="deleteProductImageByProductNo">
-        DELETE FROM product_images where product_no =#{productNo}
+        DELETE
+        FROM product_images
+        where product_no = #{productNo}
     </delete>
 
     <delete id="deleteProductByProductNo">
-        DELETE FROM products where product_no =#{productNo}
+        DELETE
+        FROM products
+        where product_no = #{productNo}
     </delete>
 </mapper>

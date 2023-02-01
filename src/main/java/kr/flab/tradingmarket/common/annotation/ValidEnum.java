@@ -20,6 +20,8 @@ public @interface ValidEnum {
 
     Class<? extends Payload>[] payload() default {};
 
+    boolean nullable() default false;
+
     Class<? extends java.lang.Enum<?>> enumClass();
 
 }

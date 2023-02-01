@@ -10,6 +10,7 @@ import javax.validation.ValidationException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +52,16 @@ public class ExceptionAdvices {
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("유효성 검증 실패")
                 .validation(ex.getConstraintViolations())
+                .build());
+    }
+
+    @ExceptionHandler(BindException.class)
+    protected ResponseEntity<ResponseMessage> constraintViolationException(BindException ex) {
+        log.info("BindException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
+                .validation(ex.getFieldErrors())
                 .build());
     }
 

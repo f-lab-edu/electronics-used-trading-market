@@ -50,6 +50,8 @@ CREATE TABLE `products`
     `product_thumbnail_no`       int          NOT NULL,
     `create_date`                datetime(6)  NOT NULL,
     `modify_date`                datetime(6)  NOT NULL,
+    `seller_no`                  int          not null,
+    `like_count`                 int          null,
     PRIMARY KEY (`product_no`)
 );
 DROP TABLE IF EXISTS `product_images`;

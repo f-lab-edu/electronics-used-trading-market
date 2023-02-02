@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.flab.tradingmarket.domain.like.mapper.LikeMapper">
+
+
+    <select id="findByUserNoAndProductNo" resultType="Like">
+        SELECT *
+        FROM likes
+        WHERE user_no= #{userNo}
+        <foreach item="item"  collection="productNoList" open=" AND product_no IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>
+

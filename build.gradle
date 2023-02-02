@@ -39,6 +39,7 @@ dependencies {
 	implementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+	implementation 'org.springframework.data:spring-data-elasticsearch:4.4.7'
 
 }
 

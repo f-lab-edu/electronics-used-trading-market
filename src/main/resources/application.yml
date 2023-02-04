@@ -20,8 +20,8 @@ spring:
   profiles:
     group:
       "test": testDB,common
-      "dev":  devDB,common,awsS3
-      "prod": prodDB,common,awsS3
+      "dev":  devDB,common,awsS3,dev-elasticsearch
+      "prod": prodDB,common,awsS3,prod-elasticsearch
 ---
 spring:
   config:
@@ -105,3 +105,29 @@ cloud:
     stack:
       auto: false
     end-point: ENC(AbYf+7EegWS/kfEDePU9zdufukQRuSyR1S915zwt7I08torE1Sup+JnkyHiUtSNb)
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-elasticsearch
+  elasticsearch:
+    host: ENC(QiCeQtd4M+pyIDysa+MUEREUOuxank8h)
+    port: ENC(NVQ61tMpz53qcrZr7xKr/g==)
+    username: ENC(N9ZPTaD2VIVELs/59tzmOQ==)
+    password: ENC(+C3dpfd3xvESjIBSYhoGQMZUHUXNOBtI)
+logging:
+  level:
+    org.elasticsearch.client: TRACE
+    org.apache.http: TRACE
+    org.springframework.data.elasticsearch.core: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod-elasticsearch
+  elasticsearch:
+    host: ENC(iJhjqUjiJcwSirI3c16VD1WhVcN5h/h+)
+    port: ENC(9ijoTa/Pfb1BxHBnvevAsw==)
+    username: ENC(ck7VCbrCGATRJQMOP0WiEQ==)
+    password: ENC(ZrExm7rv7of1KTMhUvMwfGgSgSCG5Cir)

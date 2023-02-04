@@ -8,8 +8,10 @@ import java.time.format.DateTimeParseException;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +53,16 @@ public class ExceptionAdvices {
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("유효성 검증 실패")
                 .validation(ex.getConstraintViolations())
+                .build());
+    }
+
+    @ExceptionHandler(BindException.class)
+    protected ResponseEntity<ResponseMessage> constraintViolationException(BindException ex) {
+        log.info("BindException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("유효성 검증 실패")
+                .validation(ex.getFieldErrors())
                 .build());
     }
 
@@ -198,6 +210,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(NOT_FOUND).body(
             new ResponseMessage.Builder(FAIL, NOT_FOUND.value())
                 .message("잘못된 URL 입니다.")
+                .build());
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    protected ResponseEntity<ResponseMessage> dataAccessException(DataAccessException ex) {
+        log.error("DataAccessException ex : ", ex);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
+                .message("DataBase 오류입니다. 복구될때까지 기다려주세요")
                 .build());
     }
 

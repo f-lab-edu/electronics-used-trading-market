@@ -9,7 +9,7 @@ import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 
 public class ProductControllerFixture {
     public static final String DEFAULT_PRODUCT_URL = "/products";
-    public static final String EDIT_PRODUCT_URL = "/products/edit/1";
+    public static final String EDIT_PRODUCT_URL = "/products/edit/";
     public static final RegisterProductDto FAIL_REGISTER_PRODUCT_DTO_VALIDATION_PRODUCT_STATUS = RegisterProductDto.builder()
         .productName("무선마우스팔아요")
         .productCategoryNo(1L)

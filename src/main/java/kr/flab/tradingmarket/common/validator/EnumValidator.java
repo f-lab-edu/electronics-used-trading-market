@@ -12,17 +12,19 @@ import kr.flab.tradingmarket.common.annotation.ValidEnum;
 public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
     private Set<String> values;
+    private boolean nullable;
 
     @Override
     public void initialize(ValidEnum constraintAnnotation) {
-        values = Stream.of(constraintAnnotation.enumClass().getEnumConstants())
+        this.values = Stream.of(constraintAnnotation.enumClass().getEnumConstants())
             .map(Enum::name)
             .collect(Collectors.toSet());
+        this.nullable = constraintAnnotation.nullable();
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return values.contains(value);
+        return (nullable && value == null) || values.contains(value);
     }
 
 }

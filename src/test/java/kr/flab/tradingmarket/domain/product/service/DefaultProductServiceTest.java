@@ -113,7 +113,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 썸네일 업데이트를 기존에 있던 이미지로 시도하는데 해당 이미지 이름이 기존 이미지 리스트에 없는경우 실패")
     public void failModifyDtoValidationByOldImage() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -130,7 +131,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 썸네일 업데이트를 새로 추가한 이미지로 시도하는데 해당 이미지 이름이 추가된 이미지 리스트에 없는경우 실패")
     public void failModifyDtoValidationByNewImage() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -147,7 +149,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 기존 썸네일 이미지를 삭제하고 새로운 썸네일 이미지를 지정하지 않았을때 실패")
     public void failModifyDtoValidationByDeleteImage() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -164,7 +167,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 삭제할 이미지와 업데이트할 썸네일이 겹치는 경우 실패")
     public void failModifyDtoValidationByOverlappingThumbnailsAndDeletedImages() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -181,7 +185,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 총 이미지의 개수가 11개 이상이 될 때 실패")
     public void failModifyDtoValidationByTotalImageExceeded() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -198,7 +203,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 총 이미지의 개수가 1개 미만이 될 때 실패")
     public void failModifyDtoValidationByTotalImageUnder() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -215,7 +221,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 권한이 없는 다른 Product Image를 삭제하려고 할 때 실패")
     public void failModifyDtoValidationByWrongImageNumber() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         DtoValidationException catchException = catchThrowableOfType(
@@ -232,7 +239,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 이미지 변경있을때 성공")
     public void successfulModifyDtoValidationByImageChange() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         productService.modifyProduct(any(), DEFAULT_REQUEST_MODIFY_PRODUCT_DTO, DEFAULT_PRODUCT_IMAGES);
@@ -253,7 +261,8 @@ class DefaultProductServiceTest {
     @DisplayName("service : 물품수정 validation : 이미지 변경없을때 성공")
     public void successfulModifyDtoValidationByNoImageChange() {
         //given
-        given(productMapper.findByThumbnailAndImages(any())).willReturn(DEFAULT_REGISTER_PRODUCT);
+        given(productMapper.findByThumbnailAndImages(any()))
+            .willReturn(DEFAULT_REGISTER_PRODUCT);
 
         //when
         productService.modifyProduct(any(), NO_CHANGE_IMAGE_REQUEST_MODIFY_PRODUCT_DTO, null);
@@ -268,6 +277,28 @@ class DefaultProductServiceTest {
         then(productMapper)
             .should(never())
             .updateProductThumbnail(any(), any());
+    }
+
+    @Test
+    @DisplayName("service : 물품 삭제 : 성공")
+    public void successfulDeleteProduct() {
+        //given
+        given(productMapper.findProductImageByProductNo(any()))
+            .willReturn(DEFAULT_PRODUCT_IMAGES);
+
+        //when
+        productService.deleteProduct(1L);
+
+        //then
+        then(productMapper)
+            .should()
+            .findProductImageByProductNo(any());
+        then(productMapper)
+            .should()
+            .deleteProductImageByProductNo(any());
+        then(productMapper)
+            .should()
+            .deleteProductByProductNo(any());
     }
 
 }

@@ -366,4 +366,40 @@ class ProductControllerTest {
             .modifyProduct(any(), any(), any());
     }
 
+    @Test
+    @DisplayName("controller : 상품 삭제 : 성공")
+    void successfulDeleteProduct() throws Exception {
+        //given
+        given(productService.isProductAuthorized(any(), any()))
+            .willReturn(true);
+
+        //when
+        mockMvc.perform(delete(DEFAULT_PRODUCT_URL + "/" + 1L))
+            .andDo(print())
+            .andExpect(status().isOk());
+
+        //then
+        then(productCommandService)
+            .should()
+            .deleteProduct(any());
+    }
+
+    @Test
+    @DisplayName("controller : 상품 삭제 : 권한 없는 상품 삭제시도 실패")
+    void failDeleteProduct() throws Exception {
+        //given
+        given(productService.isProductAuthorized(any(), any()))
+            .willReturn(false);
+
+        //when
+        mockMvc.perform(delete(DEFAULT_PRODUCT_URL + "/" + 1L))
+            .andDo(print())
+            .andExpect(status().isUnauthorized());
+
+        //then
+        then(productCommandService)
+            .should(never())
+            .deleteProduct(any());
+    }
+
 }

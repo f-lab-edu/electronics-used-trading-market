@@ -34,4 +34,6 @@ public interface ProductMapper {
     void deleteProductByProductNo(Long productNo);
 
     List<ProductSimpleDto> findByProductsWithLikeSearch(ProductSearchDto searchDto, Long userNo);
+
+    List<ProductSimpleDto> findByProductsWithFullTextSearch(ProductSearchDto searchDto, Long userNo);
 }

@@ -12,13 +12,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LikeSearchService implements ProductSearchService {
+public class FullTextSearchService implements ProductSearchService {
 
     private final ProductMapper productMapper;
 
     @Override
     public ResponseProductSimpleDto search(ProductSearchDto productSearchDto, Long userNo) {
-        List<ProductSimpleDto> findSearch = productMapper.findByProductsWithLikeSearch(productSearchDto, userNo);
+        List<ProductSimpleDto> findSearch = productMapper.findByProductsWithFullTextSearch(productSearchDto, userNo);
         return ResponseProductSimpleDto.builder()
             .productList(findSearch)
             .pageData(getPageData(findSearch, productSearchDto))

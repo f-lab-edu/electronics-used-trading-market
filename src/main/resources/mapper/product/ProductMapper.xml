@@ -208,6 +208,87 @@
                  LEFT JOIN product_images pi ON p.product_thumbnail_no = pi.image_no
     </select>
 
+        <select id="findByProductsWithFullTextSearch" resultType="ProductSimpleDto">
+        SELECT p.product_no,
+               p.product_name,
+               p.product_price,
+               p.modify_date,
+               p.product_sales_status,
+               pi.file_link AS image,
+               p.like_count,
+               (EXISTS(SELECT 1 FROM likes WHERE product_no = p.product_no AND user_no = #{userNo})) AS my_wish
+        FROM (SELECT product_no, product_name, modify_date, product_price, product_thumbnail_no, like_count ,product_sales_status
+              FROM products
+              WHERE MATCH(product_name) AGAINST (#{searchDto.keyword} in boolean mode)
+
+                    <if test='searchDto.getOrder().toString() eq "DATE" and searchDto.lastModifiedDate != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                           AND (modify_date < #{searchDto.lastModifiedDate} OR (modify_date = #{searchDto.lastModifiedDate} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "PRICE_DESC" and searchDto.lastPrice != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (product_price < #{searchDto.lastPrice} OR (product_price = #{searchDto.lastPrice} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "PRICE_ASC" and searchDto.lastPrice != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (product_price > #{searchDto.lastPrice} OR (product_price = #{searchDto.lastPrice} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.getOrder().toString() eq "POPULAR" and searchDto.lastLikes != null and searchDto.lastProductNo != null'>
+                        <![CDATA[
+                          AND (like_count < #{searchDto.lastLikes} OR (like_count = #{searchDto.lastLikes} AND product_no > #{searchDto.lastProductNo}))
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.category != null' >
+                        AND product_category_no = #{searchDto.category}
+                    </if>
+
+                    <if test='searchDto.maxPrice != null'>
+                        <![CDATA[
+                            AND product_price <= #{searchDto.maxPrice}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.minPrice != null'>
+                        <![CDATA[
+                            AND product_price >= #{searchDto.minPrice}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.purchaseDate != null'>
+                        <![CDATA[
+                            AND product_purchase_date >= #{searchDto.purchaseDate}
+                        ]]>
+                    </if>
+                    <if test='searchDto.productAsExpirationDate != null'>
+                        <![CDATA[
+                            AND product_as_expiration_date >= #{searchDto.productAsExpirationDate}
+                        ]]>
+                    </if>
+
+                    <if test='searchDto.productStatus != null'>
+                        AND product_status = #{searchDto.productStatus}
+                    </if>
+
+                    <if test='searchDto.productSalesStatus != null'>
+                        AND product_sales_status = #{searchDto.productSalesStatus}
+                    </if>
+
+                    <if test='searchDto.productExchangeStatus != null'>
+                        AND product_exchange_status = #{searchDto.productExchangeStatus}
+                    </if>
+
+              ORDER BY ${searchDto.getOrder().getQuery()} ,product_no
+              LIMIT #{searchDto.size}) p
+                 LEFT JOIN product_images pi ON p.product_thumbnail_no = pi.image_no
+    </select>
+
     <delete id="deleteProductImageByProductNo">
         DELETE
         FROM product_images

@@ -116,7 +116,7 @@ public class DefaultProductService implements ProductService {
             this.productNo = productNo;
             this.modifyProduct = modifyProduct;
             this.updateThumbnailInfo = modifyProduct.getUpdateThumbnail();
-            this.thumbnailUpdateType = UpdateType.valueOf(this.updateThumbnailInfo.getUpdateType());
+            this.thumbnailUpdateType = this.updateThumbnailInfo.getUpdateType();
             this.removeImageNoList = modifyProduct.getRemoveImageNoList();
             this.currentProductImageList = currentProduct.getImageList();
             validationImageCount();

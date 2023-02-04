@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/products/search")
 public class ProductSearchController {
 
+    private final ProductSearchService elasticSearchService;
+
     private final ProductSearchService fullTextSearchService;
 
     private final ProductSearchService likeSearchService;
@@ -47,6 +49,17 @@ public class ProductSearchController {
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .result(fullTextSearchService.search(productSearchDto, userNo))
+                .build());
+    }
+
+    @GetMapping(produces = "application/vnd.mymarket.appv3+json")
+    @AuthCheck
+    public ResponseEntity<ResponseMessage> elasticSearchVersion(@Valid ProductSearchDto productSearchDto,
+        @CurrentSession Long userNo) {
+
+        return ResponseEntity.status(OK)
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .result(elasticSearchService.search(productSearchDto, userNo))
                 .build());
     }
 

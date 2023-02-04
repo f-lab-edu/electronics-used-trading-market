@@ -52,6 +52,18 @@ public class RequestModifyProductDto {
     @NotNull
     private UpdateImage updateThumbnail;
 
+    public ProductStatus getProductStatus() {
+        return ProductStatus.valueOf(productStatus);
+    }
+
+    public ProductExchangeStatus getProductExchangeStatus() {
+        return ProductExchangeStatus.valueOf(productExchangeStatus);
+    }
+
+    public ProductSalesStatus getProductSalesStatus() {
+        return ProductSalesStatus.valueOf(productSalesStatus);
+    }
+
     @Getter
     @Builder
     public static class UpdateImage {
@@ -62,6 +74,10 @@ public class RequestModifyProductDto {
         @NotBlank
         @ValidEnum(enumClass = UpdateType.class)
         private String updateType;
+
+        public UpdateType getUpdateType() {
+            return UpdateType.valueOf(this.updateType);
+        }
 
         public enum UpdateType {
             NEW, OLD, NONE

@@ -18,7 +18,9 @@ import org.springframework.dao.QueryTimeoutException;
 import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
+import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 
@@ -44,7 +46,7 @@ class DefaultProductCommandServiceTest {
         //then
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
         then(productService)
             .should()
             .registerProduct(any(), any(), any());
@@ -70,7 +72,7 @@ class DefaultProductCommandServiceTest {
 
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
         then(productService)
             .should()
             .registerProduct(any(), any(), any());
@@ -85,7 +87,7 @@ class DefaultProductCommandServiceTest {
         //given
         willThrow(ImageUploadException.class)
             .given(imageService)
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
 
         //when
         //then
@@ -96,7 +98,7 @@ class DefaultProductCommandServiceTest {
 
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
         then(productService)
             .should(never())
             .registerProduct(any(), any(), any());
@@ -122,7 +124,7 @@ class DefaultProductCommandServiceTest {
 
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
     }
 
     @Test
@@ -141,7 +143,7 @@ class DefaultProductCommandServiceTest {
 
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
     }
 
     @Test
@@ -150,7 +152,7 @@ class DefaultProductCommandServiceTest {
         //given
         willThrow(ImageUploadException.class)
             .given(imageService)
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
         //when
         //then
         assertThatThrownBy(() -> productCommandService.modifyProduct(1L, DEFAULT_REQUEST_MODIFY_PRODUCT_DTO,
@@ -169,7 +171,7 @@ class DefaultProductCommandServiceTest {
     @DisplayName("service : 물품수정 : 이미지 업로드 있을때 성공")
     void successfulModifyProductByImageExistence() {
         //given
-        given(imageService.uploadProductImages(any(), any()))
+        given(imageService.uploadProductImages(DEFAULT_PRODUCT_MULTIPART_IMAGES, ImageType.PRODUCT, ProductImage.class))
             .willReturn(DEFAULT_PRODUCT_IMAGES);
 
         //when
@@ -178,7 +180,7 @@ class DefaultProductCommandServiceTest {
         //then
         then(imageService)
             .should()
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
     }
 
     @Test
@@ -191,7 +193,7 @@ class DefaultProductCommandServiceTest {
         //then
         then(imageService)
             .should(never())
-            .uploadProductImages(any(), any());
+            .uploadProductImages(any(), any(), any());
     }
 
     @Test

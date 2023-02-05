@@ -1,7 +1,5 @@
 package kr.flab.tradingmarket.domain.user.service;
 
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,23 +44,23 @@ public class DefaultUserCommandService implements UserCommandService {
 
         String imagePath = imageService.uploadImage(image, ImageType.PROFILE);
 
-        UserProfileImage imageEntity = UserProfileImage.builder()
+        UserProfileImage newProfileImage = UserProfileImage.builder()
             .fileLink(imagePath)
             .fileSize(image.getSize())
             .originalFileName(image.getOriginalFilename())
             .build();
 
-        String deleteImageName = null;
+        UserProfileImage oldProfileImage = null;
 
         try {
-            deleteImageName = userService.modifyUserProfile(imageEntity, userNo);
+            oldProfileImage = userService.modifyUserProfile(newProfileImage, userNo);
         } catch (Exception e) {
-            imageService.deleteImage(separateImagePath(imagePath));
+            imageService.deleteImage(newProfileImage);
             throw new ImageUploadException("Image upload failed", e);
         }
 
-        if (deleteImageName != null) {
-            imageService.deleteImage(deleteImageName);
+        if (oldProfileImage != null) {
+            imageService.deleteImage(oldProfileImage);
         }
 
     }

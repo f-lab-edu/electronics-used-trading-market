@@ -16,10 +16,10 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import kr.flab.tradingmarket.domain.image.entity.BaseImage;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.image.utils.ImageUtils;
-import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,27 +48,29 @@ public class AwsImageService implements ImageService {
     }
 
     @Override
-    public List<ProductImage> uploadProductImages(List<MultipartFile> files, ImageType imageType) {
-        List<ProductImage> productImages = new ArrayList<>();
-        for (MultipartFile file : files) {
-            productImages.add(ProductImage.builder()
-                .originalFileName(file.getOriginalFilename())
-                .fileSize(file.getSize())
-                .fileLink(uploadImage(file, imageType))
-                .build());
+    public <T extends BaseImage> List<T> uploadProductImages(List<MultipartFile> files, ImageType imageType,
+        Class<T> clazz) {
+        if (imageType.getClazz() != clazz) {
+            throw new IllegalArgumentException("INVALID PARAMETER VALUE");
         }
-        return productImages;
+        List<T> images = new ArrayList<>();
+        for (MultipartFile file : files) {
+            images.add(
+                clazz.cast(imageType.getFactory()
+                    .create(file.getOriginalFilename(), uploadImage(file, imageType), file.getSize())));
+        }
+        return images;
     }
 
     @Override
-    public void deleteImage(String deleteImageName) {
-        s3Client.deleteObject(bucket, deleteImageName);
+    public <T extends BaseImage> void deleteImage(T deleteImage) {
+        s3Client.deleteObject(bucket, separateImagePath(deleteImage.getFileLink()));
     }
 
     @Override
-    public void deleteProductImages(List<ProductImage> deleteImages) {
-        for (ProductImage deleteImage : deleteImages) {
-            deleteImage(separateImagePath(deleteImage.getFileLink()));
+    public <T extends BaseImage> void deleteProductImages(List<T> deleteImages) {
+        for (BaseImage deleteImage : deleteImages) {
+            deleteImage(deleteImage);
         }
     }
 

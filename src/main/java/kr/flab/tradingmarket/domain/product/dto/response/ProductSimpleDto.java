@@ -7,6 +7,7 @@ import kr.flab.tradingmarket.domain.product.entity.ProductSalesStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductSearch;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "productNo")
 public class ProductSimpleDto {
     private Long productNo;
     private String productName;

@@ -8,16 +8,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Document(indexName = "products_index_v2")
 @Getter
-@Setter
-@AllArgsConstructor
-@ToString
+@Builder
 public class ProductSearch {
     @Id
     private Long productNo;

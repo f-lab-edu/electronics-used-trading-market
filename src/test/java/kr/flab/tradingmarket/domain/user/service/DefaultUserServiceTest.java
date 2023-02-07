@@ -1,6 +1,5 @@
 package kr.flab.tradingmarket.domain.user.service;
 
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
 import static kr.flab.tradingmarket.domain.user.config.UserCommonFixture.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -16,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
+import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
@@ -172,7 +172,8 @@ class DefaultUserServiceTest {
             .willReturn(DEFAULT_NO_PROFILE_USER);
 
         //when
-        String result = userService.modifyUserProfile(UPDATE_USER_PROFILE_IMG, DEFAULT_NO_PROFILE_USER.getUserNo());
+        UserProfileImage result = userService.modifyUserProfile(UPDATE_USER_PROFILE_IMG,
+            DEFAULT_NO_PROFILE_USER.getUserNo());
 
         //then
         assertThat(result).isEqualTo(null);
@@ -192,10 +193,10 @@ class DefaultUserServiceTest {
             .willReturn(DEFAULT_USER);
 
         //when
-        String result = userService.modifyUserProfile(UPDATE_USER_PROFILE_IMG, DEFAULT_USER.getUserNo());
+        UserProfileImage result = userService.modifyUserProfile(UPDATE_USER_PROFILE_IMG, DEFAULT_USER.getUserNo());
 
         //then
-        assertThat(result).isEqualTo(separateImagePath(DEFAULT_USER_PROFILE_IMG.getFileLink()));
+        assertThat(result).isEqualTo(DEFAULT_USER_PROFILE_IMG);
 
         then(userMapper)
             .should()

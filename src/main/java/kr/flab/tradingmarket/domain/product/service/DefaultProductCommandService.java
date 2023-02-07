@@ -27,8 +27,8 @@ public class DefaultProductCommandService implements ProductCommandService {
 
     @Override
     public void registerProduct(RegisterProductDto registerProductDto, List<MultipartFile> images, Long userNo) {
-        List<ProductImage> productImages = imageService.uploadProductImages(images,
-            ImageType.PRODUCT);
+        List<ProductImage> productImages = imageService.uploadProductImages(images, ImageType.PRODUCT,
+            ProductImage.class);
         try {
             productService.registerProduct(registerProductDto, productImages, userNo);
         } catch (DataAccessException e) {
@@ -48,7 +48,7 @@ public class DefaultProductCommandService implements ProductCommandService {
         List<ProductImage> updateImageList = null;
         boolean hasUploadImage = !images.get(0).isEmpty();
         if (hasUploadImage) {
-            updateImageList = imageService.uploadProductImages(images, ImageType.PRODUCT);
+            updateImageList = imageService.uploadProductImages(images, ImageType.PRODUCT, ProductImage.class);
         }
         try {
             List<ProductImage> deleteImageList = productService.modifyProduct(productNo, modifyProduct,

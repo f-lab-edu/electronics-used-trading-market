@@ -4,16 +4,17 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.flab.tradingmarket.domain.image.entity.BaseImage;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
-import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 
 public interface ImageService {
 
     String uploadImage(MultipartFile file, ImageType imageType);
 
-    List<ProductImage> uploadProductImages(List<MultipartFile> files, ImageType imageType);
+    <T extends BaseImage> List<T> uploadProductImages(List<MultipartFile> files, ImageType imageType,
+        Class<T> clazz);
 
-    void deleteImage(String deleteImageName);
+    <T extends BaseImage> void deleteImage(T deleteImage);
 
-    void deleteProductImages(List<ProductImage> deleteImageNames);
+    <T extends BaseImage> void deleteProductImages(List<T> deleteImages);
 }

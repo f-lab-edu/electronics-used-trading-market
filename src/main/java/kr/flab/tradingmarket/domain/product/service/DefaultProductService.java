@@ -96,12 +96,10 @@ public class DefaultProductService implements ProductService {
         private final UpdateType thumbnailUpdateType;
         @Getter
         private final List<Long> removeImageNoList;
-        @Getter
         private final Product currentProduct;
         private final List<ProductImage> currentProductImageList;
         @Getter
         private final Optional<List<ProductImage>> updateImageList;
-        @Getter
         private final UpdateImage updateThumbnailInfo;
         @Getter
         private final Optional<ProductImage> updateThumbnailImage;

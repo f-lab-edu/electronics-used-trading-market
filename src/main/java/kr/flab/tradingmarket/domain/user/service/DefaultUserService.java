@@ -1,7 +1,5 @@
 package kr.flab.tradingmarket.domain.user.service;
 
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
-
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,7 +106,7 @@ public class DefaultUserService implements UserService {
      */
     @Override
     @Transactional
-    public String modifyUserProfile(UserProfileImage imagePath, Long userNo) {
+    public UserProfileImage modifyUserProfile(UserProfileImage imagePath, Long userNo) {
 
         UserProfileImage userProfileImage = userMapper.findUserProfileImageByNo(userNo).getUserProfileImage();
 
@@ -118,7 +116,7 @@ public class DefaultUserService implements UserService {
             return null;
         }
 
-        return deleteImageProfileAndGetFileName(userProfileImage);
+        return deleteImageProfileAndGetImage(userProfileImage);
     }
 
     @Override
@@ -134,9 +132,9 @@ public class DefaultUserService implements UserService {
 
     }
 
-    private String deleteImageProfileAndGetFileName(UserProfileImage userProfileImage) {
+    private UserProfileImage deleteImageProfileAndGetImage(UserProfileImage userProfileImage) {
         userMapper.deleteProfileImage(userProfileImage.getImageNo());
-        return separateImagePath(userProfileImage.getFileLink());
+        return userProfileImage;
     }
 
     private void updateProfileImage(UserProfileImage imagePath, Long userNo) {

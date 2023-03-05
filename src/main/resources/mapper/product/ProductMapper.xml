@@ -2,36 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.flab.tradingmarket.domain.product.mapper.ProductMapper">
 
-    <resultMap type="Product" id="productAndCategoryAndAllImages">
-        <id column="product_no" property="productNo"/>
-        <result column="product_name" property="productName"/>
-        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
-        <result column="product_status" property="productStatus"/>
-        <result column="product_exchange_status" property="productExchangeStatus"/>
-        <result column="product_purchase_date" property="purchaseDate"/>
-        <result column="product_sales_status" property="productSalesStatus"/>
-        <result column="product_price" property="productPrice"/>
-        <result column="product_content" property="productContent"/>
-        <result column="product_stock" property="productStock"/>
-        <result column="modify_date" property="modifyDate"/>
-        <result column="create_date" property="createDate"/>
-        <association property="productThumbnail" javaType="ProductImage">
-            <id column="product_thumbnail_no" property="imageNo"/>
-        </association>
-        <association property="category" javaType="Category">
-            <id column="product_category_no" property="categoryNo"/>
-        </association>
-        <association property="seller" javaType="User">
-            <id column="seller_no" property="userNo"/>
-        </association>
-        <collection property="imageList" ofType="ProductImage">
-            <id property="imageNo" column="image_no"/>
-            <result property="fileLink" column="file_link"/>
-            <result property="originalFileName" column="original_file_name"/>
-        </collection>
-    </resultMap>
-
-
     <insert id="insertProduct"  parameterType="Product" useGeneratedKeys="true" keyProperty="productNo">
         INSERT INTO products (product_name,
                               product_category_no,
@@ -300,4 +270,14 @@
         FROM products
         where product_no = #{productNo}
     </delete>
+
+
+    <select id="findByImagesAndCategoryAndUserAndLikes" resultMap="productAndCategoryAndAllImagesAndUserAndCategory">
+        select *
+        from products p
+                 left join category c on p.product_category_no = c.category_no
+                 left join product_images pi on p.product_no = pi.product_no
+                 left join users u on u.user_no = p.seller_no
+        where p.product_no = #{productNo}
+    </select>
 </mapper>

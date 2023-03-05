@@ -92,4 +92,13 @@ public class ProductController {
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());
     }
+
+    @GetMapping("/{productNo}")
+    public ResponseEntity<ResponseMessage> getProduct(@PathVariable Long productNo) {
+        return ResponseEntity.status(OK)
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value()).result(
+                    productCommandService.findByDetailProduct(productNo))
+                .build());
+    }
+
 }

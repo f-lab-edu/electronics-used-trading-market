@@ -6,6 +6,7 @@ import java.util.Optional;
 import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 
 public interface ProductService {
@@ -13,6 +14,8 @@ public interface ProductService {
     void registerProduct(RegisterProductDto registerProductDto, List<ProductImage> productImages, Long userNo);
 
     ResponseModifyProductDto findByModifyProduct(Long productNo);
+
+    ResponseProductDetailDto findByDetailProduct(Long productNo);
 
     boolean isProductAuthorized(Long productNo, Long userNo);
 

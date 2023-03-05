@@ -23,6 +23,8 @@ public interface ProductMapper {
 
     Product findByThumbnailAndImages(Long productNo);
 
+    Product findByImagesAndCategoryAndUserAndLikes(Long productNo);
+
     void updateProduct(Product from);
 
     void deleteProductImages(List<Long> removeImages);

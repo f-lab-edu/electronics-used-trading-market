@@ -36,6 +36,7 @@ public class Product {
     private Category category;
     private User seller;
     private List<ProductImage> imageList;
+    private Integer likeCount;
 
     @Builder
     public Product(Long productNo, String productName, LocalDate productAsExpirationDate, ProductStatus productStatus,

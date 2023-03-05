@@ -16,6 +16,7 @@ import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto.UpdateImage.UpdateType;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
@@ -46,6 +47,12 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    public ResponseProductDetailDto findByDetailProduct(Long productNo) {
+        Product product = productMapper.findByImagesAndCategoryAndUserAndLikes(productNo);
+        return ResponseProductDetailDto.from(product);
+    }
+
+    @Override
     public boolean isProductAuthorized(Long productNo, Long userNo) {
         return productMapper.existsByProductNoAndSellerNo(productNo, userNo) == 1;
     }
@@ -54,7 +61,6 @@ public class DefaultProductService implements ProductService {
     @Override
     public List<ProductImage> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList) {
-
         ModifyProductValidObject validModifyProduct = new ModifyProductValidObject(productNo, modifyProduct,
             updateImageList, productMapper.findByThumbnailAndImages(productNo));
         productMapper.updateProduct(Product.of(modifyProduct, productNo));

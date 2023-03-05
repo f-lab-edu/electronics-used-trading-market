@@ -64,7 +64,6 @@ class ProductControllerTest {
 
     @BeforeEach
     public void initMock() throws JsonProcessingException {
-        ;
         given(categoryService.existCategory(any()))
             .willReturn(true);
     }

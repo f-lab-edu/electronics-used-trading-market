@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import kr.flab.tradingmarket.domain.like.entity.Like;
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
 import kr.flab.tradingmarket.domain.product.dto.request.SearchOrder;
 import kr.flab.tradingmarket.domain.product.dto.response.ProductSimpleDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponsePageData;
 import kr.flab.tradingmarket.domain.product.entity.ProductSalesStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductSearch;
 
@@ -70,14 +70,21 @@ public class ProductSearchCommonFixture {
         .build();
 
     public static final List<ProductSimpleDto> DEFAULT_FIND_SEARCH_PRODUCT_LIST = new ArrayList<>();
-    public static final Map<String, Object> LAST_POPULAR_PAGE_DATA = Map.of("lastProductNo", 10L, "lastLikes", 10,
-        "order", SearchOrder.POPULAR);
-    public static final Map<String, Object> LAST_DATE_PAGE_DATA = Map.of("lastProductNo", 10L, "lastModifiedDate",
-        LocalDateTime.of(2023, 10, 10, 23, 20, 20), "order", SearchOrder.DATE);
-    public static final Map<String, Object> LAST_PRICE_DESC_PAGE_DATA = Map.of("lastProductNo", 10L, "lastPrice",
-        BigDecimal.valueOf(20010), "order", SearchOrder.PRICE_DESC);
-    public static final Map<String, Object> LAST_PRICE_ASC_PAGE_DATA = Map.of("lastProductNo", 10L, "lastPrice",
-        BigDecimal.valueOf(20010), "order", SearchOrder.PRICE_ASC);
+    public static final ResponsePageData<Integer> LAST_POPULAR_PAGE_DATA = new ResponsePageData<>(10,
+        SearchOrder.POPULAR,
+        10L);
+    public static final ResponsePageData<LocalDateTime> LAST_DATE_PAGE_DATA = new ResponsePageData<>(
+        LocalDateTime.of(2023, 10, 10, 23, 20, 20),
+        SearchOrder.DATE,
+        10L);
+    public static final ResponsePageData<BigDecimal> LAST_PRICE_DESC_PAGE_DATA = new ResponsePageData<>(
+        BigDecimal.valueOf(20010),
+        SearchOrder.PRICE_DESC,
+        10L);
+    public static final ResponsePageData<BigDecimal> LAST_PRICE_ASC_PAGE_DATA = new ResponsePageData<>(
+        BigDecimal.valueOf(20010),
+        SearchOrder.PRICE_ASC,
+        10L);
     public static final List<ProductSearch> DEFAULT_PRODUCT_SEARCH_ENTITY = new ArrayList<>();
     public static final List<Like> DEFAULT_LIKE_LIST = new ArrayList<>();
 

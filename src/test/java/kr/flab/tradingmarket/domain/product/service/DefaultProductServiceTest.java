@@ -71,7 +71,7 @@ class DefaultProductServiceTest {
         then(productMapper)
             .should()
             .findByThumbnailAndImages(any());
-        assertThat(result).isEqualTo(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
+        assertThat(result).usingRecursiveComparison().isEqualTo(DEFAULT_RESPONSE_MODIFY_PRODUCT_DTO);
 
     }
 

@@ -6,12 +6,8 @@ import org.hibernate.validator.constraints.Length;
 
 import kr.flab.tradingmarket.common.annotation.PasswordPatternNotBlack;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
-@EqualsAndHashCode
-@ToString
 @Getter
 @Builder
 public class UserAuthDto {

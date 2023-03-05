@@ -14,9 +14,7 @@ import kr.flab.tradingmarket.domain.product.entity.ProductExchangeStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductStatus;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
-@ToString
 @Getter
 @Builder
 public class RegisterProductDto {

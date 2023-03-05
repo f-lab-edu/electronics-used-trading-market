@@ -4,14 +4,10 @@ import javax.validation.constraints.AssertTrue;
 
 import kr.flab.tradingmarket.common.annotation.PasswordPatternNotBlack;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
-@ToString
 @Getter
 @Builder
-@EqualsAndHashCode
 public class ChangePasswordDto {
     @PasswordPatternNotBlack
     private String currentPassword;

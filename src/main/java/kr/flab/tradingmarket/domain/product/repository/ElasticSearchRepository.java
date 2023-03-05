@@ -1,5 +1,7 @@
 package kr.flab.tradingmarket.domain.product.repository;
 
+import static org.springframework.data.domain.Sort.Direction.*;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -16,6 +18,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Repository;
 
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
+import kr.flab.tradingmarket.domain.product.dto.request.RequestLatestProductDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductSearch;
 import lombok.RequiredArgsConstructor;
 
@@ -24,14 +27,22 @@ import lombok.RequiredArgsConstructor;
 public class ElasticSearchRepository implements ProductSearchRepository {
     private final ElasticsearchOperations elasticsearchOperations;
 
+    private static NativeSearchQueryBuilder createQuery(
+        RequestLatestProductDto requestLatestProductDto) {
+        return new NativeSearchQueryBuilder()
+            .withPageable(PageRequest.of(0, requestLatestProductDto.getSize()))
+            .withSort(Sort.by(DESC, "modify_date")
+                .and(Sort.by(DESC, "product_no")));
+    }
+
     private NativeSearchQuery createSearchQuery(ProductSearchDto productSearchDto) {
-        NativeSearchQueryBuilder searchQuery = new NativeSearchQueryBuilder()
-            .withQuery(makeBoolQuery(productSearchDto))
-            .withPageable(PageRequest.of(0, productSearchDto.getSize()))
-            .withSort(Sort.by(productSearchDto.getOrder().getDirection(),
-                    productSearchDto.getOrder().getFieldName())
-                .and(Sort.by(Sort.Direction.DESC, "product_no")));
-        return makeSearchAfter(productSearchDto, searchQuery);
+        return makeSearchAfter(productSearchDto,
+            new NativeSearchQueryBuilder()
+                .withQuery(makeBoolQuery(productSearchDto))
+                .withPageable(PageRequest.of(0, productSearchDto.getSize()))
+                .withSort(Sort.by(productSearchDto.getOrder().getDirection(),
+                        productSearchDto.getOrder().getFieldName())
+                    .and(Sort.by(DESC, "product_no"))));
     }
 
     @Override
@@ -39,6 +50,28 @@ public class ElasticSearchRepository implements ProductSearchRepository {
         NativeSearchQuery query = createSearchQuery(productSearchDto);
         SearchHits<ProductSearch> searchDocuments = elasticsearchOperations.search(query, ProductSearch.class);
         return searchDocuments.get().map(SearchHit::getContent).toList();
+    }
+
+    @Override
+    public List<ProductSearch> searchLatestProduct(RequestLatestProductDto requestLatestProductDto) {
+        NativeSearchQueryBuilder searchQuery = createQuery(requestLatestProductDto);
+        NativeSearchQuery query = makeSearchAfter(requestLatestProductDto, searchQuery);
+        SearchHits<ProductSearch> searchDocuments = elasticsearchOperations.search(query, ProductSearch.class);
+        return searchDocuments.get().map(SearchHit::getContent).toList();
+    }
+
+    private NativeSearchQuery makeSearchAfter(RequestLatestProductDto requestLatestProductDto,
+        NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+
+        if (requestLatestProductDto.getLastProductNo() == null
+            || requestLatestProductDto.getLastModifiedDate() == null) {
+            return nativeSearchQueryBuilder.build();
+        }
+
+        nativeSearchQueryBuilder.withSearchAfter(
+            List.of(requestLatestProductDto.getLastModifiedDate(), requestLatestProductDto.getLastProductNo()));
+        return nativeSearchQueryBuilder.build();
+
     }
 
     private NativeSearchQuery makeSearchAfter(ProductSearchDto productSearchDto,

@@ -43,8 +43,7 @@ public class Product {
         ProductExchangeStatus productExchangeStatus, LocalDate purchaseDate, ProductSalesStatus productSalesStatus,
         BigDecimal productPrice, String productContent, Integer productStock, Integer productViewCount,
         LocalDateTime modifyDate, LocalDateTime createDate, ProductImage productThumbnail, Category category,
-        User seller,
-        List<ProductImage> imageList) {
+        User seller, List<ProductImage> imageList, Integer likeCount) {
         this.productNo = productNo;
         this.productName = productName;
         this.productAsExpirationDate = productAsExpirationDate;
@@ -62,6 +61,7 @@ public class Product {
         this.category = category;
         this.seller = seller;
         this.imageList = imageList;
+        this.likeCount = likeCount;
     }
 
     public static Product of(RegisterProductDto registerProductDto, Long sellerNo) {

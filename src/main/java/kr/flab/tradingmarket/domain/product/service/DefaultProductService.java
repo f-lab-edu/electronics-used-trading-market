@@ -20,6 +20,7 @@ import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDt
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
+import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultProductService implements ProductService {
 
     private final ProductMapper productMapper;
+    private final ElasticSearchDocumentRepository elasticSearchRepository;
 
     @Override
     @Transactional
@@ -93,6 +95,7 @@ public class DefaultProductService implements ProductService {
             productMapper.findProductImageByProductNo(productNo));
         productMapper.deleteProductImageByProductNo(productNo);
         productMapper.deleteProductByProductNo(productNo);
+        elasticSearchRepository.deleteById(productNo);
         return productImageList;
     }
 

@@ -18,6 +18,7 @@ import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDt
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
+import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultProductServiceTest {
@@ -26,6 +27,9 @@ class DefaultProductServiceTest {
     DefaultProductService productService;
     @Mock
     ProductMapper productMapper;
+
+    @Mock
+    ElasticSearchDocumentRepository elasticSearchDocumentRepository;
 
     @Test
     @DisplayName("service : 물품등록 : 성공")
@@ -300,6 +304,9 @@ class DefaultProductServiceTest {
         then(productMapper)
             .should()
             .deleteProductByProductNo(any());
+        then(elasticSearchDocumentRepository)
+            .should()
+            .deleteById(any());
     }
 
     @Test

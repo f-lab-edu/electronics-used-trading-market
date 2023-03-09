@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.common.exception.NoPermissionException;
+import kr.flab.tradingmarket.domain.chat.exception.ChatRoomNotFoundException;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
@@ -193,6 +194,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
                 .message("상품수정에 실패했습니다. 나중에 다시시도 해주세요.")
+                .build());
+    }
+
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    protected ResponseEntity<ResponseMessage> chatRoomNotFoundException(ChatRoomNotFoundException ex) {
+        log.info("ChatRoomNotFoundException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("존재하지 않는 채팅방 입니다.")
                 .build());
     }
 

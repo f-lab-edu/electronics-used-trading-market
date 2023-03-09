@@ -108,6 +108,11 @@ public class DefaultProductService implements ProductService {
         return productImageList;
     }
 
+    @Override
+    public List<Product> findProductAndSellerByNoList(List<Long> productNoList) {
+        return productMapper.findByNoList(productNoList);
+    }
+
     private static class ModifyProductValidObject {
         @Getter
         private final Long productNo;

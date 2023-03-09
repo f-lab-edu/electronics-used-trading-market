@@ -12,6 +12,8 @@
 - Naver Cloud Platform
 - Docker
 
+## ☁️Architecture
+![image](https://user-images.githubusercontent.com/39224132/224132535-662b485d-8146-4aff-a95a-bebbef2afd12.png)
 
 ## 📝 WIKI
 - [UseCase](https://github.com/f-lab-edu/electronics-used-trading-market/wiki/1.UseCase)

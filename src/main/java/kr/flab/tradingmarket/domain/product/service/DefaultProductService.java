@@ -19,6 +19,7 @@ import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDt
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
+import kr.flab.tradingmarket.domain.product.exception.ProductNotFoundException;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
 import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 import lombok.Getter;
@@ -49,8 +50,16 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    public Product findById(Long productNo) {
+        return productMapper.findById(productNo);
+    }
+
+    @Override
     public ResponseProductDetailDto findByDetailProduct(Long productNo) {
         Product product = productMapper.findByImagesAndCategoryAndUserAndLikes(productNo);
+        if (product == null) {
+            throw new ProductNotFoundException("Product not found %d".formatted(productNo));
+        }
         return ResponseProductDetailDto.from(product);
     }
 

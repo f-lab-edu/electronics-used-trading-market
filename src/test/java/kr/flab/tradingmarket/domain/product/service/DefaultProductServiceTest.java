@@ -17,6 +17,7 @@ import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
+import kr.flab.tradingmarket.domain.product.exception.ProductNotFoundException;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
 import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 
@@ -326,6 +327,23 @@ class DefaultProductServiceTest {
 
         assertThat(findProduct).usingRecursiveComparison()
             .isEqualTo(DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO);
+    }
+
+    @Test
+    @DisplayName("service : 물품 조회 : 조회한 물품이 존재하지 않는 경우 실패 ")
+    public void failFindByDetailProduct() {
+        //given
+        given(productMapper.findByImagesAndCategoryAndUserAndLikes(any()))
+            .willReturn(null);
+
+        //when
+        assertThatThrownBy(() -> productService.
+            findByDetailProduct(1L)).isInstanceOf(ProductNotFoundException.class);
+
+        //then
+        then(productMapper)
+            .should()
+            .findByImagesAndCategoryAndUserAndLikes(any());
     }
 
 }

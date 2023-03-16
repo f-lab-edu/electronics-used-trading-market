@@ -2,9 +2,12 @@ package kr.flab.tradingmarket.domain.room.repository;
 
 import static kr.flab.tradingmarket.domain.chat.util.RedisKeyUtils.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Repository;
 
 import kr.flab.tradingmarket.domain.room.entity.RoomKey;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultRoomRepository implements RoomRepository {
 
     private final RedisTemplate<String, String> redisChatTemplate;
+    private final RedisScript<Void> createRoomScript;
 
     @Override
     public Set<String> findByUserNo(Long userNo) {
@@ -33,8 +37,9 @@ public class DefaultRoomRepository implements RoomRepository {
 
     @Override
     public String createRooms(RoomKey roomKey) {
-        redisChatTemplate.opsForSet().add(createUserRoomKey(roomKey.getBuyerNo()), roomKey.getRoomId());
-        redisChatTemplate.opsForSet().add(createUserRoomKey(roomKey.getSellerNo()), roomKey.getRoomId());
+        List<String> keys = Arrays.asList(createUserRoomKey(roomKey.getBuyerNo()),
+            createUserRoomKey(roomKey.getSellerNo()));
+        redisChatTemplate.execute(createRoomScript, keys, roomKey.getRoomId());
         return roomKey.getRoomId();
     }
 

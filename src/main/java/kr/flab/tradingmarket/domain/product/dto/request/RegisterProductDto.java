@@ -12,11 +12,16 @@ import kr.flab.tradingmarket.common.annotation.ValidCategory;
 import kr.flab.tradingmarket.common.annotation.ValidEnum;
 import kr.flab.tradingmarket.domain.product.entity.ProductExchangeStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductStatus;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegisterProductDto {
 
     @Length(min = 1, max = 99)

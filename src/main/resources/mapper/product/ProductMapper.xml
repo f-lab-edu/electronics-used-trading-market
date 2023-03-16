@@ -280,4 +280,19 @@
                  left join users u on u.user_no = p.seller_no
         where p.product_no = #{productNo}
     </select>
+    <select id="findByNoList" resultMap="productAndUser">
+        select *
+        from products p
+                 left join users u on u.user_no = p.seller_no
+        where p.product_no in
+        <foreach collection="list" item="productNo" index="index"
+                 separator="," open="(" close=")">
+            #{productNo}
+        </foreach>
+    </select>
+    <select id="findById" resultMap="product">
+        select *
+        from products
+        where product_no=#{productNo}
+    </select>
 </mapper>

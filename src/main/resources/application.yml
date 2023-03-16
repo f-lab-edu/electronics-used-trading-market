@@ -45,9 +45,14 @@ spring:
   session:
     storage-type: redis
   redis:
-    host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
-    port: ENC(XRKvxV1k0hftM+5eSdKULw==)
-    password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+    session:
+      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
+      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
+      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+    chat:
+      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
+      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
+      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
   devtools:
     remote:
       restart:
@@ -65,9 +70,15 @@ spring:
   session:
     storage-type: redis
   redis:
-    host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
-    port: ENC(wf+/bZci+64eLNvc+llNtQ==)
-    password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
+    session:
+      host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
+      port: ENC(wf+/bZci+64eLNvc+llNtQ==)
+      password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
+    chat:
+      host: ENC(7GyhlR7OkwsRpbh+3aU/3gw6TA1hJYW+)
+      port: ENC(gUgwceTXRAZjFQdNnJ97ag==)
+      password: ENC(khbn0zgMU6x73NKNGKkAqg==)
+
 ---
 spring:
   config:

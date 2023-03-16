@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import kr.flab.tradingmarket.domain.like.entity.Like;
 import kr.flab.tradingmarket.domain.like.mapper.LikeMapper;
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
+import kr.flab.tradingmarket.domain.product.dto.request.RequestLatestProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ProductSimpleDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductSimpleDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductSearch;
@@ -28,7 +29,23 @@ public class ElasticSearchService implements ProductSearchService {
         return createResponseProductSimpleDto(productList, productSearchDto);
     }
 
+    @Override
+    public ResponseProductSimpleDto searchLatestProduct(RequestLatestProductDto requestLatestProductDto, Long userNo) {
+        List<ProductSimpleDto> productList = convertToProductSimpleDtoList(userNo,
+            productSearchRepository.searchLatestProduct(requestLatestProductDto));
+        return ResponseProductSimpleDto.builder()
+            .productList(productList)
+            .pageData(getPageData(productList, requestLatestProductDto))
+            .size(requestLatestProductDto.getSize())
+            .build();
+    }
+
     private List<ProductSimpleDto> convertToProductSimpleDtoList(Long userNo, List<ProductSearch> productSearch) {
+        if (userNo == null) {
+            return productSearch.stream()
+                .map(i -> ProductSimpleDto.of(i, false))
+                .collect(Collectors.toList());
+        }
         List<Long> likeProductNoList = getMyLikes(userNo, productSearch);
         return productSearch.stream()
             .map(i -> ProductSimpleDto.of(i, likeProductNoList.contains(i.getProductNo())))
@@ -49,5 +66,4 @@ public class ElasticSearchService implements ProductSearchService {
             .size(productSearchDto.getSize())
             .build();
     }
-
 }

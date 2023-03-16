@@ -26,6 +26,8 @@ class DefaultUserCommandTest {
     UserService userService;
     @Mock
     ImageService imageService;
+    @Mock
+    LoginService loginService;
 
     @Test
     @DisplayName("service : 회원가입 테스트 : 성공")
@@ -93,6 +95,9 @@ class DefaultUserCommandTest {
         then(userService)
             .should()
             .withdrawUser(any());
+        then(loginService)
+            .should()
+            .logout();
     }
 
     @Test

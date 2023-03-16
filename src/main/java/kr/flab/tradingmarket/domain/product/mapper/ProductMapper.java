@@ -3,6 +3,7 @@ package kr.flab.tradingmarket.domain.product.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
@@ -17,9 +18,10 @@ public interface ProductMapper {
 
     void insertProductImages(List<ProductImage> productImages);
 
-    void updateProductThumbnail(ProductImage productThumbnail, Long productNo);
+    void updateProductThumbnail(@Param("productThumbnail") ProductImage productThumbnail,
+        @Param("productNo") Long productNo);
 
-    int existsByProductNoAndSellerNo(Long productNo, Long sellerNo);
+    int existsByProductNoAndSellerNo(@Param("productNo") Long productNo, @Param("sellerNo") Long sellerNo);
 
     Product findByThumbnailAndImages(Long productNo);
 
@@ -35,7 +37,13 @@ public interface ProductMapper {
 
     void deleteProductByProductNo(Long productNo);
 
-    List<ProductSimpleDto> findByProductsWithLikeSearch(ProductSearchDto searchDto, Long userNo);
+    List<ProductSimpleDto> findByProductsWithLikeSearch(@Param("searchDto") ProductSearchDto searchDto,
+        @Param("userNo") Long userNo);
 
-    List<ProductSimpleDto> findByProductsWithFullTextSearch(ProductSearchDto searchDto, Long userNo);
+    List<ProductSimpleDto> findByProductsWithFullTextSearch(@Param("searchDto") ProductSearchDto searchDto,
+        @Param("userNo") Long userNo);
+
+    List<Product> findByNoList(List<Long> productNoList);
+
+    Product findById(Long productNo);
 }

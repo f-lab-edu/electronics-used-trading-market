@@ -20,6 +20,7 @@ import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.image.service.ImageService;
 import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
@@ -241,4 +242,24 @@ class DefaultProductCommandServiceTest {
             .should(never())
             .deleteProductImages(any());
     }
+
+    @Test
+    @DisplayName("service : 물품 조회 : 성공")
+    public void successfulFindByDetailProduct() {
+        //given
+        given(productService.findByDetailProduct(any()))
+            .willReturn(DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO);
+
+        //when
+        ResponseProductDetailDto findProduct = productCommandService.findByDetailProduct(1L);
+
+        //then
+        then(productService)
+            .should()
+            .findByDetailProduct(any());
+
+        assertThat(findProduct).usingRecursiveComparison()
+            .isEqualTo(DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO);
+    }
+
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.flab.tradingmarket.domain.product.mapper.ProductMapper">
+    <resultMap type="Product" id="productAndCategoryAndAllImages">
+        <id column="product_no" property="productNo"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_exchange_status" property="productExchangeStatus"/>
+        <result column="product_purchase_date" property="purchaseDate"/>
+        <result column="product_sales_status" property="productSalesStatus"/>
+        <result column="product_view_count" property="productViewCount"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_content" property="productContent"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="create_date" property="createDate"/>
+        <association property="productThumbnail" javaType="ProductImage">
+            <id column="product_thumbnail_no" property="imageNo"/>
+        </association>
+        <association property="category" javaType="Category">
+            <id column="product_category_no" property="categoryNo"/>
+        </association>
+        <association property="seller" javaType="User">
+            <id column="seller_no" property="userNo"/>
+        </association>
+        <collection property="imageList" ofType="ProductImage">
+            <id property="imageNo" column="image_no"/>
+            <result property="fileLink" column="file_link"/>
+            <result property="originalFileName" column="original_file_name"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="Product" id="productAndCategoryAndAllImagesAndUserAndCategory">
+        <id column="product_no" property="productNo"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_exchange_status" property="productExchangeStatus"/>
+        <result column="product_purchase_date" property="purchaseDate"/>
+        <result column="product_sales_status" property="productSalesStatus"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_content" property="productContent"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="create_date" property="createDate"/>
+        <result column="like_count" property="likeCount"/>
+        <association property="category" javaType="Category">
+            <id column="product_category_no" property="categoryNo"/>
+            <result column="first_category" property="firstCategory"/>
+            <result column="second_category" property="secondCategory"/>
+            <result column="third_category" property="thirdCategory"/>
+        </association>
+        <association property="seller" javaType="User">
+            <id column="seller_no" property="userNo"/>
+            <result column="user_name" property="userName"/>
+        </association>
+        <collection property="imageList" ofType="ProductImage">
+            <id property="imageNo" column="image_no"/>
+            <result property="fileLink" column="file_link"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="Product" id="productAndUser">
+        <id column="product_no" property="productNo"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_exchange_status" property="productExchangeStatus"/>
+        <result column="product_purchase_date" property="purchaseDate"/>
+        <result column="product_sales_status" property="productSalesStatus"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_content" property="productContent"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="create_date" property="createDate"/>
+        <association property="seller" javaType="User">
+            <id column="seller_no" property="userNo"/>
+            <result column="user_name" property="userName"/>
+        </association>
+    </resultMap>
+
+    <resultMap type="Product" id="product">
+        <id column="product_no" property="productNo"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_as_expiration_date" property="productAsExpirationDate"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_exchange_status" property="productExchangeStatus"/>
+        <result column="product_purchase_date" property="purchaseDate"/>
+        <result column="product_sales_status" property="productSalesStatus"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="product_content" property="productContent"/>
+        <result column="product_stock" property="productStock"/>
+        <result column="modify_date" property="modifyDate"/>
+        <result column="create_date" property="createDate"/>
+        <result column="like_count" property="likeCount"/>
+        <association property="productThumbnail" javaType="ProductImage">
+            <id column="product_thumbnail_no" property="imageNo"/>
+        </association>
+        <association property="seller" javaType="User">
+            <id column="seller_no" property="userNo"/>
+        </association>
+        <association property="category" javaType="Category">
+            <id column="product_category_no" property="categoryNo"/>
+        </association>
+    </resultMap>
+</mapper>

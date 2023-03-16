@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +17,9 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class DefaultChatRepository implements ChatRepository {
-
     private final RedisTemplate<String, String> redisChatTemplate;
+    @Value("${chat.expiration-date}")
+    private int expirationDate;
 
     @Override
     public List<String> getMessages(String roomId, int offset, int size) {
@@ -39,7 +41,7 @@ public class DefaultChatRepository implements ChatRepository {
     public void saveMessage(ChatMessage message) {
         String roomKey = createRoomKey(message.getRoomId());
         redisChatTemplate.opsForList().rightPush(roomKey, ObjectMapperUtils.writeValueAsString(message));
-        redisChatTemplate.expire(roomKey, 14, TimeUnit.DAYS);
+        redisChatTemplate.expire(roomKey, expirationDate, TimeUnit.DAYS);
     }
 
 }

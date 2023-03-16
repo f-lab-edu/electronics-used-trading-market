@@ -13,6 +13,7 @@ import kr.flab.tradingmarket.domain.image.utils.ImageType;
 import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
@@ -40,6 +41,11 @@ public class DefaultProductCommandService implements ProductCommandService {
     @Override
     public ResponseModifyProductDto findByModifyProduct(Long productNo) {
         return productService.findByModifyProduct(productNo);
+    }
+
+    @Override
+    public ResponseProductDetailDto findByDetailProduct(Long productNo) {
+        return productService.findByDetailProduct(productNo);
     }
 
     @Override

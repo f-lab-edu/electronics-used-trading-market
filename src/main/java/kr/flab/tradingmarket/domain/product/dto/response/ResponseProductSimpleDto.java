@@ -4,10 +4,8 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
 public class ResponseProductSimpleDto {
     private final List<ProductSimpleDto> productList;
     private final Integer size;

@@ -45,7 +45,7 @@ class ElasticSearchServiceTest {
         then(likeMapper).should().findByUserNoAndProductNo(any(), any());
         then(elasticSearchRepository).should().searchProduct(any());
 
-        assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
+        assertThat(search.getProductList()).usingRecursiveComparison().isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
         assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_POPULAR_PAGE_DATA);
     }
@@ -66,7 +66,7 @@ class ElasticSearchServiceTest {
         then(likeMapper).should().findByUserNoAndProductNo(any(), any());
         then(elasticSearchRepository).should().searchProduct(any());
 
-        assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
+        assertThat(search.getProductList()).usingRecursiveComparison().isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
         assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_DATE_PAGE_DATA);
 
@@ -88,7 +88,7 @@ class ElasticSearchServiceTest {
         then(likeMapper).should().findByUserNoAndProductNo(any(), any());
         then(elasticSearchRepository).should().searchProduct(any());
 
-        assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
+        assertThat(search.getProductList()).usingRecursiveComparison().isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
         assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_PRICE_DESC_PAGE_DATA);
 
@@ -110,7 +110,7 @@ class ElasticSearchServiceTest {
         then(likeMapper).should().findByUserNoAndProductNo(any(), any());
         then(elasticSearchRepository).should().searchProduct(any());
 
-        assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
+        assertThat(search.getProductList()).usingRecursiveComparison().isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
         assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_PRICE_ASC_PAGE_DATA);
 
@@ -132,7 +132,7 @@ class ElasticSearchServiceTest {
         then(likeMapper).should().findByUserNoAndProductNo(any(), any());
         then(elasticSearchRepository).should().searchProduct(any());
 
-        assertThat(search.getProductList()).isEqualTo(new ArrayList<>());
+        assertThat(search.getProductList()).usingRecursiveComparison().isEqualTo(new ArrayList<>());
         assertThat(search.getSize()).isEqualTo(10);
         assertThat(search.getPageData()).isEqualTo(null);
 

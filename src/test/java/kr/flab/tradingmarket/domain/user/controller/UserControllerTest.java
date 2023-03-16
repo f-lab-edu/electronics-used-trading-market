@@ -72,7 +72,7 @@ class UserControllerTest {
             .should()
             .joinUser(JOIN_USER_DTO_CAPTURE.capture());
 
-        assertThat(JOIN_USER_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_JOIN_USER_DTO);
+        assertThat(JOIN_USER_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_JOIN_USER_DTO);
     }
 
     @Test
@@ -130,7 +130,7 @@ class UserControllerTest {
         then(loginService)
             .should()
             .login(USER_AUTH_DTO_CAPTURE.capture());
-        assertThat(USER_AUTH_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_LOGIN_USER);
+        assertThat(USER_AUTH_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_LOGIN_USER);
     }
 
     @Test
@@ -240,7 +240,7 @@ class UserControllerTest {
         then(userCommandService)
             .should()
             .modifyUser(MODIFY_USER_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
-        assertThat(MODIFY_USER_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_USER_MODIFY_DTO);
+        assertThat(MODIFY_USER_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_USER_MODIFY_DTO);
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
     }
 
@@ -371,7 +371,8 @@ class UserControllerTest {
         then(userCommandService)
             .should()
             .changePassword(CHANGE_PASSWORD_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
-        assertThat(CHANGE_PASSWORD_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_CHANGE_PASSWORD_DTO);
+        assertThat(CHANGE_PASSWORD_DTO_CAPTURE.getValue()).usingRecursiveComparison()
+            .isEqualTo(DEFAULT_CHANGE_PASSWORD_DTO);
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
     }
 

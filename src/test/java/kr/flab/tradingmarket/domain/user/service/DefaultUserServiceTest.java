@@ -161,7 +161,7 @@ class DefaultUserServiceTest {
         MyInfoDto modifyUserDtoByUserNo = userService.findModifyUserDtoByUserNo(DEFAULT_USER.getUserNo());
 
         //then
-        assertThat(MyInfoDto.from(DEFAULT_USER)).isEqualTo(modifyUserDtoByUserNo);
+        assertThat(MyInfoDto.from(DEFAULT_USER)).usingRecursiveComparison().isEqualTo(modifyUserDtoByUserNo);
     }
 
     @Test

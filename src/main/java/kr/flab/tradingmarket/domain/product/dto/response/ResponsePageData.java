@@ -2,10 +2,8 @@ package kr.flab.tradingmarket.domain.product.dto.response;
 
 import kr.flab.tradingmarket.domain.product.dto.request.SearchOrder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
 public class ResponsePageData<T> {
     private final T lastValue;
     private final String lastValueName;

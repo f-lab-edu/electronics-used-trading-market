@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.flab.tradingmarket.common.annotation.AuthCheck;
 import kr.flab.tradingmarket.common.annotation.CurrentSession;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
+import kr.flab.tradingmarket.domain.product.dto.request.RequestLatestProductDto;
 import kr.flab.tradingmarket.domain.product.service.ProductSearchService;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,6 @@ public class ProductSearchController {
     private final ProductSearchService likeSearchService;
 
     @GetMapping(produces = "application/vnd.mymarket.appv1+json")
-    @AuthCheck
     public ResponseEntity<ResponseMessage> likeSearchVersion(@Valid ProductSearchDto productSearchDto,
         @CurrentSession Long userNo) {
 
@@ -42,7 +41,6 @@ public class ProductSearchController {
     }
 
     @GetMapping(produces = "application/vnd.mymarket.appv2+json")
-    @AuthCheck
     public ResponseEntity<ResponseMessage> fullTextSearchVersion(@Valid ProductSearchDto productSearchDto,
         @CurrentSession Long userNo) {
 
@@ -53,13 +51,22 @@ public class ProductSearchController {
     }
 
     @GetMapping(produces = "application/vnd.mymarket.appv3+json")
-    @AuthCheck
     public ResponseEntity<ResponseMessage> elasticSearchVersion(@Valid ProductSearchDto productSearchDto,
         @CurrentSession Long userNo) {
 
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .result(elasticSearchService.search(productSearchDto, userNo))
+                .build());
+    }
+
+    @GetMapping("/last")
+    public ResponseEntity<ResponseMessage> getProducts(@Valid RequestLatestProductDto requestLatestProductDto,
+        @CurrentSession Long userNo) {
+
+        return ResponseEntity.status(OK)
+            .body(new ResponseMessage.Builder(SUCCESS, OK.value())
+                .result(elasticSearchService.searchLatestProduct(requestLatestProductDto, userNo))
                 .build());
     }
 

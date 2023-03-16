@@ -51,6 +51,8 @@ public interface ProductSearchService {
 
         ProductSimpleDto lastData = findSearch.get(size - 1);
 
-        return new ResponsePageData<>(lastData.getProductPrice(), SearchOrder.DATE, lastData.getProductNo());
+        return new ResponsePageData<>(lastData.getModifyDate(), SearchOrder.DATE, lastData.getProductNo());
     }
+
+    ResponseProductSimpleDto searchLatestProduct(RequestLatestProductDto requestLatestProductDto, Long userNo);
 }

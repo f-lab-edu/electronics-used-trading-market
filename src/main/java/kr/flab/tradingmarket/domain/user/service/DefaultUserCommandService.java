@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultUserCommandService implements UserCommandService {
     private final ImageService imageService;
     private final UserService userService;
+    private final LoginService loginService;
 
     @Override
     public void joinUser(JoinUserDto userDto) {
@@ -32,6 +33,7 @@ public class DefaultUserCommandService implements UserCommandService {
     @Override
     public void withdrawUser(Long userId) {
         userService.withdrawUser(userId);
+        loginService.logout();
     }
 
     @Override

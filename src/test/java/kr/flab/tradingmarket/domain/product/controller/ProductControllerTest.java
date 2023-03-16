@@ -64,7 +64,6 @@ class ProductControllerTest {
 
     @BeforeEach
     public void initMock() throws JsonProcessingException {
-        ;
         given(categoryService.existCategory(any()))
             .willReturn(true);
     }
@@ -400,6 +399,24 @@ class ProductControllerTest {
         then(productCommandService)
             .should(never())
             .deleteProduct(any());
+    }
+
+    @Test
+    @DisplayName("controller : 상품 상세 조회 : 성공")
+    void successfulGetProduct() throws Exception {
+        //given
+        given(productCommandService.findByDetailProduct(any()))
+            .willReturn(DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO);
+
+        //when
+        mockMvc.perform(get(DEFAULT_PRODUCT_URL + "/" + 1L))
+            .andDo(print())
+            .andExpect(status().isOk());
+
+        //then
+        then(productCommandService)
+            .should()
+            .findByDetailProduct(any());
     }
 
 }

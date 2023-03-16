@@ -76,9 +76,10 @@ class ProductSearchControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.result.size").value(10))
-            .andExpect(jsonPath("$.result.pageData.lastLikes").value(LAST_POPULAR_PAGE_DATA.get("lastLikes")))
-            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.get("lastProductNo")))
-            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.get("order").toString()))
+            .andExpect(jsonPath("$.result.pageData.lastValue").value(LAST_POPULAR_PAGE_DATA.getLastValue()))
+            .andExpect(jsonPath("$.result.pageData.lastValueName").value(LAST_POPULAR_PAGE_DATA.getLastValueName()))
+            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.getLastProductNo()))
+            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.getOrder().toString()))
             .andExpect(jsonPath("$.result.productList.length()").value(10));
 
         //then
@@ -111,9 +112,10 @@ class ProductSearchControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.result.size").value(10))
-            .andExpect(jsonPath("$.result.pageData.lastLikes").value(LAST_POPULAR_PAGE_DATA.get("lastLikes")))
-            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.get("lastProductNo")))
-            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.get("order").toString()))
+            .andExpect(jsonPath("$.result.pageData.lastValue").value(LAST_POPULAR_PAGE_DATA.getLastValue()))
+            .andExpect(jsonPath("$.result.pageData.lastValueName").value(LAST_POPULAR_PAGE_DATA.getLastValueName()))
+            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.getLastProductNo()))
+            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.getOrder().toString()))
             .andExpect(jsonPath("$.result.productList.length()").value(10));
 
         //then
@@ -146,9 +148,10 @@ class ProductSearchControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.result.size").value(10))
-            .andExpect(jsonPath("$.result.pageData.lastLikes").value(LAST_POPULAR_PAGE_DATA.get("lastLikes")))
-            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.get("lastProductNo")))
-            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.get("order").toString()))
+            .andExpect(jsonPath("$.result.pageData.lastValue").value(LAST_POPULAR_PAGE_DATA.getLastValue()))
+            .andExpect(jsonPath("$.result.pageData.lastValueName").value(LAST_POPULAR_PAGE_DATA.getLastValueName()))
+            .andExpect(jsonPath("$.result.pageData.lastProductNo").value(LAST_POPULAR_PAGE_DATA.getLastProductNo()))
+            .andExpect(jsonPath("$.result.pageData.order").value(LAST_POPULAR_PAGE_DATA.getOrder().toString()))
             .andExpect(jsonPath("$.result.productList.length()").value(10));
 
         //then

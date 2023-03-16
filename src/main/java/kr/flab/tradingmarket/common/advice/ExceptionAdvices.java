@@ -22,9 +22,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import kr.flab.tradingmarket.common.code.ResponseMessage;
 import kr.flab.tradingmarket.common.exception.DtoValidationException;
 import kr.flab.tradingmarket.common.exception.NoPermissionException;
+import kr.flab.tradingmarket.domain.chat.exception.ChatRoomNotFoundException;
 import kr.flab.tradingmarket.domain.image.exception.ExtensionNotSupportedException;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
+import kr.flab.tradingmarket.domain.product.exception.ProductNotFoundException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserAccessDeniedException;
@@ -92,6 +94,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(BAD_REQUEST).body(
             new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
                 .message("아이디가 중복됩니다.")
+                .build());
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    protected ResponseEntity<ResponseMessage> productNotFoundException(ProductNotFoundException ex) {
+        log.info("ProductNotFoundException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("존재하지 않는 상품입니다.")
                 .build());
     }
 
@@ -186,21 +197,21 @@ public class ExceptionAdvices {
                 .build());
     }
 
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    protected ResponseEntity<ResponseMessage> chatRoomNotFoundException(ChatRoomNotFoundException ex) {
+        log.info("ChatRoomNotFoundException ex : ", ex);
+        return ResponseEntity.status(BAD_REQUEST).body(
+            new ResponseMessage.Builder(FAIL, BAD_REQUEST.value())
+                .message("존재하지 않는 채팅방 입니다.")
+                .build());
+    }
+
     @ExceptionHandler(NoPermissionException.class)
     protected ResponseEntity<ResponseMessage> noPermissionException(NoPermissionException ex) {
         log.info("NoPermissionException ex : ", ex);
         return ResponseEntity.status(UNAUTHORIZED).body(
             new ResponseMessage.Builder(FAIL, UNAUTHORIZED.value())
                 .message("권한이 없습니다.")
-                .build());
-    }
-
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ResponseMessage> exception(Exception ex) {
-        log.error("Exception ex : ", ex);
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
-            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
-                .message("서버 오류입니다. 복구될때까지 기다려주세요")
                 .build());
     }
 
@@ -219,6 +230,15 @@ public class ExceptionAdvices {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
             new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
                 .message("DataBase 오류입니다. 복구될때까지 기다려주세요")
+                .build());
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ResponseMessage> exception(Exception ex) {
+        log.error("Exception ex : ", ex);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+            new ResponseMessage.Builder(FAIL, INTERNAL_SERVER_ERROR.value())
+                .message("서버 오류입니다. 복구될때까지 기다려주세요")
                 .build());
     }
 

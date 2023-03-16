@@ -2,6 +2,7 @@ package kr.flab.tradingmarket.domain.product.config;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import kr.flab.tradingmarket.domain.category.entity.Category;
 import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductExchangeStatus;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
@@ -192,6 +194,27 @@ public class ProductCommonFixture {
         .productThumbnail(DEFAULT_PRODUCT_THUMBNAILS)
         .imageList(DEFAULT_PRODUCT_IMAGES)
         .build();
+    public static final Product DEFAULT_DETAILS_PRODUCT = Product.builder()
+        .productNo(1L)
+        .productName("무선마우스팔아요")
+        .productAsExpirationDate(LocalDate.of(2022, 11, 29))
+        .productStatus(ProductStatus.HIGH)
+        .productExchangeStatus(ProductExchangeStatus.Y)
+        .purchaseDate(LocalDate.of(2021, 11, 20))
+        .productSalesStatus(ProductSalesStatus.SALE)
+        .productPrice(BigDecimal.valueOf(10000))
+        .productContent("무선마우스 싸게 팔아요 !!")
+        .productStock(1)
+        .modifyDate(LocalDateTime.MAX)
+        .createDate(LocalDateTime.MAX)
+        .likeCount(10)
+        .category(Category.builder().categoryNo(1L).firstCategory("컴퓨터").secondCategory("삼성").build())
+        .seller(User.builder().userNo(1L).userName("길동").build())
+        .imageList(DEFAULT_PRODUCT_IMAGES)
+        .build();
+
+    public static final ResponseProductDetailDto DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO = ResponseProductDetailDto.from(
+        DEFAULT_DETAILS_PRODUCT);
     public static final Product DEFAULT_THUMBNAIL_AND_IMAGES_PRODUCT = Product.builder()
         .productName("무선마우스팔아요")
         .category(Category.builder().categoryNo(1L).build())

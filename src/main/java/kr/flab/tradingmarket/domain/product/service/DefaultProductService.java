@@ -16,9 +16,12 @@ import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto.UpdateImage.UpdateType;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
+import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.entity.ProductImage;
+import kr.flab.tradingmarket.domain.product.exception.ProductNotFoundException;
 import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
+import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class DefaultProductService implements ProductService {
 
     private final ProductMapper productMapper;
+    private final ElasticSearchDocumentRepository elasticSearchRepository;
 
     @Override
     @Transactional
@@ -46,6 +50,20 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    public Product findById(Long productNo) {
+        return productMapper.findById(productNo);
+    }
+
+    @Override
+    public ResponseProductDetailDto findByDetailProduct(Long productNo) {
+        Product product = productMapper.findByImagesAndCategoryAndUserAndLikes(productNo);
+        if (product == null) {
+            throw new ProductNotFoundException("Product not found %d".formatted(productNo));
+        }
+        return ResponseProductDetailDto.from(product);
+    }
+
+    @Override
     public boolean isProductAuthorized(Long productNo, Long userNo) {
         return productMapper.existsByProductNoAndSellerNo(productNo, userNo) == 1;
     }
@@ -54,7 +72,6 @@ public class DefaultProductService implements ProductService {
     @Override
     public List<ProductImage> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList) {
-
         ModifyProductValidObject validModifyProduct = new ModifyProductValidObject(productNo, modifyProduct,
             updateImageList, productMapper.findByThumbnailAndImages(productNo));
         productMapper.updateProduct(Product.of(modifyProduct, productNo));
@@ -87,7 +104,13 @@ public class DefaultProductService implements ProductService {
             productMapper.findProductImageByProductNo(productNo));
         productMapper.deleteProductImageByProductNo(productNo);
         productMapper.deleteProductByProductNo(productNo);
+        elasticSearchRepository.deleteById(productNo);
         return productImageList;
+    }
+
+    @Override
+    public List<Product> findProductAndSellerByNoList(List<Long> productNoList) {
+        return productMapper.findByNoList(productNoList);
     }
 
     private static class ModifyProductValidObject {

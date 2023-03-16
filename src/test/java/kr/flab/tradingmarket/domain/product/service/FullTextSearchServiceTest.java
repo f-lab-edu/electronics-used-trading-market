@@ -40,7 +40,7 @@ class FullTextSearchServiceTest {
 
         assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
-        assertThat(search.getPageData()).isEqualTo(LAST_POPULAR_PAGE_DATA);
+        assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_POPULAR_PAGE_DATA);
     }
 
     @Test
@@ -58,7 +58,7 @@ class FullTextSearchServiceTest {
 
         assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
-        assertThat(search.getPageData()).isEqualTo(LAST_DATE_PAGE_DATA);
+        assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_DATE_PAGE_DATA);
 
     }
 
@@ -77,7 +77,7 @@ class FullTextSearchServiceTest {
 
         assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
-        assertThat(search.getPageData()).isEqualTo(LAST_PRICE_DESC_PAGE_DATA);
+        assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_PRICE_DESC_PAGE_DATA);
 
     }
 
@@ -96,7 +96,7 @@ class FullTextSearchServiceTest {
 
         assertThat(search.getProductList()).isEqualTo(DEFAULT_FIND_SEARCH_PRODUCT_LIST);
         assertThat(search.getSize()).isEqualTo(10);
-        assertThat(search.getPageData()).isEqualTo(LAST_PRICE_ASC_PAGE_DATA);
+        assertThat(search.getPageData()).usingRecursiveComparison().isEqualTo(LAST_PRICE_ASC_PAGE_DATA);
 
     }
 

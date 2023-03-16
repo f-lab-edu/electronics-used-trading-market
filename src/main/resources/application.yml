@@ -46,13 +46,13 @@ spring:
     storage-type: redis
   redis:
     session:
-      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
-      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
-      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+      cluster:
+        nodes: ENC(1CNWiPIofgmPIGLoz/Mzx6mU5hw+7FCypemreVtHCd96eVycxuVIRurcfO/PaViketW2rfeJ/GuwiVjIgzayqMMGnJaBWhAWo0si+7Zmc9yGY9ONS8ZlCK7ZHnXUUuSxLmh27nZOgtLl+NV0KOrQAXGzmXzXBjG1WmxgVc4ZKUCUscJNdqkmlQ==)
+        password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
     chat:
-      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
-      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
-      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+      cluster:
+        nodes: ENC(iped5QxnhmByeQ1dFJU9rrsyIuu2t40KcMAwHNNIEeH+7LluHDSO0cVeOAKtlMhdVrDwROw2zRa3TxsW7vkmVLQAq+9WVMt9ToocBSeAKFhfebbYFAqLcC4z5ViDVwRrtLufhCfvhVGWZUHI0f7meVZv5CB1dKIMy+zLNzsuc+KafRnhE/kbAw==)
+        password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
   devtools:
     remote:
       restart:
@@ -71,13 +71,13 @@ spring:
     storage-type: redis
   redis:
     session:
-      host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
-      port: ENC(wf+/bZci+64eLNvc+llNtQ==)
-      password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
+      cluster:
+        nodes: ENC(EC/V1VeRIj1gAMR9lllrhI83Vf7u5KxksoFxZB95zqBUP+XwOjHnZMJ5TfO6cRFi+azFSSLaVtwl56eLzXH1knT8mUeI/pstGmSJXe0IpaRxN8lDtfdfZmMPAMHUzbFtcRLVIZkMtghqgMrMYu2cxrVHQLX8OUG+ghK1VFrT2dY=)
+        password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
     chat:
-      host: ENC(7GyhlR7OkwsRpbh+3aU/3gw6TA1hJYW+)
-      port: ENC(gUgwceTXRAZjFQdNnJ97ag==)
-      password: ENC(khbn0zgMU6x73NKNGKkAqg==)
+      cluster:
+        nodes: ENC(mbA7Caf5tYR4XAJRY5NQrIIA27Vt9VAubwg7EOH3lbl8vT3Nwa2t4VcdRXOui0YOCrYwmVWd8N7Ju4rOvJsiMNQMWRhwb5Kb0rlmDqetgTCmBA60qLn5HU1AJt44hynJKhTDsi4XcPeEaZWIRivWx4K6MMaX9cyT2Ap7bTOfh3s=)
+        password: ENC(khbn0zgMU6x73NKNGKkAqg==)
 
 ---
 spring:

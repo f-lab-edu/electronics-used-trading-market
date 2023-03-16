@@ -20,7 +20,7 @@ public interface UserService {
 
     MyInfoDto findModifyUserDtoByUserNo(Long userNo);
 
-    String modifyUserProfile(UserProfileImage imagePath, Long userNo);
+    UserProfileImage modifyUserProfile(UserProfileImage imagePath, Long userNo);
 
     void changePassword(ChangePasswordDto changePassword, Long userNo);
 }

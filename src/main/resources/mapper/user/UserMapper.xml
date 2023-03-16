@@ -8,7 +8,7 @@
         <result column="user_name" property="userName"/>
         <association property="userProfileImage" javaType="UserProfileImage">
             <id column="image_no" property="imageNo"/>
-            <result column="origin_file_name" property="originalFileName"/>
+            <result column="original_file_name" property="originalFileName"/>
             <result column="file_link" property="fileLink"/>
             <result column="file_size" property="fileSize"/>
         </association>
@@ -67,7 +67,7 @@
     </select>
 
     <insert id="insertProfile" keyProperty="imageNo" parameterType="UserProfileImage" useGeneratedKeys="true">
-        INSERT INTO users_profile_images (origin_file_name, file_link, file_size, create_date, modify_date)
+        INSERT INTO users_profile_images (original_file_name, file_link, file_size, create_date, modify_date)
         VALUES (#{originalFileName}, #{fileLink}, #{fileSize}, now(), now())
     </insert>
 

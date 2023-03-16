@@ -1,6 +1,5 @@
 package kr.flab.tradingmarket.domain.user.controller;
 
-import static kr.flab.tradingmarket.domain.image.utils.ImageUtils.*;
 import static kr.flab.tradingmarket.domain.user.config.UserCommonFixture.*;
 import static kr.flab.tradingmarket.domain.user.controller.UserControllerTestFixture.*;
 import static org.assertj.core.api.Assertions.*;
@@ -27,32 +26,31 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.flab.tradingmarket.common.aop.LoginCheckAop;
+import kr.flab.tradingmarket.common.interceptor.ProductAuthorizationInterceptor;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
-import kr.flab.tradingmarket.domain.image.service.ImageService;
-import kr.flab.tradingmarket.domain.image.utils.ImageType;
-import kr.flab.tradingmarket.domain.user.entity.UserProfileImage;
+import kr.flab.tradingmarket.domain.product.service.ProductService;
 import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
-import kr.flab.tradingmarket.domain.user.service.UserService;
+import kr.flab.tradingmarket.domain.user.service.UserCommandService;
 
 @WebMvcTest(UserController.class)
 @ExtendWith(MockitoExtension.class)
-@Import({AopAutoConfiguration.class, LoginCheckAop.class})
+@Import({AopAutoConfiguration.class, LoginCheckAop.class, ProductAuthorizationInterceptor.class})
 @ActiveProfiles("test")
 class UserControllerTest {
 
     @MockBean
-    UserService userService;
+    UserCommandService userCommandService;
     @Autowired
     MockMvc mockMvc;
     @MockBean
     LoginService loginService;
     @MockBean
-    ImageService imageService;
+    ProductService productService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     private String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
@@ -70,11 +68,11 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should()
             .joinUser(JOIN_USER_DTO_CAPTURE.capture());
 
-        assertThat(JOIN_USER_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_JOIN_USER_DTO);
+        assertThat(JOIN_USER_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_JOIN_USER_DTO);
     }
 
     @Test
@@ -82,7 +80,7 @@ class UserControllerTest {
     void failJoinUserByDuplication() throws Exception {
         //given
         willThrow(UserIdDuplicateException.class)
-            .given(userService)
+            .given(userCommandService)
             .joinUser(any());
 
         //when
@@ -107,7 +105,7 @@ class UserControllerTest {
             .andExpect(status().isBadRequest());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should(never())
             .joinUser(any());
 
@@ -132,7 +130,7 @@ class UserControllerTest {
         then(loginService)
             .should()
             .login(USER_AUTH_DTO_CAPTURE.capture());
-        assertThat(USER_AUTH_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_LOGIN_USER);
+        assertThat(USER_AUTH_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_LOGIN_USER);
     }
 
     @Test
@@ -201,7 +199,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should()
             .findModifyUserDtoByUserNo(LONG_CAPTURE.capture());
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
@@ -220,7 +218,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userService).should(never())
+        then(userCommandService).should(never())
             .findModifyUserDtoByUserNo(any());
     }
 
@@ -239,10 +237,10 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should()
             .modifyUser(MODIFY_USER_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
-        assertThat(MODIFY_USER_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_USER_MODIFY_DTO);
+        assertThat(MODIFY_USER_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_USER_MODIFY_DTO);
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
     }
 
@@ -261,7 +259,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should(never())
             .modifyUser(any(), any());
     }
@@ -279,7 +277,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should()
             .withdrawUser(LONG_CAPTURE.capture());
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
@@ -298,7 +296,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should(never())
             .withdrawUser(any());
     }
@@ -307,79 +305,24 @@ class UserControllerTest {
     @DisplayName("controller : 회원 프로필 사진 변경 : 현재 프로필이 없을때 성공")
     void successfulModifyWithoutProfileImage() throws Exception {
         //given
-        Long userNo = givenLogin();
-        given(imageService.uploadImage(any(), any()))
-            .willReturn(UPDATE_USER_PROFILE_IMG.getFileLink());
+        givenLogin();
 
         //when
+        //then
         mockMvc.perform(multipart(HttpMethod.PUT, MODIFY_PROFILE_IMAGE_URL)
                 .file(UPDATE_MOCK_PROFILE_IMAGE_FILE))
             .andDo(print())
             .andExpect(status().isOk());
-
-        //then
-        then(imageService)
-            .should()
-            .uploadImage(MULTIPART_FILE_CAPTURE.capture(), IMAGE_TYPE_CAPTURE.capture());
-        assertThat(MULTIPART_FILE_CAPTURE.getValue()).isEqualTo(UPDATE_MOCK_PROFILE_IMAGE_FILE);
-        assertThat(IMAGE_TYPE_CAPTURE.getValue()).isEqualTo(ImageType.PROFILE);
-
-        then(userService)
-            .should()
-            .modifyUserProfile(USER_PROFILE_IMAGE_CAPTURE.capture(), LONG_CAPTURE.capture());
-        assertThat(USER_PROFILE_IMAGE_CAPTURE.getValue())
-            .extracting(UserProfileImage::getFileLink,
-                UserProfileImage::getFileSize,
-                UserProfileImage::getOriginalFileName)
-            .containsExactly(UPDATE_USER_PROFILE_IMG.getFileLink(),
-                UPDATE_USER_PROFILE_IMG.getFileSize(),
-                UPDATE_USER_PROFILE_IMG.getOriginalFileName());
-        assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
-
-        then(imageService)
-            .should(never()).deleteImage(any());
     }
 
     @Test
-    @DisplayName("controller : 회원 프로필 사진 변경 : 현재 프로필이 있을때 성공")
-    void successfulModifyProfileImage() throws Exception {
-        //given
-        Long userNo = givenLogin();
-        given(imageService.uploadImage(any(), any()))
-            .willReturn(UPDATE_USER_PROFILE_IMG.getFileLink());
-        given(userService.modifyUserProfile(any(), any()))
-            .willReturn(separateImagePath(DEFAULT_USER_PROFILE_IMG.getFileLink()));
-
-        //when
-        mockMvc.perform(multipart(HttpMethod.PUT, MODIFY_PROFILE_IMAGE_URL)
-                .file(UPDATE_MOCK_PROFILE_IMAGE_FILE))
-            .andDo(print())
-            .andExpect(status().isOk());
-
-        //then
-        then(imageService)
-            .should()
-            .uploadImage(any(), any());
-
-        then(userService)
-            .should()
-            .modifyUserProfile(any(), any());
-
-        then(imageService)
-            .should()
-            .deleteImage(STRING_CAPTURE.capture());
-        assertThat(STRING_CAPTURE.getValue()).isEqualTo(separateImagePath(DEFAULT_USER_PROFILE_IMG.getFileLink()));
-    }
-
-    @Test
-    @DisplayName("controller : 회원 프로필 사진 변경 : DB 트랜잭션 실패로 인한 실패")
+    @DisplayName("controller : 회원 프로필 사진 변경 : ImageUploadException발생 실패")
     void failModifyProfileImageCausedByTransaction() throws Exception {
         //given
         givenLogin();
-        given(imageService.uploadImage(any(), any()))
-            .willReturn(UPDATE_USER_PROFILE_IMG.getFileLink());
-        given(userService.modifyUserProfile(any(), any()))
-            .willThrow(ImageUploadException.class);
+        willThrow(ImageUploadException.class)
+            .given(userCommandService)
+            .modifyUserProfile(any(), any());
 
         //when
         mockMvc.perform(multipart(HttpMethod.PUT, MODIFY_PROFILE_IMAGE_URL)
@@ -388,18 +331,9 @@ class UserControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(imageService)
-            .should()
-            .uploadImage(any(), any());
-
-        then(userService)
+        then(userCommandService)
             .should()
             .modifyUserProfile(any(), any());
-
-        then(imageService)
-            .should()
-            .deleteImage(STRING_CAPTURE.capture());
-        assertThat(STRING_CAPTURE.getValue()).isEqualTo(separateImagePath(UPDATE_USER_PROFILE_IMG.getFileLink()));
     }
 
     @Test
@@ -415,27 +349,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(imageService)
-            .should(never())
-            .uploadImage(any(), any());
-    }
-
-    @Test
-    @DisplayName("controller : 회원 프로필 사진 변경 : IOException 관련 예외로 인한 실패")
-    void failModifyProfileImageCausedByIOException() throws Exception {
-        //given
-        givenLogin();
-        given(imageService.uploadImage(any(), any()))
-            .willThrow(ImageUploadException.class);
-
-        //when
-        mockMvc.perform(multipart(HttpMethod.PUT, MODIFY_PROFILE_IMAGE_URL)
-                .file(UPDATE_MOCK_PROFILE_IMAGE_FILE))
-            .andDo(print())
-            .andExpect(status().isInternalServerError());
-
-        //then
-        then(userService)
+        then(userCommandService)
             .should(never())
             .modifyUserProfile(any(), any());
     }
@@ -454,10 +368,11 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should()
             .changePassword(CHANGE_PASSWORD_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
-        assertThat(CHANGE_PASSWORD_DTO_CAPTURE.getValue()).isEqualTo(DEFAULT_CHANGE_PASSWORD_DTO);
+        assertThat(CHANGE_PASSWORD_DTO_CAPTURE.getValue()).usingRecursiveComparison()
+            .isEqualTo(DEFAULT_CHANGE_PASSWORD_DTO);
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
     }
 
@@ -475,7 +390,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userService)
+        then(userCommandService)
             .should(never())
             .changePassword(any(), any());
     }
@@ -486,7 +401,7 @@ class UserControllerTest {
         //given
         givenLogin();
         willThrow(PasswordNotMatchException.class)
-            .given(userService)
+            .given(userCommandService)
             .changePassword(any(), any());
 
         //when

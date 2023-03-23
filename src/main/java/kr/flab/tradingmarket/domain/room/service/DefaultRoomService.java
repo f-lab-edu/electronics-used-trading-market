@@ -3,7 +3,6 @@ package kr.flab.tradingmarket.domain.room.service;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.domain.room.entity.RoomKey;
 import kr.flab.tradingmarket.domain.room.repository.RoomRepository;
@@ -16,7 +15,6 @@ public class DefaultRoomService implements RoomService {
     private final RoomRepository roomRepository;
 
     @Override
-    @Transactional
     public String createRooms(RoomKey roomKey) {
         return roomRepository.createRooms(roomKey);
     }

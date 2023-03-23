@@ -3,7 +3,7 @@ package kr.flab.tradingmarket.domain.chat.util;
 public class RedisKeyUtils {
 
     public static final String ROOM_KEY = "room:%s";
-    private static final String USER_ROOMS_KEY = "user:%d:rooms";
+    private static final String USER_ROOMS_KEY = "{user}:%d:{rooms}";
 
     /**
      * 채팅방 키 => room:구매자번호:판매자번호:상품번호

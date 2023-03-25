@@ -30,7 +30,7 @@
 - ELK
 
 ## ☁️ Architecture
-![image](https://user-images.githubusercontent.com/39224132/224132535-662b485d-8146-4aff-a95a-bebbef2afd12.png)
+![image](https://user-images.githubusercontent.com/39224132/227718346-a892ea2d-c9fd-4e01-ac59-19bb0532f56f.png)
 
 ## 📝 WIKI
 - [UseCase](https://github.com/f-lab-edu/electronics-used-trading-market/wiki/1.UseCase)

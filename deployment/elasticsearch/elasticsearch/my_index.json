@@ -1,0 +1,156 @@
+{
+    "mappings": {
+        "properties": {
+            "@timestamp": {
+                "type": "date"
+            },
+            "@version": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "create_date": {
+                "type": "date"
+            },
+            "file_link": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "like_count": {
+                "type": "long"
+            },
+            "modify_date": {
+                "type": "date"
+            },
+            "product_as_expiration_date": {
+                "type": "date"
+            },
+            "product_category_no": {
+                "type": "long"
+            },
+            "product_content": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "analyzer": "nori_discard"
+            },
+            "product_exchange_status": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "product_name": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "analyzer": "nori_discard"
+            },
+            "product_no": {
+                "type": "long"
+            },
+            "product_price": {
+                "type": "long"
+            },
+            "product_purchase_date": {
+                "type": "date"
+            },
+            "product_sales_status": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "product_status": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "product_stock": {
+                "type": "long"
+            },
+            "product_thumbnail_no": {
+                "type": "long"
+            },
+            "product_view_count": {
+                "type": "long"
+            },
+            "seller_no": {
+                "type": "long"
+            },
+            "unix_ts_in_secs": {
+                "type": "float"
+            }
+        }
+    },
+    "settings": {
+        "index": {
+            "routing": {
+                "allocation": {
+                    "include": {
+                        "_tier_preference": "data_content"
+                    }
+                }
+            },
+            "number_of_shards": "1",
+            "analysis": {
+                "analyzer": {
+                    "nori_discard": {
+                        "type": "custom",
+                        "tokenizer": "nori_discard"
+                    },
+                    "nori_mixed": {
+                        "type": "custom",
+                        "tokenizer": "nori_mixed"
+                    },
+                    "nori_none": {
+                        "type": "custom",
+                        "tokenizer": "nori_none"
+                    }
+                },
+                "tokenizer": {
+                    "nori_discard": {
+                        "type": "nori_tokenizer",
+                        "decompound_mode": "discard"
+                    },
+                    "nori_mixed": {
+                        "type": "nori_tokenizer",
+                        "decompound_mode": "mixed"
+                    },
+                    "nori_none": {
+                        "type": "nori_tokenizer",
+                        "decompound_mode": "none"
+                    }
+                }
+            },
+            "number_of_replicas": "1"
+        }
+    }
+}

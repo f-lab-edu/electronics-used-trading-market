@@ -1,0 +1,115 @@
+version: '3'
+services:
+
+  redis1:
+    hostname: chat-master-redis1
+    container_name: chat-master-redis1
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.20
+    volumes:
+    - ./redis1.conf:/etc/redis.conf
+    ports:
+    - 7011:7011
+    - 17011:17011
+
+  redis2:
+    hostname: chat-master-redis2
+    container_name: chat-master-redis2
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.21
+    volumes:
+      - ./redis2.conf:/etc/redis.conf
+    ports:
+      - 7012:7012
+      - 17012:17012
+
+  redis3:
+    hostname: chat-master-redis3
+    container_name: chat-master-redis3
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.22
+    volumes:
+      - ./redis3.conf:/etc/redis.conf
+    ports:
+      - 7013:7013
+      - 17013:17013
+
+  redis4:
+    hostname: chat-slave-redis1
+    container_name: chat-slave-redis1
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.23
+    volumes:
+      - ./redis4.conf:/etc/redis.conf
+    ports:
+      - 7014:7014
+      - 17014:17014
+
+  redis5:
+    hostname: chat-slave-redis2
+    container_name: chat-slave-redis2
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.24
+    volumes:
+      - ./redis5.conf:/etc/redis.conf
+    ports:
+      - 7015:7015
+      - 17015:17015
+
+  redis6:
+    hostname: chat-slave-redis3
+    container_name: chat-slave-redis3
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.25
+    volumes:
+      - ./redis6.conf:/etc/redis.conf
+    ports:
+      - 7016:7016
+      - 17016:17016
+
+  redis-cluster-entry:
+    image: redis
+    container_name: redis-cluster
+    networks:
+      cluster-network:
+        ipv4_address: 10.11.0.26
+    command: redis-cli -a password --cluster create  10.11.0.20:7011 10.11.0.21:7012 10.11.0.22:7013 10.11.0.23:7014 10.11.0.24:7015 10.11.0.25:7016 --cluster-replicas 1 --cluster-yes
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+      - redis6
+
+networks:
+  cluster-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.11.0.0/16

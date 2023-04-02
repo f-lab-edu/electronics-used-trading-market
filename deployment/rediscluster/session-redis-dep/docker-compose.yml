@@ -1,0 +1,109 @@
+version: '3'
+services:
+
+  redis1:
+    container_name: session-master-redis1
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    volumes:
+    - ./redis1.conf:/etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.10
+    ports:
+    - 7001:7001
+    - 17001:17001
+
+  redis2:
+    container_name: session-master-redis2
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.11
+    volumes:
+      - ./redis2.conf:/etc/redis.conf
+    ports:
+      - 7002:7002
+      - 17002:17002
+
+  redis3:
+    container_name: session-master-redis3
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.12
+    volumes:
+      - ./redis3.conf:/etc/redis.conf
+    ports:
+      - 7003:7003
+      - 17003:17003
+
+  redis4:
+    container_name: session-slave-redis1
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.13
+    volumes:
+      - ./redis4.conf:/etc/redis.conf
+    ports:
+      - 7004:7004
+      - 17004:17004
+
+  redis5:
+    container_name: session-slave-redis2
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.14
+    volumes:
+      - ./redis5.conf:/etc/redis.conf
+    ports:
+      - 7005:7005
+      - 17005:17005
+
+  redis6:
+    container_name: session-slave-redis3
+    image: redis:6.2.6
+    restart: always
+    command: redis-server /etc/redis.conf
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.15
+    volumes:
+      - ./redis6.conf:/etc/redis.conf
+    ports:
+      - 7006:7006
+      - 17006:17006
+
+  redis-cluster-entry:
+    image: redis
+    container_name: session-redis-cluster
+    networks:
+      my-network:
+        ipv4_address: 10.10.0.16
+    command: redis-cli -a password --cluster create 10.10.0.10:7001 10.10.0.11:7002 10.10.0.12:7003 10.10.0.13:7004 10.10.0.14:7005 10.10.0.15:7006 --cluster-replicas 1 --cluster-yes
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+      - redis6
+
+networks:
+  my-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.0.0/16

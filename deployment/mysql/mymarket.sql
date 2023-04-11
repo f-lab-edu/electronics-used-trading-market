@@ -1,5 +1,4 @@
-CREATE DATABASE mymarket;
-USE mymarket;
+
 create table category
 (
     category_no     int auto_increment

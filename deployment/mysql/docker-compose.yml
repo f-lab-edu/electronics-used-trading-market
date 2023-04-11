@@ -10,7 +10,8 @@ services:
       - 3307:3306
     volumes:
       - ./master/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf:ro
-      - ./mymarket.sql:/docker-entrypoint-initdb.d/mymarket.sql
+      - ./master/data:/var/lib/mysql
+      - ./mymarket.sql:/app/mymarket.sql
     networks:
       - overlay
     environment:
@@ -27,7 +28,7 @@ services:
       - mysql_master
     volumes:
       - ./slave/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf:ro
-      - ./mymarket.sql:/docker-entrypoint-initdb.d/mymarket.sql
+      - ./slave/data:/var/lib/mysql
     networks:
       - overlay
     environment:

@@ -28,7 +28,7 @@ import kr.flab.tradingmarket.common.code.ValidationType;
 import kr.flab.tradingmarket.domain.product.dto.request.RegisterProductDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
-import kr.flab.tradingmarket.domain.product.service.ProductCommandService;
+import kr.flab.tradingmarket.domain.product.service.ProductFacadeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductCommandService productCommandService;
+    private final ProductFacadeService productFacadeService;
 
     @PostMapping
     @AuthCheck
@@ -46,7 +46,7 @@ public class ProductController {
         @ValidImage @RequestPart(value = "images") List<MultipartFile> images,
         @CurrentSession Long userNo) {
 
-        productCommandService.registerProduct(registerProductDto, images, userNo);
+        productFacadeService.registerProduct(registerProductDto, images, userNo);
 
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
@@ -57,7 +57,7 @@ public class ProductController {
     @AuthCheck
     @ProductAuthCheck
     public ResponseEntity<ResponseMessage> getModifyProduct(@PathVariable Long productNo) {
-        ResponseModifyProductDto byProduct = productCommandService.findByModifyProduct(productNo);
+        ResponseModifyProductDto byProduct = productFacadeService.findByModifyProduct(productNo);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .result(byProduct)
@@ -72,7 +72,7 @@ public class ProductController {
         @Valid @RequestPart("data") RequestModifyProductDto modifyProduct,
         @ValidImage(type = ValidationType.UPDATE) @RequestPart(value = "images") List<MultipartFile> images) {
 
-        productCommandService.modifyProduct(productNo, modifyProduct, images);
+        productFacadeService.modifyProduct(productNo, modifyProduct, images);
 
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
@@ -86,7 +86,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> deleteProduct(
         @PathVariable Long productNo) {
 
-        productCommandService.deleteProduct(productNo);
+        productFacadeService.deleteProduct(productNo);
 
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
@@ -97,7 +97,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> getProduct(@PathVariable Long productNo) {
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value()).result(
-                    productCommandService.findByDetailProduct(productNo))
+                    productFacadeService.findByDetailProduct(productNo))
                 .build());
     }
 

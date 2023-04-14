@@ -26,10 +26,10 @@ import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultProductCommandServiceTest {
+class DefaultProductFacadeServiceTest {
 
     @InjectMocks
-    DefaultProductCommandService productCommandService;
+    TradeProductFacadeService productCommandService;
     @Mock
     ProductService productService;
 

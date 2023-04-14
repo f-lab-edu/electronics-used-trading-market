@@ -15,7 +15,7 @@ import kr.flab.tradingmarket.domain.category.mapper.CategoryMapper;
 class CategoryServiceTest {
 
     @InjectMocks
-    DefaultCategoryService categoryService;
+    ProductCategoryService categoryService;
     @Mock
     CategoryMapper categoryMapper;
 

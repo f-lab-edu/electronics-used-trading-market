@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultCategoryService implements CategoryService {
+public class ProductCategoryService implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Transactional(readOnly = true)

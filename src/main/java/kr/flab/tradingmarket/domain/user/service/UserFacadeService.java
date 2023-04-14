@@ -7,7 +7,7 @@ import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.response.MyInfoDto;
 
-public interface UserCommandService {
+public interface UserFacadeService {
     void joinUser(JoinUserDto userDto);
 
     void modifyUser(ModifyUserDto modifyUserDto, Long userId);

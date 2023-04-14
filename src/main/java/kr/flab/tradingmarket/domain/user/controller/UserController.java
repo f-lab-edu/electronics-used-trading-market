@@ -23,19 +23,19 @@ import kr.flab.tradingmarket.domain.user.dto.request.JoinUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.ModifyUserDto;
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
-import kr.flab.tradingmarket.domain.user.service.UserCommandService;
+import kr.flab.tradingmarket.domain.user.service.UserFacadeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserCommandService userCommandService;
+    private final UserFacadeService userFacadeService;
     private final LoginService loginService;
 
     @PostMapping("/join")
     public ResponseEntity<ResponseMessage> joinUser(@RequestBody @Valid JoinUserDto joinDto) {
-        userCommandService.joinUser(joinDto);
+        userFacadeService.joinUser(joinDto);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());
@@ -61,7 +61,7 @@ public class UserController {
     @PatchMapping("/my/info")
     public ResponseEntity<ResponseMessage> modifyUser(@RequestBody @Valid ModifyUserDto modifyUserDto,
         @CurrentSession Long userNo) {
-        userCommandService.modifyUser(modifyUserDto, userNo);
+        userFacadeService.modifyUser(modifyUserDto, userNo);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());
@@ -72,14 +72,14 @@ public class UserController {
     public ResponseEntity<ResponseMessage> myInfo(@CurrentSession Long userNo) {
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
-                .result(userCommandService.findModifyUserDtoByUserNo(userNo))
+                .result(userFacadeService.findModifyUserDtoByUserNo(userNo))
                 .build());
     }
 
     @AuthCheck
     @DeleteMapping("/my/withdraw")
     public ResponseEntity<ResponseMessage> withdrawUser(@CurrentSession Long userNo) {
-        userCommandService.withdrawUser(userNo);
+        userFacadeService.withdrawUser(userNo);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());
@@ -88,7 +88,7 @@ public class UserController {
     @AuthCheck
     @PutMapping("/my/profile-image")
     public ResponseEntity<ResponseMessage> modifyProfileImage(@CurrentSession Long userNo, MultipartFile image) {
-        userCommandService.modifyUserProfile(userNo, image);
+        userFacadeService.modifyUserProfile(userNo, image);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());
@@ -98,7 +98,7 @@ public class UserController {
     @PatchMapping("/my/password")
     public ResponseEntity<ResponseMessage> changePassword(@CurrentSession Long userNo,
         @RequestBody @Valid ChangePasswordDto changePasswordDto) {
-        userCommandService.changePassword(changePasswordDto, userNo);
+        userFacadeService.changePassword(changePasswordDto, userNo);
         return ResponseEntity.status(OK)
             .body(new ResponseMessage.Builder(SUCCESS, OK.value())
                 .build());

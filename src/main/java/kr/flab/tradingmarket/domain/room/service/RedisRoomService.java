@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultRoomService implements RoomService {
+public class RedisRoomService implements RoomService {
 
     private final RoomRepository roomRepository;
 

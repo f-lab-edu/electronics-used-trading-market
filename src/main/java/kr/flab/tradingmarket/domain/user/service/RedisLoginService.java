@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.domain.user.dto.request.UserAuthDto;
 import kr.flab.tradingmarket.domain.user.entity.User;
@@ -26,6 +27,7 @@ public class RedisLoginService implements LoginService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void login(UserAuthDto loginReq) {
         Long userNo = loginCheck(loginReq);
         httpSession.setAttribute(USER_NO, userNo);

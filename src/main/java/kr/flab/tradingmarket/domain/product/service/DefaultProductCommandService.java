@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.flab.tradingmarket.common.exception.DtoValidationException;
@@ -39,11 +40,13 @@ public class DefaultProductCommandService implements ProductCommandService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseModifyProductDto findByModifyProduct(Long productNo) {
         return productService.findByModifyProduct(productNo);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseProductDetailDto findByDetailProduct(Long productNo) {
         return productService.findByDetailProduct(productNo);
     }

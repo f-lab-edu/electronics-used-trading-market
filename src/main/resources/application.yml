@@ -22,6 +22,8 @@ spring:
       "test": testDB,common
       "dev":  devDB,common,awsS3,dev-elasticsearch
       "prod": prodDB,common,awsS3,prod-elasticsearch
+chat:
+  expiration-date: 14
 ---
 spring:
   config:
@@ -38,21 +40,27 @@ spring:
     activate:
       on-profile: devDB
   datasource:
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: ENC(7tAqK/3zMoPtWPuY4PP6H1lBYwAlOWN0gcoNuMvQpZzQWG1AzFzh6ZKIy6KTuFKKohlCHG+aI6GmY5GVOffGp8cFxZ2x4q6/pSQHm3xrsory7yOVSfWT75Y9pRRIb4hOLEN1CRaCLPL6yDhO8uM2zw==)
-    username: ENC(lbJMtrWTuFYRh/U4fJIp+A==)
-    password: ENC(2afjs6pZucLb4spH6Q+dwg==)
+    source:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: ENC(5qoucI8RiWMUi4LqO7ZYO9OL1M7UC/FTRovIWkt1uTbSt82w+AGq6bbbzqX1VyJ1GHcjhZI1xxdkSs3zk7r3519HjtnwkQqjR2tcPTv1aJ8PXJo5WBJUGkfIEdg4SKe+7Gqm8BfeYqg=)
+      username: ENC(lbJMtrWTuFYRh/U4fJIp+A==)
+      password: ENC(2afjs6pZucLb4spH6Q+dwg==)
+    replica:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: ENC(lzpPXY5lX1a5Gy81mIkjr2kSH+g3V+F4/vieIDqQ7hqljqh6VdVaG0IoteQ0rjuZU1jXSrkocHtfRQRS+iChutrCVcVh/xMHAgbJxkcTRrkbJtYjG5PuNmH38XlnmoFw/CNUD6w1CDs=)
+      username: ENC(6Jvhn/1rIDNC4rM5vz4P+g==)
+      password: ENC(FejGmnwZt0Qfr5RMq2rU1w==)
   session:
     storage-type: redis
   redis:
     session:
-      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
-      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
-      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+      cluster:
+        nodes: ENC(1CNWiPIofgmPIGLoz/Mzx6mU5hw+7FCypemreVtHCd96eVycxuVIRurcfO/PaViketW2rfeJ/GuwiVjIgzayqMMGnJaBWhAWo0si+7Zmc9yGY9ONS8ZlCK7ZHnXUUuSxLmh27nZOgtLl+NV0KOrQAXGzmXzXBjG1WmxgVc4ZKUCUscJNdqkmlQ==)
+        password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
     chat:
-      host: ENC(w6bkleSDsqzLNlncMmxwXVKzJJp1pwcb)
-      port: ENC(XRKvxV1k0hftM+5eSdKULw==)
-      password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
+      cluster:
+        nodes: ENC(iped5QxnhmByeQ1dFJU9rrsyIuu2t40KcMAwHNNIEeH+7LluHDSO0cVeOAKtlMhdVrDwROw2zRa3TxsW7vkmVLQAq+9WVMt9ToocBSeAKFhfebbYFAqLcC4z5ViDVwRrtLufhCfvhVGWZUHI0f7meVZv5CB1dKIMy+zLNzsuc+KafRnhE/kbAw==)
+        password: ENC(yFzXhCZPRtdlO25IjZlQ1g==)
   devtools:
     remote:
       restart:
@@ -63,21 +71,27 @@ spring:
     activate:
       on-profile: prodDB
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(DsJnoWkUl5JZFe0I8tPgctf9KbIcOrT77sZb5MudYoCV6BmWOI8CR0vwa1nO4/pV5YOC5qljA7EtWNVgrQ0XHEoD7gKoEGdLM9iY944neywzbZTG+MRY0UGKN+ZE37Ed82ILH+WZDjql9bcKwFL1MA==)
-    username: ENC(+ShQ99B5HU2QGE/szPbDcg==)
-    password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
+    source:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: ENC(zW2O7Z11WHXkxIP/6QTZvAx2Up7VGneEFYU4K5RGsamYEVtPclvYP8KWT5HIFFQvm+c+G7U9kgvLp/OpyVgR4PkPiBjnftshOqFDebabct49GBiJsPFZZwxGwNWX/4aJ6jBpe4/zhiDnr3SL5HfWdQ==)
+      username: ENC(+ShQ99B5HU2QGE/szPbDcg==)
+      password: ENC(gxkKsxKpJYB0mASN4HPSXiOS4mC9aEl9)
+    replica:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: ENC(PEiCBnG5dJVk6RFMlyUOW2qRx8WT9Y4Y2chMsYp/wuPrUtxi3AqtqhCEjsdctoAtm6amv4whi0dryFi6ShJvID8r7JzuJByRYHgNEEnDuBd1PzO1zTVrbW3fkeYzNfgPPV8gcpKRU/B+p6HmdMNpQg==)
+      username: ENC(gAWmI5C4FFhU5dmDqBNHcA==)
+      password: ENC(CSPqayUrd+GfvDYM/bqJOJd5ru0egiAF)
   session:
     storage-type: redis
   redis:
     session:
-      host: ENC(lpKMJ7JshWgmSFiZV8eNXcpi5hYJPTZx)
-      port: ENC(wf+/bZci+64eLNvc+llNtQ==)
-      password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
+      cluster:
+        nodes: ENC(EC/V1VeRIj1gAMR9lllrhI83Vf7u5KxksoFxZB95zqBUP+XwOjHnZMJ5TfO6cRFi+azFSSLaVtwl56eLzXH1knT8mUeI/pstGmSJXe0IpaRxN8lDtfdfZmMPAMHUzbFtcRLVIZkMtghqgMrMYu2cxrVHQLX8OUG+ghK1VFrT2dY=)
+        password: ENC(iuyFPbotFE+Bc5yyLzfcQw==)
     chat:
-      host: ENC(7GyhlR7OkwsRpbh+3aU/3gw6TA1hJYW+)
-      port: ENC(gUgwceTXRAZjFQdNnJ97ag==)
-      password: ENC(khbn0zgMU6x73NKNGKkAqg==)
+      cluster:
+        nodes: ENC(mbA7Caf5tYR4XAJRY5NQrIIA27Vt9VAubwg7EOH3lbl8vT3Nwa2t4VcdRXOui0YOCrYwmVWd8N7Ju4rOvJsiMNQMWRhwb5Kb0rlmDqetgTCmBA60qLn5HU1AJt44hynJKhTDsi4XcPeEaZWIRivWx4K6MMaX9cyT2Ap7bTOfh3s=)
+        password: ENC(khbn0zgMU6x73NKNGKkAqg==)
 
 ---
 spring:

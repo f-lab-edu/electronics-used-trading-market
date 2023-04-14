@@ -62,6 +62,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findByUserNo(Long userNo) {
         User findUser = userMapper.findByNo(userNo);
         if (findUser == null) {
@@ -94,6 +95,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MyInfoDto findModifyUserDtoByUserNo(Long userNo) {
         return MyInfoDto.from(findByUserNo(userNo));
     }
@@ -132,12 +134,12 @@ public class DefaultUserService implements UserService {
 
     }
 
-    private UserProfileImage deleteImageProfileAndGetImage(UserProfileImage userProfileImage) {
+    UserProfileImage deleteImageProfileAndGetImage(UserProfileImage userProfileImage) {
         userMapper.deleteProfileImage(userProfileImage.getImageNo());
         return userProfileImage;
     }
 
-    private void updateProfileImage(UserProfileImage imagePath, Long userNo) {
+    void updateProfileImage(UserProfileImage imagePath, Long userNo) {
         userMapper.insertProfile(imagePath);
         userMapper.updateUserProfile(imagePath.getImageNo(), userNo);
     }

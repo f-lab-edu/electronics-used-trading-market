@@ -3,6 +3,7 @@ package kr.flab.tradingmarket.domain.product.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.domain.product.dto.request.ProductSearchDto;
 import kr.flab.tradingmarket.domain.product.dto.request.RequestLatestProductDto;
@@ -18,6 +19,7 @@ public class LikeSearchService implements ProductSearchService {
     private final ProductMapper productMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseProductSimpleDto search(ProductSearchDto productSearchDto, Long userNo) {
         List<ProductSimpleDto> findSearch = productMapper.findByProductsWithLikeSearch(productSearchDto, userNo);
         return ResponseProductSimpleDto.builder()

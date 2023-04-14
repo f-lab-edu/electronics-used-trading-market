@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.domain.product.entity.Product;
 import kr.flab.tradingmarket.domain.product.service.ProductService;
@@ -20,6 +21,7 @@ public class DefaultRoomFacadeService implements RoomFacadeService {
     private final ProductService productService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseRoomDto> findRooms(Long userNo) {
         Set<String> roomIdList = roomService.findByUserId(userNo);
         if (roomIdList.size() == 0) {
@@ -34,6 +36,7 @@ public class DefaultRoomFacadeService implements RoomFacadeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String createRooms(RoomKey roomKey) {
         Product findProduct = productService.findById(roomKey.getProductNo());
         Long sellerNo = findProduct.getSeller().getUserNo();

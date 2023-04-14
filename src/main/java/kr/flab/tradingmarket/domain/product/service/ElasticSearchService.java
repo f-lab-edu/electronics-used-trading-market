@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.domain.like.entity.Like;
 import kr.flab.tradingmarket.domain.like.mapper.LikeMapper;
@@ -23,6 +24,7 @@ public class ElasticSearchService implements ProductSearchService {
     private final ElasticSearchRepository productSearchRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseProductSimpleDto search(ProductSearchDto productSearchDto, Long userNo) {
         List<ProductSimpleDto> productList = convertToProductSimpleDtoList(userNo,
             productSearchRepository.searchProduct(productSearchDto));
@@ -30,6 +32,7 @@ public class ElasticSearchService implements ProductSearchService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseProductSimpleDto searchLatestProduct(RequestLatestProductDto requestLatestProductDto, Long userNo) {
         List<ProductSimpleDto> productList = convertToProductSimpleDtoList(userNo,
             productSearchRepository.searchLatestProduct(requestLatestProductDto));

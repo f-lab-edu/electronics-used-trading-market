@@ -1,6 +1,7 @@
 package kr.flab.tradingmarket.domain.user.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
@@ -37,6 +38,7 @@ public class DefaultUserCommandService implements UserCommandService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MyInfoDto findModifyUserDtoByUserNo(Long userNo) {
         return userService.findModifyUserDtoByUserNo(userNo);
     }

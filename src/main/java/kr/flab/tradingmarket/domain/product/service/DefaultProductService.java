@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.flab.tradingmarket.common.exception.DtoValidationException;
@@ -44,17 +43,20 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseModifyProductDto findByModifyProduct(Long productNo) {
         Product product = productMapper.findByThumbnailAndImages(productNo);
         return ResponseModifyProductDto.from(product);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Product findById(Long productNo) {
         return productMapper.findById(productNo);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseProductDetailDto findByDetailProduct(Long productNo) {
         Product product = productMapper.findByImagesAndCategoryAndUserAndLikes(productNo);
         if (product == null) {
@@ -64,12 +66,13 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isProductAuthorized(Long productNo, Long userNo) {
         return productMapper.existsByProductNoAndSellerNo(productNo, userNo) == 1;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public List<ProductImage> modifyProduct(Long productNo, RequestModifyProductDto modifyProduct,
         List<ProductImage> updateImageList) {
         ModifyProductValidObject validModifyProduct = new ModifyProductValidObject(productNo, modifyProduct,
@@ -82,7 +85,6 @@ public class DefaultProductService implements ProductService {
         return validModifyProduct.getCurrentDeleteImage();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     void updateImageAndThumbnail(ModifyProductValidObject modify) {
         if (modify.isUpdateImage()) {
             List<ProductImage> productImages = modify.getUpdateImageList().get();

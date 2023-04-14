@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mysql_master:
+    image: mysql:8.0.21
+    env_file:
+      - ./master/mysql_master.env
+    container_name: "mysql_master"
+    restart: "no"
+    ports:
+      - 3307:3306
+    volumes:
+      - ./master/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf:ro
+      - ./master/data:/var/lib/mysql
+      - ./mymarket.sql:/app/mymarket.sql
+    networks:
+      - overlay
+    environment:
+      MYSQL_ROOT_PASSWORD: #password
+  mysql_slave:
+    image: mysql:8.0.21
+    env_file:
+      - ./slave/mysql_slave.env
+    container_name: "mysql_slave"
+    restart: "no"
+    ports:
+      - 3308:3306
+    depends_on:
+      - mysql_master
+    volumes:
+      - ./slave/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf:ro
+      - ./slave/data:/var/lib/mysql
+    networks:
+      - overlay
+    environment:
+      MYSQL_ROOT_PASSWORD: #password
+
+networks:
+  overlay:
+

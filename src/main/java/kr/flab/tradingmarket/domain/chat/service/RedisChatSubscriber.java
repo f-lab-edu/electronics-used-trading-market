@@ -15,7 +15,6 @@ import kr.flab.tradingmarket.domain.chat.entity.ChatMessage;
 import kr.flab.tradingmarket.domain.chat.exception.ChatRoomNotFoundException;
 import kr.flab.tradingmarket.domain.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class RedisChatSubscriber implements MessageListener {
     private static final ConcurrentHashMap<String, CopyOnWriteArrayList<SseEmitter>> emitterTable = new ConcurrentHashMap<>();
     private final RoomService roomService;
 
-    @SneakyThrows
     @Override
     public void onMessage(final Message message, final byte[] pattern) {
         String messageBody = new String(message.getBody());

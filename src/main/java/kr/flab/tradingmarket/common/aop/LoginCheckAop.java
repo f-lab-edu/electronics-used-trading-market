@@ -17,7 +17,7 @@ public class LoginCheckAop {
     private final LoginService loginService;
 
     @Around("@annotation(kr.flab.tradingmarket.common.annotation.AuthCheck)")
-    public Object LoginChecker(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object loginChecker(ProceedingJoinPoint joinPoint) throws Throwable {
 
         if (loginService.getLoginUserNo() == null) {
             throw new UserAccessDeniedException("No session");

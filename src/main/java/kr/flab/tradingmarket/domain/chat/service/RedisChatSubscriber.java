@@ -49,6 +49,7 @@ public class RedisChatSubscriber implements MessageListener {
         }
         if (emitterTable.containsKey(roomId)) {
             emitterTable.get(roomId).add(emitter);
+            return;
         }
         CopyOnWriteArrayList<SseEmitter> list = new CopyOnWriteArrayList<>();
         list.add(emitter);

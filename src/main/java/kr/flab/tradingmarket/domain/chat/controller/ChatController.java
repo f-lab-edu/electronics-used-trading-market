@@ -42,7 +42,7 @@ public class ChatController {
     @AuthCheck
     public SseEmitter streamMessage(@PathVariable String roomId, HttpServletResponse response,
         @CurrentSession Long userNo) {
-        response.setCharacterEncoding(null);
+
         AtomicBoolean isComplete = new AtomicBoolean(false);
 
         RoomKey.isValid(roomId, userNo);
@@ -62,7 +62,7 @@ public class ChatController {
         emitter.onCompletion(onDetach);
         emitter.onTimeout(onDetach);
         emitter.onError((err) -> onDetach.run());
-
+        response.setHeader("X-Accel-Buffering", "no");
         return emitter;
     }
 

@@ -17,7 +17,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.SpringSessionRedisConnectionFactory;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-import io.lettuce.core.ReadFrom;
 import io.lettuce.core.cluster.ClusterClientOptions;
 import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 
@@ -38,7 +37,6 @@ public class RedisSessionConfig {
             .adaptiveRefreshTriggersTimeout(Duration.ofSeconds(30))
             .build();
         return LettuceClientConfiguration.builder()
-            .readFrom(ReadFrom.REPLICA_PREFERRED)
             .clientOptions(ClusterClientOptions.builder()
                 .topologyRefreshOptions(topologyRefreshOptions)
                 .build())

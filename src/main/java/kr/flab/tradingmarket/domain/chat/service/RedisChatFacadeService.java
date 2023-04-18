@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultChatFacadeService implements ChatFacadeService {
+public class RedisChatFacadeService implements ChatFacadeService {
 
     private final ChatService chatService;
     private final RoomService roomService;

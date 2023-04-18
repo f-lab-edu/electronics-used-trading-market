@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class DefaultRoomRepository implements RoomRepository {
+public class RedisRoomRepository implements RoomRepository {
 
     private final RedisTemplate<String, String> redisChatTemplate;
     private final RedisScript<Void> createRoomScript;

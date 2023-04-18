@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultChatService implements ChatService {
+public class RedisChatService implements ChatService {
     private final ChatRepository chatRepository;
 
     @Override

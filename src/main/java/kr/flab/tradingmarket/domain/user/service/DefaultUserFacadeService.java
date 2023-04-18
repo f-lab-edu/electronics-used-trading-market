@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultUserCommandService implements UserCommandService {
+public class DefaultUserFacadeService implements UserFacadeService {
     private final ImageService imageService;
     private final UserService userService;
     private final LoginService loginService;

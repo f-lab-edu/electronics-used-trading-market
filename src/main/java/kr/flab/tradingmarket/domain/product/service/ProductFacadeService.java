@@ -9,7 +9,7 @@ import kr.flab.tradingmarket.domain.product.dto.request.RequestModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseModifyProductDto;
 import kr.flab.tradingmarket.domain.product.dto.response.ResponseProductDetailDto;
 
-public interface ProductCommandService {
+public interface ProductFacadeService {
     void registerProduct(RegisterProductDto registerProductDto, List<MultipartFile> images, Long userNo);
 
     ResponseModifyProductDto findByModifyProduct(Long productNo);

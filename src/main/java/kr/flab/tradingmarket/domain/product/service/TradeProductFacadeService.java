@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultProductCommandService implements ProductCommandService {
+public class TradeProductFacadeService implements ProductFacadeService {
 
     private final ProductService productService;
     private final ImageService imageService;

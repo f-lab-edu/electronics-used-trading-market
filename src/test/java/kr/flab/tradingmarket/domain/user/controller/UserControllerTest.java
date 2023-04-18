@@ -33,7 +33,7 @@ import kr.flab.tradingmarket.domain.user.exception.PasswordNotMatchException;
 import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 import kr.flab.tradingmarket.domain.user.exception.UserNotFoundException;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
-import kr.flab.tradingmarket.domain.user.service.UserCommandService;
+import kr.flab.tradingmarket.domain.user.service.UserFacadeService;
 
 @WebMvcTest(UserController.class)
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +42,7 @@ import kr.flab.tradingmarket.domain.user.service.UserCommandService;
 class UserControllerTest {
 
     @MockBean
-    UserCommandService userCommandService;
+    UserFacadeService userFacadeService;
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -68,7 +68,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .joinUser(JOIN_USER_DTO_CAPTURE.capture());
 
@@ -80,7 +80,7 @@ class UserControllerTest {
     void failJoinUserByDuplication() throws Exception {
         //given
         willThrow(UserIdDuplicateException.class)
-            .given(userCommandService)
+            .given(userFacadeService)
             .joinUser(any());
 
         //when
@@ -105,7 +105,7 @@ class UserControllerTest {
             .andExpect(status().isBadRequest());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should(never())
             .joinUser(any());
 
@@ -199,7 +199,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .findModifyUserDtoByUserNo(LONG_CAPTURE.capture());
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
@@ -218,7 +218,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userCommandService).should(never())
+        then(userFacadeService).should(never())
             .findModifyUserDtoByUserNo(any());
     }
 
@@ -237,7 +237,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .modifyUser(MODIFY_USER_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
         assertThat(MODIFY_USER_DTO_CAPTURE.getValue()).usingRecursiveComparison().isEqualTo(DEFAULT_USER_MODIFY_DTO);
@@ -259,7 +259,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should(never())
             .modifyUser(any(), any());
     }
@@ -277,7 +277,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .withdrawUser(LONG_CAPTURE.capture());
         assertThat(LONG_CAPTURE.getValue()).isEqualTo(userNo);
@@ -296,7 +296,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should(never())
             .withdrawUser(any());
     }
@@ -321,7 +321,7 @@ class UserControllerTest {
         //given
         givenLogin();
         willThrow(ImageUploadException.class)
-            .given(userCommandService)
+            .given(userFacadeService)
             .modifyUserProfile(any(), any());
 
         //when
@@ -331,7 +331,7 @@ class UserControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .modifyUserProfile(any(), any());
     }
@@ -349,7 +349,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should(never())
             .modifyUserProfile(any(), any());
     }
@@ -368,7 +368,7 @@ class UserControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should()
             .changePassword(CHANGE_PASSWORD_DTO_CAPTURE.capture(), LONG_CAPTURE.capture());
         assertThat(CHANGE_PASSWORD_DTO_CAPTURE.getValue()).usingRecursiveComparison()
@@ -390,7 +390,7 @@ class UserControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(userCommandService)
+        then(userFacadeService)
             .should(never())
             .changePassword(any(), any());
     }
@@ -401,7 +401,7 @@ class UserControllerTest {
         //given
         givenLogin();
         willThrow(PasswordNotMatchException.class)
-            .given(userCommandService)
+            .given(userFacadeService)
             .changePassword(any(), any());
 
         //when

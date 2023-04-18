@@ -21,7 +21,7 @@ import kr.flab.tradingmarket.domain.user.exception.UserIdDuplicateException;
 class DefaultUserCommandTest {
 
     @InjectMocks
-    DefaultUserCommandService userCommandService;
+    DefaultUserFacadeService userCommandService;
     @Mock
     UserService userService;
     @Mock

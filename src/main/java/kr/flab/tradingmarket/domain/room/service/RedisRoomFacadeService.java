@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultRoomFacadeService implements RoomFacadeService {
+public class RedisRoomFacadeService implements RoomFacadeService {
     private final RoomService roomService;
     private final ProductService productService;
 

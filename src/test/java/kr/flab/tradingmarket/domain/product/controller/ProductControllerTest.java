@@ -38,7 +38,7 @@ import kr.flab.tradingmarket.domain.category.service.CategoryService;
 import kr.flab.tradingmarket.domain.image.exception.ImageUploadException;
 import kr.flab.tradingmarket.domain.product.exception.ProductModifyException;
 import kr.flab.tradingmarket.domain.product.exception.ProductRegisterException;
-import kr.flab.tradingmarket.domain.product.service.ProductCommandService;
+import kr.flab.tradingmarket.domain.product.service.ProductFacadeService;
 import kr.flab.tradingmarket.domain.product.service.ProductService;
 import kr.flab.tradingmarket.domain.user.service.LoginService;
 
@@ -49,7 +49,7 @@ import kr.flab.tradingmarket.domain.user.service.LoginService;
 class ProductControllerTest {
 
     @MockBean
-    ProductCommandService productCommandService;
+    ProductFacadeService productFacadeService;
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -92,7 +92,7 @@ class ProductControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .registerProduct(any(), any(), any());
 
@@ -123,7 +123,7 @@ class ProductControllerTest {
             .andExpect(status().isBadRequest());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should(never())
             .registerProduct(any(), any(), any());
 
@@ -144,7 +144,7 @@ class ProductControllerTest {
             .andExpect(status().isBadRequest());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should(never())
             .registerProduct(any(), any(), any());
     }
@@ -154,7 +154,7 @@ class ProductControllerTest {
     void failRegisterProductByS3Exception() throws Exception {
         //given
         willThrow(ImageUploadException.class)
-            .given(productCommandService)
+            .given(productFacadeService)
             .registerProduct(any(), any(), any());
 
         //when
@@ -169,7 +169,7 @@ class ProductControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .registerProduct(any(), any(), any());
     }
@@ -179,7 +179,7 @@ class ProductControllerTest {
     void failRegisterProductByDbException() throws Exception {
         //given
         willThrow(ProductRegisterException.class)
-            .given(productCommandService)
+            .given(productFacadeService)
             .registerProduct(any(), any(), any());
 
         //when
@@ -194,7 +194,7 @@ class ProductControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .registerProduct(any(), any(), any());
     }
@@ -212,7 +212,7 @@ class ProductControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .findByModifyProduct(any());
     }
@@ -230,7 +230,7 @@ class ProductControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should(never())
             .findByModifyProduct(any());
     }
@@ -254,7 +254,7 @@ class ProductControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .modifyProduct(any(), any(), any());
 
@@ -279,7 +279,7 @@ class ProductControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should(never())
             .modifyProduct(any(), any(), any());
     }
@@ -291,7 +291,7 @@ class ProductControllerTest {
         given(productService.isProductAuthorized(any(), any()))
             .willReturn(true);
         willThrow(ProductModifyException.class)
-            .given(productCommandService)
+            .given(productFacadeService)
             .modifyProduct(any(), any(), any());
 
         //when
@@ -306,7 +306,7 @@ class ProductControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .modifyProduct(any(), any(), any());
     }
@@ -318,7 +318,7 @@ class ProductControllerTest {
         given(productService.isProductAuthorized(any(), any()))
             .willReturn(true);
         willThrow(new DtoValidationException("testFiled", "testMessage"))
-            .given(productCommandService)
+            .given(productFacadeService)
             .modifyProduct(any(), any(), any());
 
         //when
@@ -333,7 +333,7 @@ class ProductControllerTest {
             .andExpect(status().isBadRequest());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .modifyProduct(any(), any(), any());
     }
@@ -345,7 +345,7 @@ class ProductControllerTest {
         given(productService.isProductAuthorized(any(), any()))
             .willReturn(true);
         willThrow(ImageUploadException.class)
-            .given(productCommandService)
+            .given(productFacadeService)
             .modifyProduct(any(), any(), any());
 
         //when
@@ -360,7 +360,7 @@ class ProductControllerTest {
             .andExpect(status().isInternalServerError());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .modifyProduct(any(), any(), any());
     }
@@ -378,7 +378,7 @@ class ProductControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .deleteProduct(any());
     }
@@ -396,7 +396,7 @@ class ProductControllerTest {
             .andExpect(status().isUnauthorized());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should(never())
             .deleteProduct(any());
     }
@@ -405,7 +405,7 @@ class ProductControllerTest {
     @DisplayName("controller : 상품 상세 조회 : 성공")
     void successfulGetProduct() throws Exception {
         //given
-        given(productCommandService.findByDetailProduct(any()))
+        given(productFacadeService.findByDetailProduct(any()))
             .willReturn(DEFAULT_RESPONSE_PRODUCT_DETAIL_DTO);
 
         //when
@@ -414,7 +414,7 @@ class ProductControllerTest {
             .andExpect(status().isOk());
 
         //then
-        then(productCommandService)
+        then(productFacadeService)
             .should()
             .findByDetailProduct(any());
     }

@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultProductService implements ProductService {
+public class TradeProductService implements ProductService {
 
     private final ProductMapper productMapper;
     private final ElasticSearchDocumentRepository elasticSearchRepository;

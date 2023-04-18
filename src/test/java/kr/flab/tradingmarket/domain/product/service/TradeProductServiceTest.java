@@ -22,10 +22,10 @@ import kr.flab.tradingmarket.domain.product.mapper.ProductMapper;
 import kr.flab.tradingmarket.domain.product.repository.ElasticSearchDocumentRepository;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultProductServiceTest {
+class TradeProductServiceTest {
 
     @InjectMocks
-    DefaultProductService productService;
+    TradeProductService productService;
     @Mock
     ProductMapper productMapper;
 

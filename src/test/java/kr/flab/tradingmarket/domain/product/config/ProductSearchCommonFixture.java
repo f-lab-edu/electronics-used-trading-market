@@ -94,7 +94,7 @@ public class ProductSearchCommonFixture {
             ProductSearch build = ProductSearch.builder()
                 .productNo((long)i)
                 .productName("test_item_" + i)
-                .productPrice(BigDecimal.valueOf(20000 + i))
+                .productPrice((double)(20000 + i))
                 .modifyDate(testDateTime)
                 .image("image_link_" + i)
                 .modifyDate(testDateTime)

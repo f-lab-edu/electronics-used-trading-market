@@ -1,6 +1,5 @@
 package kr.flab.tradingmarket.domain.product.dto.response;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import kr.flab.tradingmarket.domain.product.entity.ProductSalesStatus;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ProductSimpleDto {
     private Long productNo;
     private String productName;
-    private BigDecimal productPrice;
+    private Double productPrice;
     private LocalDateTime modifyDate;
     private String image;
     private Integer likeCount;
@@ -23,7 +22,7 @@ public class ProductSimpleDto {
     private ProductSalesStatus productSalesStatus;
 
     @Builder
-    public ProductSimpleDto(Long productNo, String productName, BigDecimal productPrice, LocalDateTime modifyDate,
+    public ProductSimpleDto(Long productNo, String productName, Double productPrice, LocalDateTime modifyDate,
         String image, Integer likeCount, Boolean myWish, ProductSalesStatus productSalesStatus) {
         this.productNo = productNo;
         this.productName = productName;
